@@ -8,7 +8,12 @@ import javax.inject.Inject
 class TaskRepository @Inject constructor(private val taskDao: TaskDao)  {
     val tasks: LiveData<List<Task>> = taskDao.getAllTasks()
 
-    suspend fun addTask(task: Task) {
+    suspend fun insert(task: Task) {
         taskDao.insert(task)
     }
+
+    suspend fun update(task: Task) {
+        taskDao.update(task)
+    }
+
 }

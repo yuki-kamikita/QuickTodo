@@ -2,6 +2,8 @@
 
 package com.akaiyukiusagi.quicktodo.ui.screen.home
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Checkbox
@@ -29,19 +33,31 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.akaiyukiusagi.quicktodo.model.room.entity.Task
+import com.akaiyukiusagi.quicktodo.ui.component.OnPause
 import com.akaiyukiusagi.quicktodo.ui.theme.QuickTodoTheme
 
 @Composable
 fun HomeScreen() {
     val viewModel: HomeViewModel = hiltViewModel()
     val tasks by viewModel.tasks.observeAsState(emptyList())
+    val focusManager = LocalFocusManager.current
 
     Surface(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+            ) { focusManager.clearFocus() },
         color = MaterialTheme.colorScheme.background
     ) {
         Column(
@@ -55,7 +71,15 @@ fun HomeScreen() {
                 verticalArrangement = Arrangement.Top
             ) {
                 items(tasks) { task ->
-                    TaskItem(task = task)
+                    TaskItem(
+                        task = task,
+                        tapCheckBox = { tappedTask ->
+                            viewModel.doneTask(tappedTask)
+                        },
+                        editComplete = { updatedTask ->
+                            viewModel.updateTask(updatedTask)
+                        }
+                    )
                 }
             }
             Divider()
@@ -67,7 +91,16 @@ fun HomeScreen() {
 }
 
 @Composable
-fun TaskItem(task: Task) {
+fun TaskItem(
+    task: Task,
+    tapCheckBox: (Task) -> Unit,
+    editComplete: (Task) -> Unit
+) {
+    var textFieldValue by remember { mutableStateOf(task.content) }
+
+    val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
+
     Row (
         modifier = Modifier
             .fillMaxWidth()
@@ -75,16 +108,38 @@ fun TaskItem(task: Task) {
         ) {
         Checkbox(
             checked = task.isCompleted,
-            onCheckedChange = { /* Update in database */ }
+            onCheckedChange = { isChecked ->
+                tapCheckBox(task.copy(isCompleted = isChecked))
+            }
         )
+
         TextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = task.content,
-            onValueChange = { /* Update in database */ }
+            value = textFieldValue,
+            maxLines = 1,
+            onValueChange = { newText ->
+                textFieldValue = newText
+            },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done,
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = { focusManager.clearFocus() }
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(focusRequester)
+                .onFocusChanged { focusState ->
+                    if (!focusState.isFocused) {
+                        editComplete(task.copy(content = textFieldValue))
+                    }
+                },
         )
+
+        OnPause {
+            editComplete(task.copy(content = textFieldValue))
+        }
     }
 }
-
 
 @Composable
 fun NewTask(onAddTask: (String) -> Unit) {

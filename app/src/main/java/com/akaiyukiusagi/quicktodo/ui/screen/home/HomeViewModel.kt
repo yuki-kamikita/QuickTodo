@@ -1,5 +1,6 @@
 package com.akaiyukiusagi.quicktodo.ui.screen.home
 
+import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +11,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val taskRepository: TaskRepository) : ViewModel() {
+class HomeViewModel @Inject constructor(
+    private val taskRepository: TaskRepository
+) : ViewModel(), LifecycleObserver {
     val tasks: LiveData<List<Task>> = taskRepository.tasks
 
     fun addTask(text: String) {
@@ -19,7 +22,20 @@ class HomeViewModel @Inject constructor(private val taskRepository: TaskReposito
             content = text,
             )
         viewModelScope.launch {
-            taskRepository.addTask(task)
+            taskRepository.insert(task)
         }
     }
+
+    fun doneTask(task: Task) {
+        viewModelScope.launch {
+            taskRepository.update(task.copy(isCompleted = true))
+        }
+    }
+
+    fun updateTask(task: Task) {
+        viewModelScope.launch {
+            taskRepository.update(task)
+        }
+    }
+
 }
