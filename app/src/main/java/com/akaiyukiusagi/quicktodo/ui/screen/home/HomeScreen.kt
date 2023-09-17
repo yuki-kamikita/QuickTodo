@@ -157,22 +157,38 @@ fun TaskItem(
 @Composable
 fun NewTask(onAddTask: (String) -> Unit) {
     var text by remember { mutableStateOf("") }
+    val focusManager = LocalFocusManager.current
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(8.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         TextField(
             value = text,
-            onValueChange = { newText -> text = newText },
+            maxLines = 1,
             label = { Text("New Task") },
-            modifier = Modifier.weight(1f)
+            onValueChange = { newText -> text = newText },
+            modifier = Modifier.weight(1f),
+            keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    focusManager.clearFocus()
+                    onAddTask(text)
+                    text = ""
+                }
+            ),
         )
 
         IconButton(
-            onClick = { onAddTask(text) },
+            onClick = {
+                focusManager.clearFocus()
+                onAddTask(text)
+                text = ""
+            },
 //            modifier = Modifier.padding(start = 8.dp)
         ) {
             Icon(imageVector = Icons.Default.Send, contentDescription = "Send")
