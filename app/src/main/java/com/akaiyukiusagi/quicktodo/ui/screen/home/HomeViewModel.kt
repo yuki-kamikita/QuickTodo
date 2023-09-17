@@ -14,13 +14,11 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val taskRepository: TaskRepository
 ) : ViewModel(), LifecycleObserver {
-    val tasks: LiveData<List<Task>> = taskRepository.tasks
+    val tasks: LiveData<List<Task>> = taskRepository.todoTasks
+    val doneTasks: LiveData<List<Task>> = taskRepository.doneTasks
 
     fun addTask(text: String) {
-        val task = Task(
-            id = 0,
-            content = text,
-            )
+        val task = Task(content = text)
         viewModelScope.launch {
             taskRepository.insert(task)
         }
@@ -29,6 +27,12 @@ class HomeViewModel @Inject constructor(
     fun doneTask(task: Task) {
         viewModelScope.launch {
             taskRepository.update(task.copy(isCompleted = true))
+        }
+    }
+
+    fun restoreTask(task: Task) {
+        viewModelScope.launch {
+            taskRepository.update(task.copy(isCompleted = false))
         }
     }
 

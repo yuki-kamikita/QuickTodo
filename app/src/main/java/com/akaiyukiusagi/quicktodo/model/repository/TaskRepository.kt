@@ -7,6 +7,8 @@ import javax.inject.Inject
 
 class TaskRepository @Inject constructor(private val taskDao: TaskDao)  {
     val tasks: LiveData<List<Task>> = taskDao.getAllTasks()
+    val todoTasks: LiveData<List<Task>> = taskDao.getTodoTasks()
+    val doneTasks: LiveData<List<Task>> = taskDao.getDoneTasks()
 
     suspend fun insert(task: Task) {
         taskDao.insert(task)

@@ -49,6 +49,7 @@ import com.akaiyukiusagi.quicktodo.ui.theme.QuickTodoTheme
 fun HomeScreen() {
     val viewModel: HomeViewModel = hiltViewModel()
     val tasks by viewModel.tasks.observeAsState(emptyList())
+    val doneTasks by viewModel.doneTasks.observeAsState(emptyList())
     val focusManager = LocalFocusManager.current
 
     Surface(
@@ -64,21 +65,32 @@ fun HomeScreen() {
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Bottom
         ) {
+            // TODO: 外に出す
             LazyColumn(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight(),
                 verticalArrangement = Arrangement.Top
             ) {
-                items(tasks) { task ->
+                items(tasks, key = { task -> task.id }) { task ->
                     TaskItem(
                         task = task,
-                        tapCheckBox = { tappedTask ->
+                        tapCheckbox = { tappedTask ->
                             viewModel.doneTask(tappedTask)
                         },
                         editComplete = { updatedTask ->
                             viewModel.updateTask(updatedTask)
                         }
+                    )
+                }
+                item { Divider() }
+                items(doneTasks, key = { task -> task.id }) { task ->
+                    TaskItem(
+                        task = task,
+                        tapCheckbox = { tappedTask ->
+                            viewModel.restoreTask(tappedTask)
+                        },
+                        editComplete = {}
                     )
                 }
             }
@@ -93,7 +105,7 @@ fun HomeScreen() {
 @Composable
 fun TaskItem(
     task: Task,
-    tapCheckBox: (Task) -> Unit,
+    tapCheckbox: (Task) -> Unit,
     editComplete: (Task) -> Unit
 ) {
     var textFieldValue by remember { mutableStateOf(task.content) }
@@ -105,11 +117,11 @@ fun TaskItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(4.dp),
-        ) {
+    ) {
         Checkbox(
             checked = task.isCompleted,
             onCheckedChange = { isChecked ->
-                tapCheckBox(task.copy(isCompleted = isChecked))
+                tapCheckbox(task.copy(isCompleted = isChecked))
             }
         )
 
@@ -133,6 +145,7 @@ fun TaskItem(
                         editComplete(task.copy(content = textFieldValue))
                     }
                 },
+            enabled = !task.isCompleted
         )
 
         OnPause {
