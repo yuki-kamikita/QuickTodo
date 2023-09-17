@@ -11,9 +11,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -54,6 +58,7 @@ fun HomeScreen() {
                     TaskItem(task = task)
                 }
             }
+            Divider()
             NewTask { text ->
                 viewModel.addTask(text)
             }
@@ -63,14 +68,21 @@ fun HomeScreen() {
 
 @Composable
 fun TaskItem(task: Task) {
-    Checkbox(
-        checked = task.isCompleted,
-        onCheckedChange = { /* Update in database */ }
-    )
-    TextField(
-        value = task.content,
-        onValueChange = { /* Update in database */ }
-    )
+    Row (
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(4.dp),
+        ) {
+        Checkbox(
+            checked = task.isCompleted,
+            onCheckedChange = { /* Update in database */ }
+        )
+        TextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = task.content,
+            onValueChange = { /* Update in database */ }
+        )
+    }
 }
 
 
@@ -91,13 +103,11 @@ fun NewTask(onAddTask: (String) -> Unit) {
             modifier = Modifier.weight(1f)
         )
 
-        Button(
-            onClick = {
-                onAddTask(text)
-            },
-            modifier = Modifier.padding(start = 8.dp)
+        IconButton(
+            onClick = { onAddTask(text) },
+//            modifier = Modifier.padding(start = 8.dp)
         ) {
-            Text("Add")
+            Icon(imageVector = Icons.Default.Send, contentDescription = "Send")
         }
     }
 }

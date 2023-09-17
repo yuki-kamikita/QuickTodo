@@ -8,15 +8,14 @@ import androidx.room.Insert
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Update
-import java.time.LocalDateTime
 
 @Entity
 data class Task(
     @PrimaryKey(autoGenerate = true) val id: Int,
-    val content: String = "aaa",
+    val content: String,
     val isCompleted: Boolean = false,
 //    val completedAt: LocalDateTime,
-//    val createdAt: LocalDateTime
+//    val createdAt: LocalDateTime,
 )
 
 @Dao

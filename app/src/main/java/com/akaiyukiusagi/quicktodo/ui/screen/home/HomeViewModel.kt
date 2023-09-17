@@ -23,9 +23,3 @@ class HomeViewModel @Inject constructor(private val taskRepository: TaskReposito
         }
     }
 }
-
-//@HiltViewModel
-//class HomeViewModel @Inject constructor(private val taskRepository: TaskRepository) : ViewModel() {
-//    val tasks: List<String> = listOf("11","WWAGADS")
-//    val test: LiveData<List<Task>> = taskRepository.tasks
-//}

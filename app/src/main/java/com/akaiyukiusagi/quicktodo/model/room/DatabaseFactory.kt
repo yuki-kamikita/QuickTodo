@@ -22,11 +22,6 @@ abstract class DatabaseFactory : RoomDatabase() {
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
-//    @Singleton
-//    @Provides
-//    fun provideDatabaseFactory(
-//        @ApplicationContext context: Context
-//    ) = Room.databaseBuilder(context, DatabaseFactory::class.java, "task").build()
     @Singleton
     @Provides
     fun provideDatabaseFactory(

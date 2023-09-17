@@ -12,7 +12,3 @@ class TaskRepository @Inject constructor(private val taskDao: TaskDao)  {
         taskDao.insert(task)
     }
 }
-
-//class TaskRepository @Inject constructor()  {
-//    val tasks: List<String> = listOf("11","WWAGADS")
-//}
