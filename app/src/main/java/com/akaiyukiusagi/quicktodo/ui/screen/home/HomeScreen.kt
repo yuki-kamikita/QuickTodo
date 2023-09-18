@@ -2,6 +2,9 @@
 
 package com.akaiyukiusagi.quicktodo.ui.screen.home
 
+import android.Manifest
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +20,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -44,6 +48,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.akaiyukiusagi.quicktodo.model.room.entity.Task
 import com.akaiyukiusagi.quicktodo.ui.component.OnPause
 import com.akaiyukiusagi.quicktodo.ui.theme.QuickTodoTheme
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 
 @Composable
 fun HomeScreen() {
@@ -65,6 +73,9 @@ fun HomeScreen() {
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Bottom
         ) {
+
+            RequestPermission()
+
             // TODO: 外に出す
             LazyColumn(
                 modifier = Modifier
@@ -196,6 +207,31 @@ fun NewTask(onAddTask: (String) -> Unit) {
     }
 }
 
+// TODO: 通知に出すボタンを用意する
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun RequestPermission() {
+
+    val notificationPermissionState = rememberPermissionState(
+        Manifest.permission.POST_NOTIFICATIONS
+    )
+
+    if (!notificationPermissionState.status.isGranted) {
+        Column {
+            val textToShow = if (notificationPermissionState.status.shouldShowRationale) {
+                "通知欄に表示するには許可が必要です"
+            } else {
+                "通知欄に表示するには許可が必要です"
+            }
+            Text(textToShow)
+            Button(onClick = { notificationPermissionState.launchPermissionRequest() }) {
+                Text("通知許可を出す")
+            }
+            Divider()
+        }
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
