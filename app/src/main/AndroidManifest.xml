@@ -23,6 +23,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
+        <receiver android:name=".notification.CompleteReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.akaiyukiusagi.quicktodo.ACTION_COMPLETE"/>
+            </intent-filter>
+        </receiver>
+
+    </application>
 </manifest>

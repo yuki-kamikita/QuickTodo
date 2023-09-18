@@ -18,4 +18,8 @@ class TaskRepository @Inject constructor(private val taskDao: TaskDao)  {
         taskDao.update(task)
     }
 
+    suspend fun markAsCompleted(id: Int) {
+        taskDao.markAsCompleted(id)
+    }
+
 }

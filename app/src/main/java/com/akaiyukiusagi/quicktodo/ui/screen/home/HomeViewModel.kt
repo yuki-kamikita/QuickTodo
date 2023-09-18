@@ -14,6 +14,7 @@ import com.akaiyukiusagi.quicktodo.MainActivity
 import com.akaiyukiusagi.quicktodo.R
 import com.akaiyukiusagi.quicktodo.model.room.entity.Task
 import com.akaiyukiusagi.quicktodo.model.repository.TaskRepository
+import com.akaiyukiusagi.quicktodo.notification.CompleteReceiver
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
@@ -78,17 +79,24 @@ class HomeViewModel @Inject constructor(
         channel.setSound(null, null)
 
         // クリックされた時の遷移先
-        val intent = Intent(context, MainActivity::class.java).apply {
+        val intentOpen = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        val pendingIntentOpen: PendingIntent = PendingIntent.getActivity(context, 0, intentOpen, PendingIntent.FLAG_IMMUTABLE)
+
+        val intentDone = Intent(context, CompleteReceiver::class.java).apply {
+            action = "com.akaiyukiusagi.quicktodo.ACTION_COMPLETE" // TODO: 定数化
+            putExtra("taskId", task.id)
+        }
+        val pendingIntentDone: PendingIntent = PendingIntent.getBroadcast(context, task.id, intentDone, PendingIntent.FLAG_IMMUTABLE)
 
         val notification = NotificationCompat.Builder(context, channelId)
             .setContentTitle(task.content)
 //            .setContentText(task.content) // TODO: 長くなったらこっちにずらす
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentIntent(pendingIntent) // 通知タップ時
+            .setContentIntent(pendingIntentOpen) // 通知タップ時
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC) // ロック画面で内容を表示 https://developer.android.com/training/notify-user/build-notification?hl=ja#lockscreenNotification
+            .addAction(R.drawable.ic_launcher_foreground, "Done", pendingIntentDone) // 完了ボタン
             .build()
 
         notificationManager.notify(task.id, notification)
