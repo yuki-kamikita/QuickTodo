@@ -14,6 +14,7 @@ data class Task(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val content: String,
     val isCompleted: Boolean = false,
+    val sendNotification: Boolean = false,
 //    val completedAt: LocalDateTime,
 //    val createdAt: LocalDateTime,
 )
@@ -28,6 +29,9 @@ interface TaskDao {
 
     @Query("SELECT * FROM task WHERE isCompleted = 1")
     fun getDoneTasks(): LiveData<List<Task>>
+
+    @Query("SELECT * FROM task WHERE sendNotification = 1 AND isCompleted = 0")
+    fun getNotificationTasks(): LiveData<List<Task>>
 
     @Query("UPDATE task SET isCompleted = 1 WHERE id = :taskId")
     suspend fun markAsCompleted(taskId: Int)

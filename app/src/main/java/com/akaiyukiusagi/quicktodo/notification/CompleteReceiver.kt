@@ -11,6 +11,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * 通知からタスクを完了させる
+ */
 @AndroidEntryPoint
 class CompleteReceiver : BroadcastReceiver() {
     @Inject lateinit var taskRepository: TaskRepository

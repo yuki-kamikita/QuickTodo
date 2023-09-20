@@ -10,21 +10,19 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Send
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -55,7 +53,6 @@ import com.akaiyukiusagi.quicktodo.ui.theme.QuickTodoTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
-import com.google.accompanist.permissions.shouldShowRationale
 
 @Composable
 fun HomeScreen() {
@@ -78,9 +75,6 @@ fun HomeScreen() {
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Bottom
         ) {
-
-            RequestPermission()
-
             // TODO: 外に出す
             LazyColumn(
                 modifier = Modifier
@@ -91,22 +85,14 @@ fun HomeScreen() {
                 items(tasks, key = { task -> task.id }) { task ->
                     TaskItem(
                         task = task,
-                        tapCheckbox = { tappedTask ->
-                            viewModel.doneTask(tappedTask)
-                        },
-                        editComplete = { updatedTask ->
-                            viewModel.updateTask(updatedTask)
-                        }
+                        updateTask = { updatedTask -> viewModel.updateTask(updatedTask) }
                     )
                 }
                 item { Divider() }
                 items(doneTasks, key = { task -> task.id }) { task ->
                     TaskItem(
                         task = task,
-                        tapCheckbox = { tappedTask ->
-                            viewModel.restoreTask(tappedTask)
-                        },
-                        editComplete = {}
+                        updateTask = { tappedTask -> viewModel.updateTask(tappedTask) },
                     )
                 }
             }
@@ -121,13 +107,17 @@ fun HomeScreen() {
 @Composable
 fun TaskItem(
     task: Task,
-    tapCheckbox: (Task) -> Unit,
-    editComplete: (Task) -> Unit
+    updateTask: (Task) -> Unit
 ) {
     var textFieldValue by remember { mutableStateOf(task.content) }
 
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
+
+
+    OnPause {
+        updateTask(task.copy(content = textFieldValue))
+    }
 
     Row (
         modifier = Modifier
@@ -137,35 +127,98 @@ fun TaskItem(
         Checkbox(
             checked = task.isCompleted,
             onCheckedChange = { isChecked ->
-                tapCheckbox(task.copy(isCompleted = isChecked))
+                updateTask(task.copy(isCompleted = isChecked))
             }
         )
 
         TextField(
             value = textFieldValue,
             maxLines = 1,
-            onValueChange = { newText ->
-                textFieldValue = newText
-            },
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done,
-            ),
-            keyboardActions = KeyboardActions(
-                onDone = { focusManager.clearFocus() }
-            ),
+            onValueChange = { newText -> textFieldValue = newText },
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+            enabled = !task.isCompleted,
             modifier = Modifier
-                .fillMaxWidth()
+                .weight(1f)
                 .focusRequester(focusRequester)
                 .onFocusChanged { focusState ->
-                    if (!focusState.isFocused) {
-                        editComplete(task.copy(content = textFieldValue))
-                    }
+                    if (!focusState.isFocused) updateTask(task.copy(content = textFieldValue))
                 },
-            enabled = !task.isCompleted
         )
 
-        OnPause {
-            editComplete(task.copy(content = textFieldValue))
+        // 通知ボタン
+        // AndroidOSバージョンによってパーミッションを要求する
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            RequirePermissionNotificationButton(task = task, updateTask = updateTask)
+        } else {
+            NotificationButton(task = task, updateTask = updateTask)
+        }
+
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun RequirePermissionNotificationButton(
+    task: Task,
+    updateTask: (Task) -> Unit
+) {
+    if (!task.isCompleted) {
+        if (task.sendNotification) {
+            IconButton(
+                onClick = { updateTask(task.copy(sendNotification = false)) },
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Notifications,
+                    contentDescription = "Send Notification"
+                )
+            }
+        } else {
+            val notificationPermissionState = rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
+
+            IconButton(
+                onClick = {
+                    if (!notificationPermissionState.status.isGranted) {
+                        notificationPermissionState.launchPermissionRequest() // 通知権限の取得
+                    }
+                    updateTask(task.copy(sendNotification = true))
+                },
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Notifications,
+                    contentDescription = "Don't Send Notification"
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun NotificationButton(
+    task: Task,
+    updateTask: (Task) -> Unit
+) {
+    if (!task.isCompleted) {
+        if (task.sendNotification) {
+            IconButton(
+                onClick = { updateTask(task.copy(sendNotification = false)) },
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Notifications,
+                    contentDescription = "Send Notification"
+                )
+            }
+        } else {
+            IconButton(
+                onClick = { updateTask(task.copy(sendNotification = true)) },
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Notifications,
+                    contentDescription = "Don't Send Notification"
+                )
+            }
         }
     }
 }
@@ -212,31 +265,6 @@ fun NewTask(onAddTask: (String) -> Unit) {
     }
 }
 
-// TODO: 通知に出すボタンを用意する
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@OptIn(ExperimentalPermissionsApi::class)
-@Composable
-fun RequestPermission() {
-
-    val notificationPermissionState = rememberPermissionState(
-        Manifest.permission.POST_NOTIFICATIONS
-    )
-
-    if (!notificationPermissionState.status.isGranted) {
-        Column {
-            val textToShow = if (notificationPermissionState.status.shouldShowRationale) {
-                "通知欄に表示するには許可が必要です"
-            } else {
-                "通知欄に表示するには許可が必要です"
-            }
-            Text(textToShow)
-            Button(onClick = { notificationPermissionState.launchPermissionRequest() }) {
-                Text("通知許可を出す")
-            }
-            Divider()
-        }
-    }
-}
 
 @Preview(showBackground = true)
 @Composable
