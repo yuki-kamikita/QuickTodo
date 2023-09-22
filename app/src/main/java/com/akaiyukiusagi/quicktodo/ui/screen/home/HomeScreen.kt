@@ -3,8 +3,10 @@
 package com.akaiyukiusagi.quicktodo.ui.screen.home
 
 import android.Manifest
+import android.content.res.Configuration
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -17,12 +19,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,16 +36,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
@@ -72,7 +79,9 @@ fun HomeScreen() {
         color = MaterialTheme.colorScheme.background
     ) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 4.dp, end = 4.dp, top = 4.dp),
             verticalArrangement = Arrangement.Bottom
         ) {
             // TODO: 外に出す
@@ -114,46 +123,56 @@ fun TaskItem(
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
 
-
     OnPause {
         updateTask(task.copy(content = textFieldValue))
     }
 
-    Row (
+    Card (
         modifier = Modifier
             .fillMaxWidth()
             .padding(4.dp),
     ) {
-        Checkbox(
-            checked = task.isCompleted,
-            onCheckedChange = { isChecked ->
-                updateTask(task.copy(isCompleted = isChecked))
+        Row (
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Checkbox(
+                checked = task.isCompleted,
+                onCheckedChange = { isChecked ->
+                    updateTask(task.copy(isCompleted = isChecked))
+                }
+            )
+
+            TextField(
+                value = textFieldValue,
+                singleLine = true,
+                onValueChange = { newText -> textFieldValue = newText },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+                enabled = !task.isCompleted,
+                modifier = Modifier
+                    .weight(1f)
+                    .focusRequester(focusRequester)
+                    .onFocusChanged { focusState ->
+                        if (!focusState.isFocused) updateTask(task.copy(content = textFieldValue))
+                    },
+                colors = TextFieldDefaults.textFieldColors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent
+                ),
+            )
+
+            // 通知ボタン
+            // AndroidOSバージョンによってパーミッションを要求する
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                RequirePermissionNotificationButton(task = task, updateTask = updateTask)
+            } else {
+                NotificationButton(task = task, updateTask = updateTask)
             }
-        )
 
-        TextField(
-            value = textFieldValue,
-            maxLines = 1,
-            onValueChange = { newText -> textFieldValue = newText },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-            enabled = !task.isCompleted,
-            modifier = Modifier
-                .weight(1f)
-                .focusRequester(focusRequester)
-                .onFocusChanged { focusState ->
-                    if (!focusState.isFocused) updateTask(task.copy(content = textFieldValue))
-                },
-        )
-
-        // 通知ボタン
-        // AndroidOSバージョンによってパーミッションを要求する
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            RequirePermissionNotificationButton(task = task, updateTask = updateTask)
-        } else {
-            NotificationButton(task = task, updateTask = updateTask)
         }
-
     }
 }
 
@@ -227,19 +246,31 @@ fun NotificationButton(
 fun NewTask(onAddTask: (String) -> Unit) {
     var text by remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
+    val focusRequester = remember { FocusRequester() }
+    val isFocused = remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 8.dp, end = 8.dp, top = 8.dp),
+            .padding(start = 8.dp, top = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         TextField(
             value = text,
-            maxLines = 1,
+            singleLine = true,
             label = { Text("New Task") },
             onValueChange = { newText -> text = newText },
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f)
+                .focusRequester(focusRequester)
+                .onFocusChanged { focusState -> isFocused.value = focusState.isFocused },
+            colors = TextFieldDefaults.textFieldColors(
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            ),
+            shape = RoundedCornerShape(16.dp),
             keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Done,
             ),
@@ -266,10 +297,42 @@ fun NewTask(onAddTask: (String) -> Unit) {
 }
 
 
-@Preview(showBackground = true)
+
+//@Preview(showBackground = true)
+//@Composable
+//fun GreetingPreview() {
+//    QuickTodoTheme {
+//        HomeScreen()
+//    }
+//}
+
+@Preview(
+    group = "NewTask",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
 @Composable
-fun GreetingPreview() {
+fun NewTaskPreviewLight() {
     QuickTodoTheme {
-        HomeScreen()
+        Surface (
+            color = MaterialTheme.colorScheme.background
+        ) {
+            NewTask(onAddTask = {})
+        }
+    }
+}
+@Preview(
+    group = "NewTask",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun NewTaskPreviewDark() {
+    QuickTodoTheme {
+        Surface (
+            color = MaterialTheme.colorScheme.background
+        ) {
+            NewTask(onAddTask = {})
+        }
     }
 }
