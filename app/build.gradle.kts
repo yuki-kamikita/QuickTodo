@@ -74,6 +74,9 @@ dependencies {
     // TODO: バージョンは共通っぽいから変数に入れるか
     implementation("com.google.accompanist:accompanist-permissions:0.33.1-alpha")
 
+    // Glance ウィジェット作成
+    implementation("androidx.glance:glance-appwidget:1.0.0")
+
     // ViewModel and LiveData
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
