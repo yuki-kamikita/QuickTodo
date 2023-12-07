@@ -5,8 +5,6 @@ package com.akaiyukiusagi.quicktodo.ui.screen.home
 import android.Manifest
 import android.content.res.Configuration
 import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -64,8 +62,6 @@ import com.google.accompanist.permissions.rememberPermissionState
 @Composable
 fun HomeScreen() {
     val viewModel: HomeViewModel = hiltViewModel()
-    val tasks by viewModel.tasks.observeAsState(emptyList())
-    val doneTasks by viewModel.doneTasks.observeAsState(emptyList())
     val focusManager = LocalFocusManager.current
 
     Surface(
@@ -84,27 +80,10 @@ fun HomeScreen() {
                 .padding(start = 4.dp, end = 4.dp, top = 4.dp),
             verticalArrangement = Arrangement.Bottom
         ) {
-            // TODO: 外に出す
-            LazyColumn(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight(),
-                verticalArrangement = Arrangement.Top
-            ) {
-                items(tasks, key = { task -> task.id }) { task ->
-                    TaskItem(
-                        task = task,
-                        updateTask = { updatedTask -> viewModel.updateTask(updatedTask) }
-                    )
-                }
-                item { Divider() }
-                items(doneTasks, key = { task -> task.id }) { task ->
-                    TaskItem(
-                        task = task,
-                        updateTask = { tappedTask -> viewModel.updateTask(tappedTask) },
-                    )
-                }
-            }
+            TaskList(
+                modifier = Modifier.weight(1f).fillMaxHeight(),
+                viewModel = viewModel
+            )
             Divider()
             NewTask { text ->
                 viewModel.addTask(text)
@@ -112,6 +91,35 @@ fun HomeScreen() {
         }
     }
 }
+
+@Composable
+fun TaskList(
+    modifier: Modifier,
+    viewModel: HomeViewModel
+) {
+    val tasks by viewModel.tasks.observeAsState(emptyList())
+    val doneTasks by viewModel.doneTasks.observeAsState(emptyList())
+
+    LazyColumn(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Top
+    ) {
+        items(tasks, key = { task -> task.id }) { task ->
+            TaskItem(
+                task = task,
+                updateTask = { updatedTask -> viewModel.updateTask(updatedTask) }
+            )
+        }
+        item { Divider() }
+        items(doneTasks, key = { task -> task.id }) { task ->
+            TaskItem(
+                task = task,
+                updateTask = { tappedTask -> viewModel.updateTask(tappedTask) },
+            )
+        }
+    }
+}
+
 
 @Composable
 fun TaskItem(
@@ -164,51 +172,7 @@ fun TaskItem(
                 ),
             )
 
-            // 通知ボタン
-            // AndroidOSバージョンによってパーミッションを要求する
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                RequirePermissionNotificationButton(task = task, updateTask = updateTask)
-            } else {
-                NotificationButton(task = task, updateTask = updateTask)
-            }
-
-        }
-    }
-}
-
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@OptIn(ExperimentalPermissionsApi::class)
-@Composable
-fun RequirePermissionNotificationButton(
-    task: Task,
-    updateTask: (Task) -> Unit
-) {
-    if (!task.isCompleted) {
-        if (task.sendNotification) {
-            IconButton(
-                onClick = { updateTask(task.copy(sendNotification = false)) },
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Notifications,
-                    contentDescription = "Send Notification"
-                )
-            }
-        } else {
-            val notificationPermissionState = rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
-
-            IconButton(
-                onClick = {
-                    if (!notificationPermissionState.status.isGranted) {
-                        notificationPermissionState.launchPermissionRequest() // 通知権限の取得
-                    }
-                    updateTask(task.copy(sendNotification = true))
-                },
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Notifications,
-                    contentDescription = "Don't Send Notification"
-                )
-            }
+            if (!task.isCompleted) NotificationButton(task = task, updateTask = updateTask)
         }
     }
 }
@@ -219,26 +183,22 @@ fun NotificationButton(
     task: Task,
     updateTask: (Task) -> Unit
 ) {
-    if (!task.isCompleted) {
-        if (task.sendNotification) {
-            IconButton(
-                onClick = { updateTask(task.copy(sendNotification = false)) },
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Notifications,
-                    contentDescription = "Send Notification"
-                )
+    val notificationPermissionState = rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
+
+    IconButton(
+        onClick = {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                if (!notificationPermissionState.status.isGranted) {
+                    notificationPermissionState.launchPermissionRequest() // 通知権限の取得
+                }
             }
-        } else {
-            IconButton(
-                onClick = { updateTask(task.copy(sendNotification = true)) },
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Notifications,
-                    contentDescription = "Don't Send Notification"
-                )
-            }
-        }
+            updateTask(task.copy(sendNotification = !task.sendNotification)) },
+    ) {
+        val icon = if (task.sendNotification) Icons.Filled.Notifications else Icons.Outlined.Notifications
+        Icon(
+            imageVector = icon,
+            contentDescription = "Notification"
+        )
     }
 }
 
@@ -298,36 +258,10 @@ fun NewTask(onAddTask: (String) -> Unit) {
 
 
 
-//@Preview(showBackground = true)
-//@Composable
-//fun GreetingPreview() {
-//    QuickTodoTheme {
-//        HomeScreen()
-//    }
-//}
-
-@Preview(
-    group = "NewTask",
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO
-)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun NewTaskPreviewLight() {
-    QuickTodoTheme {
-        Surface (
-            color = MaterialTheme.colorScheme.background
-        ) {
-            NewTask(onAddTask = {})
-        }
-    }
-}
-@Preview(
-    group = "NewTask",
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
-@Composable
-fun NewTaskPreviewDark() {
+fun NewTaskPreview() {
     QuickTodoTheme {
         Surface (
             color = MaterialTheme.colorScheme.background
