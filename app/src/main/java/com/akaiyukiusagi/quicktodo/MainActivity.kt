@@ -4,8 +4,19 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.core.view.WindowCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.akaiyukiusagi.quicktodo.ui.screen.home.HomeScreen
+import com.akaiyukiusagi.quicktodo.ui.screen.home.HomeViewModel
 import com.akaiyukiusagi.quicktodo.ui.theme.QuickTodoTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,7 +31,20 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             QuickTodoTheme {
-                HomeScreen()
+                val focusManager = LocalFocusManager.current
+                Surface(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .safeDrawingPadding() // システムバーと被らせない？
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                        ) { focusManager.clearFocus() },
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    val homeViewModel: HomeViewModel = hiltViewModel()
+                    HomeScreen(homeViewModel)
+                }
             }
         }
     }

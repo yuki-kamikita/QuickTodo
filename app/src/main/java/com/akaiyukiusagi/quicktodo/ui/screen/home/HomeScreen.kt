@@ -5,8 +5,6 @@ package com.akaiyukiusagi.quicktodo.ui.screen.home
 import android.Manifest
 import android.content.res.Configuration
 import android.os.Build
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -48,10 +45,10 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.akaiyukiusagi.quicktodo.model.room.entity.Task
 import com.akaiyukiusagi.quicktodo.ui.component.OnPause
 import com.akaiyukiusagi.quicktodo.ui.theme.QuickTodoTheme
@@ -60,34 +57,22 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 
 @Composable
-fun HomeScreen() {
-    val viewModel: HomeViewModel = hiltViewModel()
-    val focusManager = LocalFocusManager.current
-
-    Surface(
+fun HomeScreen(viewModel: IHomeViewModel) {
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .safeDrawingPadding() // システムバーと被らせない？
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-            ) { focusManager.clearFocus() },
-        color = MaterialTheme.colorScheme.background
+            .padding(start = 4.dp, end = 4.dp, top = 4.dp),
+        verticalArrangement = Arrangement.Bottom
     ) {
-        Column(
+        TaskList(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(start = 4.dp, end = 4.dp, top = 4.dp),
-            verticalArrangement = Arrangement.Bottom
-        ) {
-            TaskList(
-                modifier = Modifier.weight(1f).fillMaxHeight(),
-                viewModel = viewModel
-            )
-            Divider()
-            NewTask { text ->
-                viewModel.addTask(text)
-            }
+                .weight(1f)
+                .fillMaxHeight(),
+            viewModel = viewModel
+        )
+        Divider()
+        NewTask { text ->
+            viewModel.addTask(text)
         }
     }
 }
@@ -95,7 +80,7 @@ fun HomeScreen() {
 @Composable
 fun TaskList(
     modifier: Modifier,
-    viewModel: HomeViewModel
+    viewModel: IHomeViewModel
 ) {
     val tasks by viewModel.tasks.observeAsState(emptyList())
     val doneTasks by viewModel.doneTasks.observeAsState(emptyList())
@@ -114,7 +99,7 @@ fun TaskList(
         items(doneTasks, key = { task -> task.id }) { task ->
             TaskItem(
                 task = task,
-                updateTask = { tappedTask -> viewModel.updateTask(tappedTask) },
+                updateTask = { tappedTask -> viewModel.updateTask(tappedTask) }
             )
         }
     }
@@ -172,7 +157,7 @@ fun TaskItem(
                 ),
             )
 
-            if (!task.isCompleted) NotificationButton(task = task, updateTask = updateTask)
+            if (!task.isCompleted) NotificationButton(task, updateTask)
         }
     }
 }
@@ -183,12 +168,16 @@ fun NotificationButton(
     task: Task,
     updateTask: (Task) -> Unit
 ) {
-    val notificationPermissionState = rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
+    // プレビューモードでなければ、通知権限の状態を取得
+    val isPreview = LocalInspectionMode.current
+    val notificationPermissionState = if (!isPreview) {
+        rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
+    } else null // プレビュー時はnull
 
     IconButton(
         onClick = {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                if (!notificationPermissionState.status.isGranted) {
+                if (!notificationPermissionState?.status?.isGranted!!) {
                     notificationPermissionState.launchPermissionRequest() // 通知権限の取得
                 }
             }
@@ -256,12 +245,23 @@ fun NewTask(onAddTask: (String) -> Unit) {
     }
 }
 
-
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showSystemUi = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+@Composable
+fun PreviewScreen() {
+    QuickTodoTheme {
+        Surface {
+            HomeScreen(
+                viewModel = PreviewHomeViewModel()
+            )
+        }
+    }
+}
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun NewTaskPreview() {
+fun PreviewNewTask() {
     QuickTodoTheme {
         Surface (
             color = MaterialTheme.colorScheme.background
