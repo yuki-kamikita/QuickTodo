@@ -57,6 +57,7 @@ import com.akaiyukiusagi.quicktodo.ui.theme.QuickTodoTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import java.time.LocalDateTime
 
 @Composable
 fun HomeScreen(viewModel: IHomeViewModel) {
@@ -138,7 +139,9 @@ fun TaskItem(
             Checkbox(
                 checked = task.isCompleted,
                 onCheckedChange = { isChecked ->
-                    updateTask(task.copy(isCompleted = isChecked))
+                    // そもそもここはcompletedAtでいいのか、updatedAtにすべきなのか悩む。両方入れおくべきな気もする
+                    val completed = if (isChecked) LocalDateTime.now() else null
+                    updateTask(task.copy(isCompleted = isChecked, completedAt = completed))
                 }
             )
 
@@ -177,12 +180,13 @@ fun NotificationButton(
     // プレビューモードでなければ、通知権限の状態を取得
     val isPreview = LocalInspectionMode.current
     val notificationPermissionState = if (!isPreview) {
-        rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
+        rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS) // ここの旧バージョン対応はもういいかな……
     } else null // プレビュー時はnull
 
     IconButton(
         onClick = {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                // FIXME: !!を使わないようにする
                 if (!notificationPermissionState?.status?.isGranted!!) {
                     notificationPermissionState.launchPermissionRequest() // 通知権限の取得
                 }
