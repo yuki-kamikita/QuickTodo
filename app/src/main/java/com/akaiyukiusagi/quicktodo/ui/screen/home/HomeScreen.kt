@@ -139,7 +139,7 @@ fun TaskItem(
     task: Task,
     updateTask: (Task) -> Unit
 ) {
-    var textFieldValue by remember { mutableStateOf(task.content) }
+    var textFieldValue = task.content
 
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
