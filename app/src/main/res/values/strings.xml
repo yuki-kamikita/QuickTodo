@@ -1,5 +1,12 @@
 <resources>
     <string name="app_name">QuickTodo</string>
 
-    <string name="new_task">New Task</string>
+    <string name="new_task">新しいタスク</string>
+
+    <string name="label_today">今日</string>
+    <string name="label_yesterday">昨日</string>
+    <string name="label_day_before_yesterday">一昨日</string>
+    <string name="label_last_7_days">過去7日間</string>
+    <string name="label_last_30_days">過去30日間</string>
+    <string name="label_month">%1$d月</string>
 </resources>

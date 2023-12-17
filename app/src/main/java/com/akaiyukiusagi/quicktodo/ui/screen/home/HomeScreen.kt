@@ -44,6 +44,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
@@ -51,6 +52,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.akaiyukiusagi.quicktodo.R
+import com.akaiyukiusagi.quicktodo.core.extension.category
+import com.akaiyukiusagi.quicktodo.core.extension.view
 import com.akaiyukiusagi.quicktodo.model.room.entity.Task
 import com.akaiyukiusagi.quicktodo.ui.component.OnPause
 import com.akaiyukiusagi.quicktodo.ui.theme.QuickTodoTheme
@@ -84,6 +87,7 @@ fun TaskList(
     modifier: Modifier,
     viewModel: IHomeViewModel
 ) {
+    val context = LocalContext.current
     val tasks by viewModel.tasks.observeAsState(emptyList())
     val doneTasks by viewModel.doneTasks.observeAsState(emptyList())
 
@@ -102,11 +106,29 @@ fun TaskList(
         item { Divider() }
 
         // 完了
-        items(doneTasks, key = { task -> task.id }) { task ->
-            TaskItem(
-                task = task,
-                updateTask = { updatedTask -> viewModel.updateTask(updatedTask) }
-            )
+        var currentCategory: String? = null
+        doneTasks.forEach { task ->
+            val taskCategory = task.completedAt.category(context)
+
+            // カテゴリが変わったら見出しを表示
+            if (taskCategory != currentCategory) {
+                item {
+                    // TODO: 見栄え調整
+                    Text(
+                        text = taskCategory,
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(start = 8.dp, top = 8.dp)
+                    )
+                }
+                currentCategory = taskCategory
+            }
+
+            item {
+                TaskItem(
+                    task = task,
+                    updateTask = { updatedTask -> viewModel.updateTask(updatedTask) }
+                )
+            }
         }
     }
 }
@@ -166,6 +188,7 @@ fun TaskItem(
             )
 
             if (!task.isCompleted) NotificationButton(task, updateTask)
+            else CompletedDateTime(task = task)
         }
     }
 }
@@ -199,6 +222,14 @@ fun NotificationButton(
             contentDescription = "Notification"
         )
     }
+}
+
+@Composable
+fun CompletedDateTime(task: Task) {
+    Text(
+        text = task.completedAt.view(),
+        modifier = Modifier.padding(end = 4.dp)
+    )
 }
 
 /** タスク追加 */

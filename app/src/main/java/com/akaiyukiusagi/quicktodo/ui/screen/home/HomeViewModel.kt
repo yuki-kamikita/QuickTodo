@@ -10,6 +10,9 @@ import com.akaiyukiusagi.quicktodo.model.repository.TaskRepository
 import com.akaiyukiusagi.quicktodo.notification.NotificationUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -68,8 +71,17 @@ class PreviewHomeViewModel: IHomeViewModel {
         )
     }
     override val doneTasks = MutableLiveData<List<Task>>().apply {
+        val today = LocalDateTime.now()
         value = listOf(
-            Task(3, "ccc", true, false)
+            Task(3, "当日", true, false, today),
+            Task(4, "1日前", true, false, today.minusDays(1)),
+            Task(5, "2日前", true, false, today.minusDays(2)),
+            Task(6, "3日前", true, false, today.minusDays(3)),
+            Task(7, "7日前", true, false, today.minusDays(7)),
+            Task(8, "8日前", true, false, today.minusDays(8)),
+            Task(9, "30日前", true, false, today.minusDays(30)),
+            Task(10, "31日前", true, false, today.minusDays(31)),
+            Task(11, "100日前", true, false, today.minusDays(100)),
         )
     }
     override fun addTask(text: String) {}
