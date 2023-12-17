@@ -8,6 +8,7 @@ import androidx.room.Insert
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Update
+import java.time.LocalDateTime
 
 @Entity
 data class Task(
@@ -15,8 +16,8 @@ data class Task(
     val content: String,
     val isCompleted: Boolean = false,
     val sendNotification: Boolean = false,
-//    val completedAt: LocalDateTime,
-//    val createdAt: LocalDateTime,
+    val completedAt: LocalDateTime? = null,
+    val createdAt: LocalDateTime = LocalDateTime.now(),
 )
 
 @Dao
