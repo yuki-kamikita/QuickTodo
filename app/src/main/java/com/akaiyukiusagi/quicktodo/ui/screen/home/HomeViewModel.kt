@@ -8,11 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.akaiyukiusagi.quicktodo.model.room.entity.Task
 import com.akaiyukiusagi.quicktodo.model.repository.TaskRepository
 import com.akaiyukiusagi.quicktodo.notification.NotificationUtil
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberPermissionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.util.jar.Manifest
 import javax.inject.Inject
 
 @HiltViewModel
@@ -63,7 +60,7 @@ interface IHomeViewModel {
     fun updateTask(task: Task)
 }
 
-class PreviewHomeViewModel(): IHomeViewModel {
+class PreviewHomeViewModel: IHomeViewModel {
     override val tasks = MutableLiveData<List<Task>>().apply {
         value = listOf(
             Task(1, "aaa", false, false),

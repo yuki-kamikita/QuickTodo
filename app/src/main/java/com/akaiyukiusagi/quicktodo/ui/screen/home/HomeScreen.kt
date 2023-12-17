@@ -46,9 +46,11 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.akaiyukiusagi.quicktodo.R
 import com.akaiyukiusagi.quicktodo.model.room.entity.Task
 import com.akaiyukiusagi.quicktodo.ui.component.OnPause
 import com.akaiyukiusagi.quicktodo.ui.theme.QuickTodoTheme
@@ -71,12 +73,11 @@ fun HomeScreen(viewModel: IHomeViewModel) {
             viewModel = viewModel
         )
         Divider()
-        NewTask { text ->
-            viewModel.addTask(text)
-        }
+        NewTask { text -> viewModel.addTask(text) }
     }
 }
 
+/** タスク一覧 */
 @Composable
 fun TaskList(
     modifier: Modifier,
@@ -89,23 +90,27 @@ fun TaskList(
         modifier = modifier,
         verticalArrangement = Arrangement.Top
     ) {
+        // 未完
         items(tasks, key = { task -> task.id }) { task ->
             TaskItem(
                 task = task,
                 updateTask = { updatedTask -> viewModel.updateTask(updatedTask) }
             )
         }
+
         item { Divider() }
+
+        // 完了
         items(doneTasks, key = { task -> task.id }) { task ->
             TaskItem(
                 task = task,
-                updateTask = { tappedTask -> viewModel.updateTask(tappedTask) }
+                updateTask = { updatedTask -> viewModel.updateTask(updatedTask) }
             )
         }
     }
 }
 
-
+/** タスク一行 */
 @Composable
 fun TaskItem(
     task: Task,
@@ -162,6 +167,7 @@ fun TaskItem(
     }
 }
 
+/** 通知on/offボタン */
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun NotificationButton(
@@ -191,6 +197,7 @@ fun NotificationButton(
     }
 }
 
+/** タスク追加 */
 @Composable
 fun NewTask(onAddTask: (String) -> Unit) {
     var text by remember { mutableStateOf("") }
@@ -208,7 +215,7 @@ fun NewTask(onAddTask: (String) -> Unit) {
         TextField(
             value = text,
             singleLine = true,
-            label = { Text("New Task") },
+            label = { Text(stringResource(id = R.string.new_task)) },
             onValueChange = { newText -> text = newText },
             modifier = Modifier
                 .weight(1f)
@@ -220,9 +227,7 @@ fun NewTask(onAddTask: (String) -> Unit) {
                 disabledIndicatorColor = Color.Transparent
             ),
             shape = RoundedCornerShape(16.dp),
-            keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done,
-            ),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(
                 onDone = {
                     focusManager.clearFocus()
