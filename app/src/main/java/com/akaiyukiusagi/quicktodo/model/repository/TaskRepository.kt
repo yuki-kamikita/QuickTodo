@@ -1,6 +1,7 @@
 package com.akaiyukiusagi.quicktodo.model.repository
 
 import androidx.lifecycle.LiveData
+import com.akaiyukiusagi.quicktodo.core.LogHelper
 import com.akaiyukiusagi.quicktodo.model.room.entity.Task
 import com.akaiyukiusagi.quicktodo.model.room.entity.TaskDao
 import java.time.LocalDateTime
@@ -14,14 +15,17 @@ class TaskRepository @Inject constructor(private val taskDao: TaskDao)  {
 
     suspend fun insert(task: Task) {
         taskDao.insert(task)
+        LogHelper.d("$task")
     }
 
     suspend fun update(task: Task) {
         taskDao.update(task)
+        LogHelper.d("$task")
     }
 
     suspend fun completed(id: Int) {
         taskDao.markAsCompleted(id, LocalDateTime.now())
+        LogHelper.d("$id")
     }
 
 }
