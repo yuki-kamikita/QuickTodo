@@ -143,9 +143,10 @@ fun TaskItem(
 
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
+    var hadFocus by remember { mutableStateOf(false) }
 
     OnPause {
-        updateTask(task.copy(content = textFieldValue))
+        if (hadFocus) updateTask(task.copy(content = textFieldValue))
     }
 
     Card (
@@ -167,6 +168,8 @@ fun TaskItem(
                 }
             )
 
+//            Text(text = task.id.toString()) // しばらくデバッグ用に入れとく
+
             TextField(
                 value = textFieldValue,
                 singleLine = true,
@@ -178,7 +181,12 @@ fun TaskItem(
                     .weight(1f)
                     .focusRequester(focusRequester)
                     .onFocusChanged { focusState ->
-                        if (!focusState.isFocused) updateTask(task.copy(content = textFieldValue))
+                        if (focusState.isFocused) hadFocus = true
+                        else if (hadFocus) {
+                            // フォーカスが失われた場合にのみ実行
+                            updateTask(task.copy(content = textFieldValue))
+                            hadFocus = false
+                        }
                     },
                 colors = TextFieldDefaults.textFieldColors(
                     focusedIndicatorColor = Color.Transparent,
