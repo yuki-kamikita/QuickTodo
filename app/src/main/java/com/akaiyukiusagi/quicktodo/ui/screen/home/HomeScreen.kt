@@ -3,8 +3,10 @@
 package com.akaiyukiusagi.quicktodo.ui.screen.home
 
 import android.Manifest
+import android.content.Context
 import android.content.res.Configuration
 import android.os.Build
+import android.os.Vibrator
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -56,6 +58,7 @@ import com.akaiyukiusagi.quicktodo.core.extension.category
 import com.akaiyukiusagi.quicktodo.core.extension.view
 import com.akaiyukiusagi.quicktodo.model.room.entity.Task
 import com.akaiyukiusagi.quicktodo.ui.component.OnPause
+import com.akaiyukiusagi.quicktodo.ui.component.performVibration
 import com.akaiyukiusagi.quicktodo.ui.theme.QuickTodoTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -139,6 +142,7 @@ fun TaskItem(
     task: Task,
     updateTask: (Task) -> Unit
 ) {
+    val context = LocalContext.current
     var textFieldValue = task.content
 
     val focusRequester = remember { FocusRequester() }
@@ -165,6 +169,7 @@ fun TaskItem(
                     // そもそもここはcompletedAtでいいのか、updatedAtにすべきなのか悩む。両方入れおくべきな気もする
                     val completed = if (isChecked) LocalDateTime.now() else null
                     updateTask(task.copy(isCompleted = isChecked, completedAt = completed))
+                    performVibration(context, 5)
                 }
             )
 
