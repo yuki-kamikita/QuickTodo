@@ -3,6 +3,7 @@ package com.akaiyukiusagi.quicktodo.model.repository
 import androidx.lifecycle.LiveData
 import com.akaiyukiusagi.quicktodo.model.room.entity.Task
 import com.akaiyukiusagi.quicktodo.model.room.entity.TaskDao
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 class TaskRepository @Inject constructor(private val taskDao: TaskDao)  {
@@ -19,8 +20,8 @@ class TaskRepository @Inject constructor(private val taskDao: TaskDao)  {
         taskDao.update(task)
     }
 
-    suspend fun markAsCompleted(id: Int) {
-        taskDao.markAsCompleted(id)
+    suspend fun completed(id: Int) {
+        taskDao.markAsCompleted(id, LocalDateTime.now())
     }
 
 }

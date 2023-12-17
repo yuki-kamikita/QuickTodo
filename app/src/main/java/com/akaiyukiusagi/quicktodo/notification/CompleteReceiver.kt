@@ -27,7 +27,7 @@ class CompleteReceiver : BroadcastReceiver() {
         }
 
         CoroutineScope(Dispatchers.IO).launch {
-                taskRepository.markAsCompleted(taskId)
+                taskRepository.completed(taskId)
 
                 // 通知をキャンセル
                 val notificationManager = context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
