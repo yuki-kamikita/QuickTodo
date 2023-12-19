@@ -3,10 +3,8 @@
 package com.akaiyukiusagi.quicktodo.ui.screen.home
 
 import android.Manifest
-import android.content.Context
 import android.content.res.Configuration
 import android.os.Build
-import android.os.Vibrator
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -100,7 +98,7 @@ fun TaskList(
     ) {
         // 未完
         items(tasks, key = { task -> task.id }) { task ->
-            TaskItem(
+            TodoItem(
                 task = task,
                 updateTask = { updatedTask -> viewModel.updateTask(updatedTask) }
             )
@@ -127,7 +125,7 @@ fun TaskList(
             }
 
             item {
-                TaskItem(
+                CompletedItem(
                     task = task,
                     updateTask = { updatedTask -> viewModel.updateTask(updatedTask) }
                 )
@@ -136,14 +134,16 @@ fun TaskList(
     }
 }
 
-/** タスク一行 */
+// TODO: カードデザインの共通部分をまとめる
+
+/** 未完の一行 */
 @Composable
-fun TaskItem(
+fun TodoItem(
     task: Task,
     updateTask: (Task) -> Unit
 ) {
     val context = LocalContext.current
-    var textFieldValue = task.content
+    var textFieldValue by remember { mutableStateOf(task.content) }
 
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
@@ -193,6 +193,60 @@ fun TaskItem(
                             hadFocus = false
                         }
                     },
+                colors = TextFieldDefaults.textFieldColors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent
+                ),
+            )
+
+            if (!task.isCompleted) NotificationButton(task, updateTask)
+            else CompletedDateTime(task = task)
+        }
+    }
+}
+
+/** 完了の一行 */
+@Composable
+fun CompletedItem(
+    task: Task,
+    updateTask: (Task) -> Unit
+) {
+    val context = LocalContext.current
+    var textFieldValue = task.content
+
+    val focusManager = LocalFocusManager.current
+
+    Card (
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(4.dp),
+    ) {
+        Row (
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Checkbox(
+                checked = task.isCompleted,
+                onCheckedChange = { isChecked ->
+                    // そもそもここはcompletedAtでいいのか、updatedAtにすべきなのか悩む。両方入れおくべきな気もする
+                    val completed = if (isChecked) LocalDateTime.now() else null
+                    updateTask(task.copy(isCompleted = isChecked, completedAt = completed))
+                    performVibration(context, 5)
+                }
+            )
+
+//            Text(text = task.id.toString()) // しばらくデバッグ用に入れとく
+
+            TextField(
+                value = textFieldValue,
+                singleLine = true,
+                onValueChange = { newText -> textFieldValue = newText },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+                enabled = !task.isCompleted,
+                modifier = Modifier.weight(1f),
                 colors = TextFieldDefaults.textFieldColors(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
