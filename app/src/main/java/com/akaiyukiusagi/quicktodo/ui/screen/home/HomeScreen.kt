@@ -50,12 +50,17 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewDynamicColors
+import androidx.compose.ui.tooling.preview.PreviewFontScale
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import com.akaiyukiusagi.quicktodo.R
 import com.akaiyukiusagi.quicktodo.core.extension.category
 import com.akaiyukiusagi.quicktodo.core.extension.view
 import com.akaiyukiusagi.quicktodo.model.room.entity.Task
 import com.akaiyukiusagi.quicktodo.ui.component.OnPause
+import com.akaiyukiusagi.quicktodo.ui.component.PreviewComponent
 import com.akaiyukiusagi.quicktodo.ui.component.performVibration
 import com.akaiyukiusagi.quicktodo.ui.theme.QuickTodoTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -331,28 +336,36 @@ fun NewTask(onAddTask: (String) -> Unit = {}) {
     }
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showSystemUi = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
+
+@PreviewLightDark
+@PreviewDynamicColors
+@Preview(fontScale = 2.0F)
 @Composable
-fun PreviewScreen() {
-    QuickTodoTheme {
-        Surface {
-            HomeScreen(
-                viewModel = PreviewHomeViewModel()
-            )
+fun PreviewScreen(defaultState: Boolean = true) {
+    PreviewComponent {
+        HomeScreen(
+            viewModel = PreviewHomeViewModel()
+        )
+    }
+}
+
+@PreviewLightDark
+@PreviewDynamicColors
+@Composable
+fun PreviewCard() {
+    PreviewComponent {
+        Column {
+            CardDesign(false, "未完了のタスク") {}
+            CardDesign(true, "完了したタスク") {}
         }
     }
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@PreviewLightDark
+@PreviewDynamicColors
 @Composable
 fun PreviewNewTask() {
-    QuickTodoTheme {
-        Surface (
-            color = MaterialTheme.colorScheme.background
-        ) {
-            NewTask(onAddTask = {})
-        }
+    PreviewComponent {
+        NewTask()
     }
 }
