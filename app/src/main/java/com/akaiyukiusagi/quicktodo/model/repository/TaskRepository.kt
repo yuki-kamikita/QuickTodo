@@ -23,7 +23,7 @@ class TaskRepository @Inject constructor(private val taskDao: TaskDao)  {
         LogHelper.d("$task")
     }
 
-    suspend fun completed(id: Int) {
+    suspend fun complete(id: Int) {
         taskDao.markAsCompleted(id, LocalDateTime.now())
         LogHelper.d("$id")
     }

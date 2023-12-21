@@ -142,21 +142,65 @@ fun TodoItem(
     task: Task,
     updateTask: (Task) -> Unit
 ) {
-    val context = LocalContext.current
+    // 編集可能にするため、rememberにする
     var textFieldValue by remember { mutableStateOf(task.content) }
 
+    CardDesign(
+        isChecked = false,
+        text = textFieldValue,
+        changeCheck = { updateTask(task.copy(isCompleted = true, completedAt = LocalDateTime.now())) },
+        offFocus = { updateTask(task.copy(content = textFieldValue)) },
+        onPause = { updateTask(task.copy(content = textFieldValue)) },
+        changeText = { newText -> textFieldValue = newText }
+    ) {
+        NotificationButton(task, updateTask)
+    }
+}
+
+/** 完了の一行 */
+@Composable
+fun CompletedItem(
+    task: Task,
+    updateTask: (Task) -> Unit
+) {
+    // ORDER BY completedAt のせいか、チェックつけ外しすると表示するtaskが狂ったのでrememberを外す
+    val textFieldValue = task.content
+
+    CardDesign(
+        isChecked = true,
+        text = textFieldValue,
+        changeCheck = { updateTask(task.copy(isCompleted = false, completedAt = null)) },
+        suffix = {
+            Text(
+                text = task.completedAt.view(),
+                modifier = Modifier.padding(end = 4.dp)
+            )
+        }
+    )
+}
+
+/** 完/未完 の共通部分 */
+@Composable
+fun CardDesign(
+    isChecked: Boolean,
+    text: String,
+    changeCheck: () -> Unit = {},
+    offFocus: () -> Unit = {},
+    onPause: () -> Unit = {},
+    changeText: (String) -> Unit = {},
+    suffix: @Composable () -> Unit
+) {
+    val context = LocalContext.current
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     var hadFocus by remember { mutableStateOf(false) }
 
-    OnPause {
-        if (hadFocus) updateTask(task.copy(content = textFieldValue))
-    }
+    OnPause { if (hadFocus) onPause() }
 
     Card (
         modifier = Modifier
             .fillMaxWidth()
-            .padding(4.dp),
+            .padding(4.dp)
     ) {
         Row (
             modifier = Modifier.fillMaxWidth(),
@@ -164,11 +208,9 @@ fun TodoItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Checkbox(
-                checked = task.isCompleted,
-                onCheckedChange = { isChecked ->
-                    // そもそもここはcompletedAtでいいのか、updatedAtにすべきなのか悩む。両方入れおくべきな気もする
-                    val completed = if (isChecked) LocalDateTime.now() else null
-                    updateTask(task.copy(isCompleted = isChecked, completedAt = completed))
+                checked = isChecked,
+                onCheckedChange = {
+                    changeCheck()
                     performVibration(context, 5)
                 }
             )
@@ -176,12 +218,12 @@ fun TodoItem(
 //            Text(text = task.id.toString()) // しばらくデバッグ用に入れとく
 
             TextField(
-                value = textFieldValue,
+                value = text,
                 singleLine = true,
-                onValueChange = { newText -> textFieldValue = newText },
+                onValueChange = changeText,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-                enabled = !task.isCompleted,
+                enabled = !isChecked,
                 modifier = Modifier
                     .weight(1f)
                     .focusRequester(focusRequester)
@@ -189,7 +231,7 @@ fun TodoItem(
                         if (focusState.isFocused) hadFocus = true
                         else if (hadFocus) {
                             // フォーカスが失われた場合にのみ実行
-                            updateTask(task.copy(content = textFieldValue))
+                            offFocus()
                             hadFocus = false
                         }
                     },
@@ -200,64 +242,10 @@ fun TodoItem(
                 ),
             )
 
-            if (!task.isCompleted) NotificationButton(task, updateTask)
-            else CompletedDateTime(task = task)
+            suffix()
         }
     }
-}
 
-/** 完了の一行 */
-@Composable
-fun CompletedItem(
-    task: Task,
-    updateTask: (Task) -> Unit
-) {
-    val context = LocalContext.current
-    var textFieldValue = task.content
-
-    val focusManager = LocalFocusManager.current
-
-    Card (
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(4.dp),
-    ) {
-        Row (
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Checkbox(
-                checked = task.isCompleted,
-                onCheckedChange = { isChecked ->
-                    // そもそもここはcompletedAtでいいのか、updatedAtにすべきなのか悩む。両方入れおくべきな気もする
-                    val completed = if (isChecked) LocalDateTime.now() else null
-                    updateTask(task.copy(isCompleted = isChecked, completedAt = completed))
-                    performVibration(context, 5)
-                }
-            )
-
-//            Text(text = task.id.toString()) // しばらくデバッグ用に入れとく
-
-            TextField(
-                value = textFieldValue,
-                singleLine = true,
-                onValueChange = { newText -> textFieldValue = newText },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-                enabled = !task.isCompleted,
-                modifier = Modifier.weight(1f),
-                colors = TextFieldDefaults.textFieldColors(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent
-                ),
-            )
-
-            if (!task.isCompleted) NotificationButton(task, updateTask)
-            else CompletedDateTime(task = task)
-        }
-    }
 }
 
 /** 通知on/offボタン */
@@ -291,17 +279,9 @@ fun NotificationButton(
     }
 }
 
-@Composable
-fun CompletedDateTime(task: Task) {
-    Text(
-        text = task.completedAt.view(),
-        modifier = Modifier.padding(end = 4.dp)
-    )
-}
-
 /** タスク追加 */
 @Composable
-fun NewTask(onAddTask: (String) -> Unit) {
+fun NewTask(onAddTask: (String) -> Unit = {}) {
     var text by remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
@@ -345,7 +325,6 @@ fun NewTask(onAddTask: (String) -> Unit) {
                 onAddTask(text)
                 text = ""
             },
-//            modifier = Modifier.padding(start = 8.dp)
         ) {
             Icon(imageVector = Icons.Default.Send, contentDescription = "Send")
         }
