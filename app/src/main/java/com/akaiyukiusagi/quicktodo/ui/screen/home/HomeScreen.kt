@@ -3,7 +3,6 @@
 package com.akaiyukiusagi.quicktodo.ui.screen.home
 
 import android.Manifest
-import android.content.res.Configuration
 import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,13 +27,12 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -51,9 +49,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewDynamicColors
-import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewLightDark
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import com.akaiyukiusagi.quicktodo.R
 import com.akaiyukiusagi.quicktodo.core.extension.category
@@ -62,7 +58,6 @@ import com.akaiyukiusagi.quicktodo.model.room.entity.Task
 import com.akaiyukiusagi.quicktodo.ui.component.OnPause
 import com.akaiyukiusagi.quicktodo.ui.component.PreviewComponent
 import com.akaiyukiusagi.quicktodo.ui.component.performVibration
-import com.akaiyukiusagi.quicktodo.ui.theme.QuickTodoTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -94,8 +89,8 @@ fun TaskList(
     viewModel: IHomeViewModel
 ) {
     val context = LocalContext.current
-    val tasks by viewModel.tasks.observeAsState(emptyList())
-    val doneTasks by viewModel.doneTasks.observeAsState(emptyList())
+    val tasks by viewModel.tasks.collectAsState(initial = emptyList())
+    val doneTasks by viewModel.doneTasks.collectAsState(initial = emptyList())
 
     LazyColumn(
         modifier = modifier,
@@ -114,7 +109,7 @@ fun TaskList(
         // 完了
         var currentCategory: String? = null
         doneTasks.forEach { task ->
-            val taskCategory = task.completedAt.category(context)
+            val taskCategory = task.completedAt?.category(context) ?: "" // FIXME: ここダメ
 
             // カテゴリが変わったら見出しを表示
             if (taskCategory != currentCategory) {
@@ -139,7 +134,6 @@ fun TaskList(
     }
 }
 
-// TODO: カードデザインの共通部分をまとめる
 
 /** 未完の一行 */
 @Composable
@@ -185,6 +179,7 @@ fun CompletedItem(
 }
 
 /** 完/未完 の共通部分 */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CardDesign(
     isChecked: Boolean,

@@ -9,6 +9,8 @@ import com.akaiyukiusagi.quicktodo.model.room.entity.Task
 import com.akaiyukiusagi.quicktodo.model.repository.TaskRepository
 import com.akaiyukiusagi.quicktodo.notification.NotificationUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -20,22 +22,24 @@ class HomeViewModel @Inject constructor(
     private val taskRepository: TaskRepository,
     private val notificationUtil: NotificationUtil
 ) : ViewModel(), IHomeViewModel, LifecycleObserver {
-    override val tasks: LiveData<List<Task>> = taskRepository.todoTasks
-    override val doneTasks: LiveData<List<Task>> = taskRepository.doneTasks
-    private val notificationTasks: LiveData<List<Task>> = taskRepository.notificationTasks
+    override val tasks: Flow<List<Task>> = taskRepository.todoTasks
+    override val doneTasks: Flow<List<Task>> = taskRepository.doneTasks
+    private val notificationTasksFlow: Flow<List<Task>> = taskRepository.notificationTasks
 
     init {
-        // TODO: リマインド機能
-        // 未完了のTODOが変更されたときに通知を送る
-        notificationTasks.observeForever { tasks ->
-            for (task in tasks) {
-                notificationUtil.pushNotification(task)
+        viewModelScope.launch {
+            notificationTasksFlow.collect { tasks ->
+                tasks.forEach { task ->
+                    notificationUtil.pushNotification(task)
+                }
             }
         }
-        // 完了済みのものは通知から消す
-        doneTasks.observeForever { doneTasks ->
-            for (task in doneTasks) {
-                notificationUtil.removePushedNotification(task)
+
+        viewModelScope.launch {
+            doneTasks.collect { doneTasks ->
+                doneTasks.forEach { task ->
+                    notificationUtil.removePushedNotification(task)
+                }
             }
         }
     }
@@ -53,26 +57,27 @@ class HomeViewModel @Inject constructor(
             if (!task.sendNotification) notificationUtil.removePushedNotification(task)
         }
     }
-
 }
 
+
 interface IHomeViewModel {
-    val tasks: LiveData<List<Task>>
-    val doneTasks: LiveData<List<Task>>
+    val tasks: Flow<List<Task>>
+    val doneTasks: Flow<List<Task>>
     fun addTask(text: String)
     fun updateTask(task: Task)
 }
 
 class PreviewHomeViewModel: IHomeViewModel {
-    override val tasks = MutableLiveData<List<Task>>().apply {
-        value = listOf(
+    override val tasks: Flow<List<Task>> = flowOf(
+        listOf(
             Task(1, "aaa", false, false),
             Task(2, "bbb", false, true)
         )
-    }
-    override val doneTasks = MutableLiveData<List<Task>>().apply {
-        val today = LocalDateTime.now()
-        value = listOf(
+    )
+
+    private val today = LocalDateTime.now()
+    override val doneTasks: Flow<List<Task>> = flowOf(
+        listOf(
             Task(3, "当日", true, false, today),
             Task(4, "1日前", true, false, today.minusDays(1)),
             Task(5, "2日前", true, false, today.minusDays(2)),
@@ -83,7 +88,8 @@ class PreviewHomeViewModel: IHomeViewModel {
             Task(10, "31日前", true, false, today.minusDays(31)),
             Task(11, "100日前", true, false, today.minusDays(100)),
         )
-    }
+    )
+
     override fun addTask(text: String) {}
 
     override fun updateTask(task: Task) {}
