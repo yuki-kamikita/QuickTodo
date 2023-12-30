@@ -1,6 +1,6 @@
 # テスト周り
 
-カバレッジ更新に必要かも
+カバレッジ更新
 ```
 ./gradlew createDebugCoverageReport
 ```
