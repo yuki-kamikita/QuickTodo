@@ -1,4 +1,4 @@
-package com.akaiyukiusagi.quicktodo.model.room
+package com.akaiyukiusagi.quicktodo.data_layer.room
 
 import androidx.room.TypeConverter
 import java.time.LocalDateTime

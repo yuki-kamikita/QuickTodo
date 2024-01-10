@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.akaiyukiusagi.quicktodo.ui.screen.home
+package com.akaiyukiusagi.quicktodo.ui_layer.screen.home
 
 import android.Manifest
 import android.os.Build
@@ -54,10 +54,10 @@ import androidx.compose.ui.unit.dp
 import com.akaiyukiusagi.quicktodo.R
 import com.akaiyukiusagi.quicktodo.core.extension.category
 import com.akaiyukiusagi.quicktodo.core.extension.view
-import com.akaiyukiusagi.quicktodo.model.room.entity.Task
-import com.akaiyukiusagi.quicktodo.ui.component.OnPause
-import com.akaiyukiusagi.quicktodo.ui.component.PreviewComponent
-import com.akaiyukiusagi.quicktodo.ui.component.performVibration
+import com.akaiyukiusagi.quicktodo.data_layer.room.entity.Task
+import com.akaiyukiusagi.quicktodo.ui_layer.component.OnPause
+import com.akaiyukiusagi.quicktodo.ui_layer.component.PreviewComponent
+import com.akaiyukiusagi.quicktodo.ui_layer.component.performVibration
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState

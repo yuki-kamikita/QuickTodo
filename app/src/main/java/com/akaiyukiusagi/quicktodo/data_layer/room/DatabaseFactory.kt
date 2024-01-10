@@ -1,4 +1,4 @@
-package com.akaiyukiusagi.quicktodo.model.room
+package com.akaiyukiusagi.quicktodo.data_layer.room
 
 import android.content.Context
 import androidx.room.Database
@@ -7,8 +7,8 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.akaiyukiusagi.quicktodo.model.room.entity.Task
-import com.akaiyukiusagi.quicktodo.model.room.entity.TaskDao
+import com.akaiyukiusagi.quicktodo.data_layer.room.entity.Task
+import com.akaiyukiusagi.quicktodo.data_layer.room.entity.TaskDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

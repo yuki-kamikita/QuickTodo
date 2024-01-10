@@ -1,4 +1,4 @@
-package com.akaiyukiusagi.quicktodo.ui.theme
+package com.akaiyukiusagi.quicktodo.ui_layer.theme
 
 import androidx.compose.ui.graphics.Color
 

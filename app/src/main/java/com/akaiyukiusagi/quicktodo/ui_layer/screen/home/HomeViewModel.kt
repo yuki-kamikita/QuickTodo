@@ -1,20 +1,16 @@
-package com.akaiyukiusagi.quicktodo.ui.screen.home
+package com.akaiyukiusagi.quicktodo.ui_layer.screen.home
 
 import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.akaiyukiusagi.quicktodo.model.room.entity.Task
-import com.akaiyukiusagi.quicktodo.model.repository.TaskRepository
-import com.akaiyukiusagi.quicktodo.notification.NotificationUtil
+import com.akaiyukiusagi.quicktodo.data_layer.room.entity.Task
+import com.akaiyukiusagi.quicktodo.data_layer.repository.TaskRepository
+import com.akaiyukiusagi.quicktodo.ui_layer.notification.NotificationUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel

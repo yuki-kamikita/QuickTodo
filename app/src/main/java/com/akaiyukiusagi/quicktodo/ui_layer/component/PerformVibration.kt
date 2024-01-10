@@ -1,4 +1,4 @@
-package com.akaiyukiusagi.quicktodo.ui.component
+package com.akaiyukiusagi.quicktodo.ui_layer.component
 
 import android.content.Context
 import android.os.VibrationEffect

@@ -1,4 +1,4 @@
-package com.akaiyukiusagi.quicktodo.notification
+package com.akaiyukiusagi.quicktodo.ui_layer.notification
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -8,7 +8,7 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import com.akaiyukiusagi.quicktodo.MainActivity
 import com.akaiyukiusagi.quicktodo.R
-import com.akaiyukiusagi.quicktodo.model.room.entity.Task
+import com.akaiyukiusagi.quicktodo.data_layer.room.entity.Task
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

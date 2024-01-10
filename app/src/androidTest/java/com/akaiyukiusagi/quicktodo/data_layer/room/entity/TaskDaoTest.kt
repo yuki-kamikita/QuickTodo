@@ -1,10 +1,10 @@
-package com.akaiyukiusagi.quicktodo.model.room.entity
+package com.akaiyukiusagi.quicktodo.data_layer.room.entity
 
 import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.akaiyukiusagi.quicktodo.core.LogHelper
-import com.akaiyukiusagi.quicktodo.model.room.DatabaseFactory
+import com.akaiyukiusagi.quicktodo.data_layer.room.DatabaseFactory
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 

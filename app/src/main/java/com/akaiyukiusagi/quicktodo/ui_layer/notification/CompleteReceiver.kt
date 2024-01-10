@@ -1,10 +1,10 @@
-package com.akaiyukiusagi.quicktodo.notification
+package com.akaiyukiusagi.quicktodo.ui_layer.notification
 
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.akaiyukiusagi.quicktodo.model.repository.TaskRepository
+import com.akaiyukiusagi.quicktodo.data_layer.repository.TaskRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

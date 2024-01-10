@@ -1,4 +1,4 @@
-package com.akaiyukiusagi.quicktodo.model.room.entity
+package com.akaiyukiusagi.quicktodo.data_layer.room.entity
 
 import androidx.room.Dao
 import androidx.room.Delete

@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".notification.CompleteReceiver"
+        <receiver android:name=".ui_layer.notification.CompleteReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.akaiyukiusagi.quicktodo.ACTION_COMPLETE"/>

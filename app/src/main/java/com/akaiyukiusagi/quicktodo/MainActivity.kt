@@ -15,9 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.akaiyukiusagi.quicktodo.ui.screen.home.HomeScreen
-import com.akaiyukiusagi.quicktodo.ui.screen.home.HomeViewModel
-import com.akaiyukiusagi.quicktodo.ui.theme.QuickTodoTheme
+import com.akaiyukiusagi.quicktodo.ui_layer.screen.home.HomeScreen
+import com.akaiyukiusagi.quicktodo.ui_layer.screen.home.HomeViewModel
+import com.akaiyukiusagi.quicktodo.ui_layer.theme.QuickTodoTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

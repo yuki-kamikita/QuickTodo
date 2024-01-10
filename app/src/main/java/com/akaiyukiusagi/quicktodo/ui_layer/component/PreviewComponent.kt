@@ -1,9 +1,9 @@
-package com.akaiyukiusagi.quicktodo.ui.component
+package com.akaiyukiusagi.quicktodo.ui_layer.component
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import com.akaiyukiusagi.quicktodo.ui.theme.QuickTodoTheme
+import com.akaiyukiusagi.quicktodo.ui_layer.theme.QuickTodoTheme
 
 @Composable
 fun PreviewComponent(content: @Composable () -> Unit) {

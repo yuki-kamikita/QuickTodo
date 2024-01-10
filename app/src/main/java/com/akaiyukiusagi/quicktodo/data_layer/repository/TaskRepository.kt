@@ -1,8 +1,8 @@
-package com.akaiyukiusagi.quicktodo.model.repository
+package com.akaiyukiusagi.quicktodo.data_layer.repository
 
 import com.akaiyukiusagi.quicktodo.core.LogHelper
-import com.akaiyukiusagi.quicktodo.model.room.entity.Task
-import com.akaiyukiusagi.quicktodo.model.room.entity.TaskDao
+import com.akaiyukiusagi.quicktodo.data_layer.room.entity.Task
+import com.akaiyukiusagi.quicktodo.data_layer.room.entity.TaskDao
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
 import javax.inject.Inject
