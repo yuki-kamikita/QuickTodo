@@ -2,6 +2,9 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="PreviewScreen - Light">
+        <State />
+      </entry>
       <entry key="app">
         <State />
       </entry>
@@ -12,12 +15,6 @@
         <State />
       </entry>
       <entry key="getTodoTasksTest()">
-        <State />
-      </entry>
-      <entry key="insertAndGetAllTasks()">
-        <State />
-      </entry>
-      <entry key="updateTaskTest()">
         <State />
       </entry>
     </value>

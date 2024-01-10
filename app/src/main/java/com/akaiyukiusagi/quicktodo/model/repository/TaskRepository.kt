@@ -7,24 +7,24 @@ import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
 import javax.inject.Inject
 
-class TaskRepository @Inject constructor(private val taskDao: TaskDao)  {
-    val tasks: Flow<List<Task>> = taskDao.getAllTasks()
-    val todoTasks: Flow<List<Task>> = taskDao.getTodoTasks()
-    val doneTasks: Flow<List<Task>> = taskDao.getDoneTasks()
-    val notificationTasks: Flow<List<Task>> = taskDao.getNotificationTasks()
+class TaskRepository @Inject constructor(private val taskLocalDataSource: TaskDao)  {
+    val tasks: Flow<List<Task>> = taskLocalDataSource.getAllTasks()
+    val todoTasks: Flow<List<Task>> = taskLocalDataSource.getTodoTasks()
+    val doneTasks: Flow<List<Task>> = taskLocalDataSource.getDoneTasks()
+    val notificationTasks: Flow<List<Task>> = taskLocalDataSource.getNotificationTasks()
 
     suspend fun insert(task: Task) {
-        taskDao.insert(task)
+        taskLocalDataSource.insert(task)
         LogHelper.d("$task")
     }
 
     suspend fun update(task: Task) {
-        taskDao.update(task)
+        taskLocalDataSource.update(task)
         LogHelper.d("$task")
     }
 
     suspend fun complete(id: Int) {
-        taskDao.markAsCompleted(id, LocalDateTime.now())
+        taskLocalDataSource.markAsCompleted(id, LocalDateTime.now())
         LogHelper.d("$id")
     }
 
