@@ -71,6 +71,7 @@ import java.time.LocalDateTime
 import com.akaiyukiusagi.quicktodo.ui_layer.component.SwipeToDelete
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(viewModel: IHomeViewModel) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -109,6 +110,9 @@ fun TaskList(
     val doneTasks by viewModel.doneTasks.collectAsState(initial = emptyList())
     val scope = rememberCoroutineScope()
 
+    val message = stringResource(id = R.string.delete_suffix)
+    val label = stringResource(id = R.string.undo)
+
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.Top
@@ -123,9 +127,9 @@ fun TaskList(
 
                     scope.launch {
                         val result = snackbarHostState.showSnackbar(
-                            message = "${task.content} が削除されました",
-                            actionLabel = "元に戻す",
-                            duration = SnackbarDuration.Long
+                            message = task.content + message,
+                            actionLabel = label,
+                            duration = SnackbarDuration.Short
                         )
                         if (result == SnackbarResult.ActionPerformed) {
                             viewModel.addTask(task)
@@ -164,9 +168,9 @@ fun TaskList(
 
                         scope.launch {
                             val result = snackbarHostState.showSnackbar(
-                                message = "${task.content} が削除されました",
-                                actionLabel = "元に戻す",
-                                duration = SnackbarDuration.Long
+                                message = task.content + message,
+                                actionLabel = label,
+                                duration = SnackbarDuration.Short
                             )
                             if (result == SnackbarResult.ActionPerformed) {
                                 viewModel.addTask(task)
@@ -189,7 +193,6 @@ fun TodoItem(
 ) {
     // 編集可能にするため、rememberにする
     var textFieldValue by remember { mutableStateOf(task.content) }
-    val scope = rememberCoroutineScope()
 
     CardDesign(
         isChecked = false,

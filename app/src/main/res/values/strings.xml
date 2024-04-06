@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">QuickTodo</string>
 
+    <string name="delete_suffix"> が削除されました</string>
+    <string name="undo">元に戻す</string>
+
     <string name="new_task">新しいタスク</string>
 
     <string name="label_today">今日</string>
