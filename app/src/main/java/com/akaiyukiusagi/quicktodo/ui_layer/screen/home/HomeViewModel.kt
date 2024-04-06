@@ -53,6 +53,12 @@ class HomeViewModel @Inject constructor(
             if (!task.sendNotification) notificationUtil.removePushedNotification(task)
         }
     }
+
+    override fun deleteTask(task: Task) {
+        viewModelScope.launch {
+            taskRepository.delete(task)
+        }
+    }
 }
 
 
@@ -61,6 +67,7 @@ interface IHomeViewModel {
     val doneTasks: Flow<List<Task>>
     fun addTask(text: String)
     fun updateTask(task: Task)
+    fun deleteTask(task: Task)
 }
 
 class PreviewHomeViewModel: IHomeViewModel {
@@ -89,6 +96,5 @@ class PreviewHomeViewModel: IHomeViewModel {
     override fun addTask(text: String) {}
 
     override fun updateTask(task: Task) {}
-
-//    override fun taskComplete(task: Task) {}
+    override fun deleteTask(task: Task) {}
 }

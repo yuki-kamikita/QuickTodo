@@ -15,17 +15,22 @@ class TaskRepository @Inject constructor(private val taskLocalDataSource: TaskDa
 
     suspend fun insert(task: Task) {
         taskLocalDataSource.insert(task)
-        LogHelper.d("$task")
+        LogHelper.d("insert: $task")
     }
 
     suspend fun update(task: Task) {
         taskLocalDataSource.update(task)
-        LogHelper.d("$task")
+        LogHelper.d("update: $task")
     }
 
     suspend fun complete(id: Int) {
         taskLocalDataSource.markAsCompleted(id, LocalDateTime.now())
-        LogHelper.d("$id")
+        LogHelper.d("complete: $id")
+    }
+
+    suspend fun delete(task: Task) {
+        taskLocalDataSource.delete(task)
+        LogHelper.d("delete: $task")
     }
 
 }

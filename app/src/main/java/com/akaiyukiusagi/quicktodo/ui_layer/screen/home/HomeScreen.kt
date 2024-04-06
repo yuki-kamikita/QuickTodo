@@ -62,6 +62,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import java.time.LocalDateTime
+import com.akaiyukiusagi.quicktodo.ui_layer.component.SwipeToDelete
 
 @Composable
 fun HomeScreen(viewModel: IHomeViewModel) {
@@ -100,7 +101,8 @@ fun TaskList(
         items(tasks, key = { task -> task.id }) { task ->
             TodoItem(
                 task = task,
-                updateTask = { updatedTask -> viewModel.updateTask(updatedTask) }
+                updateTask = { updatedTask -> viewModel.updateTask(updatedTask) },
+                onDelete = { deleteTask -> viewModel.deleteTask(deleteTask)}
             )
         }
 
@@ -127,7 +129,8 @@ fun TaskList(
             item {
                 CompletedItem(
                     task = task,
-                    updateTask = { updatedTask -> viewModel.updateTask(updatedTask) }
+                    updateTask = { updatedTask -> viewModel.updateTask(updatedTask) },
+                    onDelete = { deleteTask -> viewModel.deleteTask(deleteTask)}
                 )
             }
         }
@@ -139,7 +142,8 @@ fun TaskList(
 @Composable
 fun TodoItem(
     task: Task,
-    updateTask: (Task) -> Unit
+    updateTask: (Task) -> Unit,
+    onDelete: (Task) -> Unit,
 ) {
     // 編集可能にするため、rememberにする
     var textFieldValue by remember { mutableStateOf(task.content) }
@@ -150,6 +154,7 @@ fun TodoItem(
         changeCheck = { updateTask(task.copy(isCompleted = true, completedAt = LocalDateTime.now())) },
         offFocus = { updateTask(task.copy(content = textFieldValue)) },
         onPause = { updateTask(task.copy(content = textFieldValue)) },
+        onDelete = { onDelete(task)},
         changeText = { newText -> textFieldValue = newText }
     ) {
         NotificationButton(task, updateTask)
@@ -160,7 +165,8 @@ fun TodoItem(
 @Composable
 fun CompletedItem(
     task: Task,
-    updateTask: (Task) -> Unit
+    updateTask: (Task) -> Unit,
+    onDelete: (Task) -> Unit,
 ) {
     // ORDER BY completedAt のせいか、チェックつけ外しすると表示するtaskが狂ったのでrememberを外す
     val textFieldValue = task.content
@@ -169,6 +175,7 @@ fun CompletedItem(
         isChecked = true,
         text = textFieldValue,
         changeCheck = { updateTask(task.copy(isCompleted = false, completedAt = null)) },
+        onDelete = { onDelete(task)},
         suffix = {
             Text(
                 text = task.completedAt.view(),
@@ -188,6 +195,7 @@ fun CardDesign(
     offFocus: () -> Unit = {},
     onPause: () -> Unit = {},
     changeText: (String) -> Unit = {},
+    onDelete: () -> Unit = {},
     suffix: @Composable () -> Unit
 ) {
     val context = LocalContext.current
@@ -197,52 +205,53 @@ fun CardDesign(
 
     OnPause { if (hadFocus) onPause() }
 
-    Card (
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(4.dp)
+    SwipeToDelete(
+        modifier = Modifier.padding(4.dp),
+        onDelete = onDelete
     ) {
-        Row (
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Checkbox(
-                checked = isChecked,
-                onCheckedChange = {
-                    changeCheck()
-                    performVibration(context, 5)
-                }
-            )
+        Card (modifier = Modifier.fillMaxWidth()) {
+            Row (
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Checkbox(
+                    checked = isChecked,
+                    onCheckedChange = {
+                        changeCheck()
+                        performVibration(context, 5)
+                    }
+                )
 
 //            Text(text = task.id.toString()) // しばらくデバッグ用に入れとく
 
-            TextField(
-                value = text,
-                singleLine = true,
-                onValueChange = changeText,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-                enabled = !isChecked,
-                modifier = Modifier
-                    .weight(1f)
-                    .focusRequester(focusRequester)
-                    .onFocusChanged { focusState ->
-                        if (focusState.isFocused) hadFocus = true
-                        else if (hadFocus) {
-                            // フォーカスが失われた場合にのみ実行
-                            offFocus()
-                            hadFocus = false
-                        }
-                    },
-                colors = TextFieldDefaults.textFieldColors(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent
-                ),
-            )
+                TextField(
+                    value = text,
+                    singleLine = true,
+                    onValueChange = changeText,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+                    enabled = !isChecked,
+                    modifier = Modifier
+                        .weight(1f)
+                        .focusRequester(focusRequester)
+                        .onFocusChanged { focusState ->
+                            if (focusState.isFocused) hadFocus = true
+                            else if (hadFocus) {
+                                // フォーカスが失われた場合にのみ実行
+                                offFocus()
+                                hadFocus = false
+                            }
+                        },
+                    colors = TextFieldDefaults.textFieldColors(
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent
+                    ),
+                )
 
-            suffix()
+                suffix()
+            }
         }
     }
 
