@@ -8,6 +8,7 @@ import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
+import androidx.compose.foundation.gestures.snapTo
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,8 +24,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -70,11 +73,22 @@ fun SwipeToDelete(
         )
     }
 
+    // 削除が実行されたらスワイプを元に戻す
+    // LazyColumnで使った時に削除後に下の行にスワイプ状態が残ってしまったため追加
+    var triggerReset by remember { mutableStateOf(false) }
+    val onDeleteAndReset = {
+        onDelete()
+        triggerReset = !triggerReset
+    }
+    LaunchedEffect(triggerReset) {
+        state.snapTo(false)
+    }
+
     Box(modifier = modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
-                .clickable(onClick = onDelete)
+                .clickable(onClick = onDeleteAndReset)
         ) {
             // 手前レイヤーの角R埋め用
             Spacer (modifier = Modifier
