@@ -45,10 +45,10 @@ class NotificationUtil(@ApplicationContext private val context: Context) {
         val notification = NotificationCompat.Builder(context, channelId)
             .setContentTitle(task.content)
 //            .setContentText(task.content) // TODO: 長くなったらこっちにずらす
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.baseline_checklist_24)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC) // ロック画面で内容を表示 https://developer.android.com/training/notify-user/build-notification?hl=ja#lockscreenNotification
             .setContentIntent(pendingIntentOpen) // 通知タップ時
-            .addAction(R.drawable.ic_launcher_foreground, "Done", pendingIntentDone) // 完了ボタン
+            .addAction(R.drawable.baseline_checklist_24, "Done", pendingIntentDone) // 完了ボタン
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setOngoing(true) // 通知をスワイプで消さない Android14以降はスワイプすると消える
             .setAutoCancel(false) // スワイプで消さない 効いてはいない お守り
