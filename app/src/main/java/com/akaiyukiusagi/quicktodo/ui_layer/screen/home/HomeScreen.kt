@@ -27,6 +27,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -35,6 +40,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -63,23 +69,31 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import java.time.LocalDateTime
 import com.akaiyukiusagi.quicktodo.ui_layer.component.SwipeToDelete
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(viewModel: IHomeViewModel) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(start = 4.dp, end = 4.dp, top = 4.dp),
-        verticalArrangement = Arrangement.Bottom
-    ) {
-        TaskList(
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    Scaffold (
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ){ padding ->
+        Column(
             modifier = Modifier
-                .weight(1f)
-                .fillMaxHeight(),
-            viewModel = viewModel
-        )
-        Divider()
-        NewTask { text -> viewModel.addTask(text) }
+                .fillMaxSize()
+                .padding(start = 4.dp, end = 4.dp, top = 4.dp),
+            verticalArrangement = Arrangement.Bottom
+        ) {
+            TaskList(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(),
+                viewModel = viewModel,
+                snackbarHostState = snackbarHostState
+            )
+            Divider()
+            NewTask { text -> viewModel.addTask(text) }
+        }
     }
 }
 
@@ -87,11 +101,13 @@ fun HomeScreen(viewModel: IHomeViewModel) {
 @Composable
 fun TaskList(
     modifier: Modifier,
-    viewModel: IHomeViewModel
+    viewModel: IHomeViewModel,
+    snackbarHostState: SnackbarHostState,
 ) {
     val context = LocalContext.current
     val tasks by viewModel.tasks.collectAsState(initial = emptyList())
     val doneTasks by viewModel.doneTasks.collectAsState(initial = emptyList())
+    val scope = rememberCoroutineScope()
 
     LazyColumn(
         modifier = modifier,
@@ -102,7 +118,20 @@ fun TaskList(
             TodoItem(
                 task = task,
                 updateTask = { updatedTask -> viewModel.updateTask(updatedTask) },
-                onDelete = { deleteTask -> viewModel.deleteTask(deleteTask)}
+                onDelete = {
+                    viewModel.deleteTask(task)
+
+                    scope.launch {
+                        val result = snackbarHostState.showSnackbar(
+                            message = "${task.content} が削除されました",
+                            actionLabel = "元に戻す",
+                            duration = SnackbarDuration.Long
+                        )
+                        if (result == SnackbarResult.ActionPerformed) {
+                            viewModel.addTask(task)
+                        }
+                    }
+                }
             )
         }
 
@@ -130,7 +159,20 @@ fun TaskList(
                 CompletedItem(
                     task = task,
                     updateTask = { updatedTask -> viewModel.updateTask(updatedTask) },
-                    onDelete = { deleteTask -> viewModel.deleteTask(deleteTask)}
+                    onDelete = {
+                        viewModel.deleteTask(task)
+
+                        scope.launch {
+                            val result = snackbarHostState.showSnackbar(
+                                message = "${task.content} が削除されました",
+                                actionLabel = "元に戻す",
+                                duration = SnackbarDuration.Long
+                            )
+                            if (result == SnackbarResult.ActionPerformed) {
+                                viewModel.addTask(task)
+                            }
+                        }
+                    }
                 )
             }
         }
@@ -143,10 +185,11 @@ fun TaskList(
 fun TodoItem(
     task: Task,
     updateTask: (Task) -> Unit,
-    onDelete: (Task) -> Unit,
+    onDelete: () -> Unit,
 ) {
     // 編集可能にするため、rememberにする
     var textFieldValue by remember { mutableStateOf(task.content) }
+    val scope = rememberCoroutineScope()
 
     CardDesign(
         isChecked = false,
@@ -154,7 +197,7 @@ fun TodoItem(
         changeCheck = { updateTask(task.copy(isCompleted = true, completedAt = LocalDateTime.now())) },
         offFocus = { updateTask(task.copy(content = textFieldValue)) },
         onPause = { updateTask(task.copy(content = textFieldValue)) },
-        onDelete = { onDelete(task)},
+        onDelete = onDelete,
         changeText = { newText -> textFieldValue = newText }
     ) {
         NotificationButton(task, updateTask)
@@ -166,7 +209,7 @@ fun TodoItem(
 fun CompletedItem(
     task: Task,
     updateTask: (Task) -> Unit,
-    onDelete: (Task) -> Unit,
+    onDelete: () -> Unit,
 ) {
     // ORDER BY completedAt のせいか、チェックつけ外しすると表示するtaskが狂ったのでrememberを外す
     val textFieldValue = task.content
@@ -175,7 +218,7 @@ fun CompletedItem(
         isChecked = true,
         text = textFieldValue,
         changeCheck = { updateTask(task.copy(isCompleted = false, completedAt = null)) },
-        onDelete = { onDelete(task)},
+        onDelete = onDelete,
         suffix = {
             Text(
                 text = task.completedAt.view(),

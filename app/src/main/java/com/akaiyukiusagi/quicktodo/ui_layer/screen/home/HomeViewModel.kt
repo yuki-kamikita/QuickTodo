@@ -46,6 +46,11 @@ class HomeViewModel @Inject constructor(
             taskRepository.insert(task)
         }
     }
+    override fun addTask(task: Task) {
+        viewModelScope.launch {
+            taskRepository.insert(task)
+        }
+    }
 
     override fun updateTask(task: Task) {
         viewModelScope.launch {
@@ -66,6 +71,7 @@ interface IHomeViewModel {
     val tasks: Flow<List<Task>>
     val doneTasks: Flow<List<Task>>
     fun addTask(text: String)
+    fun addTask(task: Task)
     fun updateTask(task: Task)
     fun deleteTask(task: Task)
 }
@@ -94,6 +100,7 @@ class PreviewHomeViewModel: IHomeViewModel {
     )
 
     override fun addTask(text: String) {}
+    override fun addTask(task: Task) {}
 
     override fun updateTask(task: Task) {}
     override fun deleteTask(task: Task) {}
