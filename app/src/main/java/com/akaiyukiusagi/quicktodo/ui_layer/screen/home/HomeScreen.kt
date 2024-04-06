@@ -110,8 +110,8 @@ fun TaskList(
     val doneTasks by viewModel.doneTasks.collectAsState(initial = emptyList())
     val scope = rememberCoroutineScope()
 
-    val message = stringResource(id = R.string.delete_suffix)
-    val label = stringResource(id = R.string.undo)
+    val message = stringResource(id = R.string.snackbar_delete_suffix)
+    val label = stringResource(id = R.string.snackbar_undo)
 
     LazyColumn(
         modifier = modifier,
