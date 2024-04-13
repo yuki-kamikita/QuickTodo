@@ -124,6 +124,7 @@ fun TaskList(
                 updateTask = { updatedTask -> viewModel.updateTask(updatedTask) },
                 onDelete = {
                     viewModel.deleteTask(task)
+                    performVibration(context, 5)
 
                     scope.launch {
                         val result = snackbarHostState.showSnackbar(
@@ -310,6 +311,8 @@ fun NotificationButton(
     task: Task,
     updateTask: (Task) -> Unit
 ) {
+    val context = LocalContext.current
+
     // プレビューモードでなければ、通知権限の状態を取得
     val isPreview = LocalInspectionMode.current
     val notificationPermissionState = if (!isPreview) {
@@ -324,7 +327,9 @@ fun NotificationButton(
                     notificationPermissionState.launchPermissionRequest() // 通知権限の取得
                 }
             }
-            updateTask(task.copy(sendNotification = !task.sendNotification)) },
+            updateTask(task.copy(sendNotification = !task.sendNotification))
+            performVibration(context, 5)
+        },
     ) {
         val icon = if (task.sendNotification) Icons.Filled.Notifications else Icons.Outlined.Notifications
         Icon(
@@ -337,6 +342,7 @@ fun NotificationButton(
 /** タスク追加 */
 @Composable
 fun NewTask(onAddTask: (String) -> Unit = {}) {
+    val context = LocalContext.current
     var text by remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
@@ -378,6 +384,7 @@ fun NewTask(onAddTask: (String) -> Unit = {}) {
             onClick = {
                 focusManager.clearFocus()
                 onAddTask(text)
+                performVibration(context, 5)
                 text = ""
             },
         ) {

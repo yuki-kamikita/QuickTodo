@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">QuickTodo</string>
+    <string name="app_name">通知Todo</string>
 
     <string name="snackbar_delete_suffix"> が削除されました</string>
     <string name="snackbar_undo">元に戻す</string>
