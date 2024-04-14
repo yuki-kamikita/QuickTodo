@@ -18,25 +18,13 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-
-    - name: Create secrets directory
-      run: |
-        mkdir secrets
         
     - name: Decode keystore file
       run: |
         echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > release.keystore
-
-    - name: Copy Keystore
-      run: |
-         cp release.keystore secrets/release.keystore
          
     - name: Build and Sign AAB
       run: ./gradlew :app:bundleRelease --stacktrace
-      env:
-        KEYSTORE_ALIAS: ${{ secrets.KEY_ALIAS }}
-        KEYSTORE_ALIAS_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        KEYSTORE_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
 
     - name: Upload to Google Play
       uses: r0adkll/upload-google-play@v1
