@@ -20,7 +20,7 @@ jobs:
 
     - name: Decode keystore file
       run: |
-        echo "${{ secrets.KEYSTORE }}" | base64 -d > app/release.keystore
+        echo "${{ secrets.KEYSTORE }}" | base64 -d > release.keystore
 
     - name: Build and Sign AAB
       run: |
