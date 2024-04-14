@@ -22,7 +22,7 @@ jobs:
         echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > app/release.keystore
 
     - name: Build and Sign AAB
-      run: ./gradlew :app:bundleRelease
+      run: ./gradlew :app:bundleRelease --info
       env:
         KEYSTORE_ALIAS: ${{ secrets.KEY_ALIAS }}
         KEYSTORE_ALIAS_PASSWORD: ${{ secrets.KEY_PASSWORD }}
