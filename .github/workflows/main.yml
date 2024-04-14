@@ -19,6 +19,10 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
+    - name: Create secrets directory
+      run: |
+        mkdir secrets
+        
     - name: Decode keystore file
       run: |
         echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > release.keystore
