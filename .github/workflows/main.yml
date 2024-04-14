@@ -22,7 +22,7 @@ jobs:
     - name: Decode keystore file
       run: |
         echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > release.keystore
-        cp release.keystore app/playstore.keystore
+        cp release.keystore app/release.keystore
 
     - name: Build and Sign AAB
       run: ./gradlew :app:bundleRelease
