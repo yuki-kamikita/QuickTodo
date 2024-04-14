@@ -25,6 +25,10 @@ jobs:
          
     - name: Build and Sign AAB
       run: ./gradlew :app:assembleRelease --stacktrace
+      env:
+        KEYSTORE_ALIAS: ${{ secrets.KEY_ALIAS }}
+        KEYSTORE_ALIAS_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        KEYSTORE_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
 
     - name: Upload to Google Play
       uses: r0adkll/upload-google-play@v1
