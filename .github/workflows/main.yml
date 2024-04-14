@@ -24,7 +24,7 @@ jobs:
         echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > app/release.keystore
          
     - name: Build and Sign AAB
-      run: ./gradlew :app:assembleRelease --stacktrace
+      run: ./gradlew :app:bundleRelease --stacktrace
       env:
         KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
