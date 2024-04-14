@@ -19,10 +19,17 @@ jobs:
         java-version: '17'
         distribution: 'temurin'  # Adoptium (以前のAdoptOpenJDK) のビルドを使用
 
-    - name: Build and Sign AAB
+    - name: Decode keystore file
       run: |
-        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > app/release.keystore
-        ./gradlew bundleRelease -Pandroid.injected.signing.store.file=release.keystore -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
+        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > release.keystore
+        cp release.keystore app/playstore.keystore
+
+    - name: Build and Sign AAB
+      run: ./gradlew :app:bundleRelease
+      env:
+        KEYSTORE_ALIAS: ${{ secrets.KEY_ALIAS }}
+        KEYSTORE_ALIAS_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        KEYSTORE_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
 
     - name: Upload to Google Play
       uses: r0adkll/upload-google-play@v1
