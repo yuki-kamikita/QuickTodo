@@ -18,6 +18,10 @@ jobs:
         java-version: '17'
         distribution: 'temurin'  # Adoptium (以前のAdoptOpenJDK) のビルドを使用
 
+    - name: Decode keystore file
+      run: |
+        echo "${{ secrets.KEYSTORE }}" | base64 -d > app/release.keystore
+
     - name: Build and Sign AAB
       run: |
         echo "${{ secrets.KEYSTORE }}" | base64 -d > release.keystore
