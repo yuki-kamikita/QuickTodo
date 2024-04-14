@@ -24,7 +24,7 @@ jobs:
         echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > app/release.keystore
          
     - name: Build and Sign AAB
-      run: ./gradlew :app:bundleRelease --stacktrace
+      run: ./gradlew :app:assembleRelease --stacktrace
 
     - name: Upload to Google Play
       uses: r0adkll/upload-google-play@v1
