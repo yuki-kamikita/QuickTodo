@@ -58,7 +58,7 @@ fun SwipeToDelete(
     val deleteButtonWidthPx = with(density) { deleteButtonWidth.toPx() }
     var contentHeight by remember { mutableIntStateOf(0) }
     val contentHeightDp = (with(density) { contentHeight.toDp() })
-    val roundedCornerShape = 14.dp // contentにCardが入る前提の角Rの値 Card以外対応には単純にこれを引数に入れてもいいかも
+    val roundedCornerShape = 12.dp // contentにCardが入る前提の角Rの値 Card以外対応には単純にこれを引数に入れてもいいかも
 
     val state = remember {
         AnchoredDraggableState(
@@ -100,7 +100,12 @@ fun SwipeToDelete(
             // 削除ボタン
             Box(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(topEnd = roundedCornerShape, bottomEnd = roundedCornerShape))
+                    .clip(
+                        RoundedCornerShape(
+                            topEnd = roundedCornerShape,
+                            bottomEnd = roundedCornerShape
+                        )
+                    )
                     .background(MaterialTheme.colorScheme.error)
                     .height(contentHeightDp)
                     .width(deleteButtonWidth)
@@ -112,6 +117,8 @@ fun SwipeToDelete(
                     tint = MaterialTheme.colorScheme.onError
                 )
             }
+            
+            Spacer(modifier = Modifier.width(1.dp)) // 若干DeleteButtonが見えている対策
         }
 
         Box(
