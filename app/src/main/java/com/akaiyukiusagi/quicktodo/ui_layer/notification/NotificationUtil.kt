@@ -5,7 +5,9 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import androidx.compose.ui.res.stringResource
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat.getString
 import com.akaiyukiusagi.quicktodo.MainActivity
 import com.akaiyukiusagi.quicktodo.R
 import com.akaiyukiusagi.quicktodo.data_layer.room.entity.Task
@@ -48,7 +50,7 @@ class NotificationUtil(@ApplicationContext private val context: Context) {
             .setSmallIcon(R.drawable.baseline_checklist_24)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC) // ロック画面で内容を表示 https://developer.android.com/training/notify-user/build-notification?hl=ja#lockscreenNotification
             .setContentIntent(pendingIntentOpen) // 通知タップ時
-            .addAction(R.drawable.baseline_checklist_24, "Done", pendingIntentDone) // 完了ボタン
+            .addAction(R.drawable.baseline_checklist_24, getString(context, R.string.notification_done), pendingIntentDone) // 完了ボタン
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setOngoing(true) // 通知をスワイプで消さない Android14以降はスワイプすると消える
             .setAutoCancel(false) // スワイプで消さない 効いてはいない お守り

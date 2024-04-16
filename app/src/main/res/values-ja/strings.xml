@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">通知Todo</string>
+
+    <string name="snackbar_delete_suffix"> が削除されました</string>
+    <string name="snackbar_undo">元に戻す</string>
+
+    <string name="new_task">新しいタスク</string>
+
+    <string name="label_today">今日</string>
+    <string name="label_yesterday">昨日</string>
+    <string name="label_day_before_yesterday">一昨日</string>
+    <string name="label_last_7_days">過去7日間</string>
+    <string name="label_last_30_days">過去30日間</string>
+    <string name="label_month">%1$d月</string>
+
+    <string name="notification_done">完了</string>
+</resources>
