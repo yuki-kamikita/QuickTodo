@@ -41,9 +41,11 @@ class HomeViewModel @Inject constructor(
     }
 
     override fun addTask(text: String) {
-        val task = Task(content = text)
-        viewModelScope.launch {
-            taskRepository.insert(task)
+        if (text.isNotEmpty()) {
+            val task = Task(content = text)
+            viewModelScope.launch {
+                taskRepository.insert(task)
+            }
         }
     }
     override fun addTask(task: Task) {
