@@ -64,6 +64,7 @@ class HomeViewModel @Inject constructor(
     override fun deleteTask(task: Task) {
         viewModelScope.launch {
             taskRepository.delete(task)
+            if (task.sendNotification) notificationUtil.removePushedNotification(task)
         }
     }
 }
