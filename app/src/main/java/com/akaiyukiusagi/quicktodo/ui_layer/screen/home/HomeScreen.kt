@@ -128,7 +128,7 @@ fun TaskList(
 
                     scope.launch {
                         val result = snackbarHostState.showSnackbar(
-                            message = task.content + message,
+                            message = task.content + " " + message,
                             actionLabel = label,
                             duration = SnackbarDuration.Short
                         )
