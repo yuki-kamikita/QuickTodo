@@ -6,9 +6,9 @@ import android.Manifest
 import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,8 +22,8 @@ import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,6 +32,7 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -71,37 +72,38 @@ import java.time.LocalDateTime
 import com.akaiyukiusagi.quicktodo.ui_layer.component.SwipeToDelete
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(viewModel: IHomeViewModel) {
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold (
+//        floatingActionButton = {
+//            FloatingActionButton(onClick = { /* スクロール描写で 完了/未完 切り替え */ }) {
+//                Icon(imageVector = Icons.Default.History, contentDescription = stringResource(id = R.string.history))
+//            }
+//        },
+//        topBar = { // 追加画面遷移用
+//            TopAppBar(
+//                title = { Text(text = stringResource(id = R.string.app_name)) },
+//                actions = { IconButton(onClick = { }) {
+//                    Icon(imageVector = Icons.Default.Settings, contentDescription = "")
+//                }},
+//            )},
+        bottomBar = { NewTask { text -> viewModel.addTask(text) } },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ){ padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(start = 4.dp, end = 4.dp, top = 4.dp),
-            verticalArrangement = Arrangement.Bottom
-        ) {
-            TaskList(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight(),
-                viewModel = viewModel,
-                snackbarHostState = snackbarHostState
-            )
-            Divider()
-            NewTask { text -> viewModel.addTask(text) }
-        }
+        TaskList(
+            padding = padding,
+            viewModel = viewModel,
+            snackbarHostState = snackbarHostState
+        )
     }
 }
 
 /** タスク一覧 */
 @Composable
 fun TaskList(
-    modifier: Modifier,
+    padding: PaddingValues,
     viewModel: IHomeViewModel,
     snackbarHostState: SnackbarHostState,
 ) {
@@ -114,9 +116,11 @@ fun TaskList(
     val label = stringResource(id = R.string.snackbar_undo)
 
     LazyColumn(
-        modifier = modifier,
+        contentPadding = padding,
         verticalArrangement = Arrangement.Top
     ) {
+        item { Spacer(modifier = Modifier.padding(2.dp)) } // TODO: AppBar入れたら不要になる
+
         // 未完
         items(tasks, key = { task -> task.id }) { task ->
             TodoItem(
@@ -140,7 +144,7 @@ fun TaskList(
             )
         }
 
-        item { Divider() }
+        item { HorizontalDivider() }
 
         // 完了
         var currentCategory: String? = null
@@ -348,47 +352,52 @@ fun NewTask(onAddTask: (String) -> Unit = {}) {
     val focusRequester = remember { FocusRequester() }
     val isFocused = remember { mutableStateOf(false) }
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 8.dp, top = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        TextField(
-            value = text,
-            singleLine = true,
-            label = { Text(stringResource(id = R.string.new_task)) },
-            onValueChange = { newText -> text = newText },
-            modifier = Modifier
-                .weight(1f)
-                .focusRequester(focusRequester)
-                .onFocusChanged { focusState -> isFocused.value = focusState.isFocused },
-            colors = TextFieldDefaults.textFieldColors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent
-            ),
-            shape = RoundedCornerShape(16.dp),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    focusManager.clearFocus()
-                    onAddTask(text)
-                    text = ""
-                }
-            ),
-        )
+    Surface {
+        Column {
+            HorizontalDivider()
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 8.dp, top = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                TextField(
+                    value = text,
+                    singleLine = true,
+                    label = { Text(stringResource(id = R.string.new_task)) },
+                    onValueChange = { newText -> text = newText },
+                    modifier = Modifier
+                        .weight(1f)
+                        .focusRequester(focusRequester)
+                        .onFocusChanged { focusState -> isFocused.value = focusState.isFocused },
+                    colors = TextFieldDefaults.textFieldColors(
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent
+                    ),
+                    shape = RoundedCornerShape(16.dp),
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            focusManager.clearFocus()
+                            onAddTask(text)
+                            text = ""
+                        }
+                    ),
+                )
 
-        IconButton(
-            onClick = {
-                focusManager.clearFocus()
-                onAddTask(text)
-                performVibration(context, 5)
-                text = ""
-            },
-        ) {
-            Icon(imageVector = Icons.Default.Send, contentDescription = "Send")
+                IconButton(
+                    onClick = {
+                        focusManager.clearFocus()
+                        onAddTask(text)
+                        performVibration(context, 5)
+                        text = ""
+                    },
+                ) {
+                    Icon(imageVector = Icons.Default.Send, contentDescription = "Send")
+                }
+            }
         }
     }
 }

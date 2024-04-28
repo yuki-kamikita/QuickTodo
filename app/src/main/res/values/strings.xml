@@ -6,6 +6,7 @@
     <string name="snackbar_undo">Undo</string>
 
     <string name="new_task">New Task</string>
+    <string name="history">History</string>
 
     <string name="label_today">Today</string>
     <string name="label_yesterday">Yesterday</string>

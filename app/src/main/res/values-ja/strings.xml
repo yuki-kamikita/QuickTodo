@@ -6,6 +6,7 @@
     <string name="snackbar_undo">元に戻す</string>
 
     <string name="new_task">新しいやること</string>
+    <string name="history">履歴</string>
 
     <string name="label_today">今日</string>
     <string name="label_yesterday">昨日</string>
