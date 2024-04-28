@@ -10,3 +10,8 @@
 ```
 open ./app/build/reports/coverage/androidTest/debug/connected/index.html
 ```
+
+.apkビルド
+```
+./gradlew assembleDebug
+```
