@@ -88,6 +88,8 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-livedata")
     implementation("androidx.compose.material:material-icons-extended:1.6.6")
     implementation("androidx.compose.material3:material3-window-size-class:1.2.1")
+    implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation("com.google.accompanist:accompanist-navigation-animation:0.24.3-alpha")
 
     // Accompanist
     // TODO: バージョンは共通っぽいから変数に入れるか
