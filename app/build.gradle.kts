@@ -105,6 +105,11 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.49")
     implementation("androidx.hilt:hilt-common:1.1.0")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+
+    // Glance ウィジェット
+    implementation("androidx.glance:glance-appwidget:1.1.0-beta02")
+    implementation("androidx.glance:glance-material3:1.0.0")
+    implementation("androidx.work:work-runtime-ktx:2.9.0") // ウィジェットの読み込みに使用
 }
 
 kapt {

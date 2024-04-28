@@ -24,6 +24,8 @@ data class Task(
 interface TaskDao {
     @Query("SELECT * FROM task")
     fun getAllTasks(): Flow<List<Task>>
+    @Query("SELECT * FROM task")
+    fun getAllTasks2(): List<Task>
 
     @Query("SELECT * FROM task WHERE isCompleted = 0")
     fun getTodoTasks(): Flow<List<Task>>

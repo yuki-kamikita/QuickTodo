@@ -33,4 +33,8 @@ class TaskRepository @Inject constructor(private val taskLocalDataSource: TaskDa
         LogHelper.d("delete: $task")
     }
 
+    fun getAllTasks() :List<Task>{
+        return taskLocalDataSource.getAllTasks2()
+    }
+
 }
