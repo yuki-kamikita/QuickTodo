@@ -23,10 +23,10 @@ class NotificationUtil(@ApplicationContext private val context: Context) {
 
     fun pushNotification(task: Task) {
         // TODO: チャンネル作成は毎回しないで関数分けて最初だけする
-        val channelId = "QuickTodo" // TODO: アプリIDあたりから引っ張ってくる
+        val channelId = context.packageName
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        val channel = NotificationChannel(channelId, "Todo", NotificationManager.IMPORTANCE_LOW).apply {
+        val channel = NotificationChannel(channelId, getString(context, R.string.notification_description), NotificationManager.IMPORTANCE_LOW).apply {
             setSound(null, null)
             setShowBadge(false)
         }
