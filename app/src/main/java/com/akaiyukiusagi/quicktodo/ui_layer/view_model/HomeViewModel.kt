@@ -1,4 +1,4 @@
-package com.akaiyukiusagi.quicktodo.ui_layer.screen.home
+package com.akaiyukiusagi.quicktodo.ui_layer.view_model
 
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.ViewModel

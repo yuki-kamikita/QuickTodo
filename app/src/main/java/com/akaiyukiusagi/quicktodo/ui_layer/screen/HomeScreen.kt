@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.akaiyukiusagi.quicktodo.ui_layer.screen.home
+package com.akaiyukiusagi.quicktodo.ui_layer.screen
 
 import android.Manifest
 import android.os.Build
@@ -70,6 +70,8 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import java.time.LocalDateTime
 import com.akaiyukiusagi.quicktodo.ui_layer.component.SwipeToDelete
+import com.akaiyukiusagi.quicktodo.ui_layer.view_model.IHomeViewModel
+import com.akaiyukiusagi.quicktodo.ui_layer.view_model.PreviewHomeViewModel
 import kotlinx.coroutines.launch
 
 @Composable

@@ -8,15 +8,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.akaiyukiusagi.quicktodo.ui_layer.screen.home.HomeScreen
-import com.akaiyukiusagi.quicktodo.ui_layer.screen.home.HomeViewModel
+import com.akaiyukiusagi.quicktodo.ui_layer.screen.HomeScreen
+import com.akaiyukiusagi.quicktodo.ui_layer.view_model.HomeViewModel
 import com.akaiyukiusagi.quicktodo.ui_layer.theme.QuickTodoTheme
 import dagger.hilt.android.AndroidEntryPoint
 
