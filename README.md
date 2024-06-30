@@ -25,7 +25,7 @@ mainブランチにマージしたらGooglePlayにaabをビルドし、署名し
 
 # テスト
 ## スクリーンショットテスト
-https://developer.android.com/studio/preview/compose-screenshot-testing
+https://developer.android.com/studio/preview/compose-screenshot-testing  
 [保存場所](app/src/debug/screenshotTest/reference)
 
 #### スクリーンショット撮影
@@ -45,7 +45,7 @@ https://developer.android.com/studio/preview/compose-screenshot-testing
 ./gradlew createDebugCoverageReport
 ```
 
-[カバレッジ保存場所](./app/build/reports/coverage/androidTest/debug/connected/index.html)
+[カバレッジ保存場所](./app/build/reports/coverage/androidTest/debug/connected/index.html)  
 カバレッジをブラウザで開く
 ```
 open ./app/build/reports/coverage/androidTest/debug/connected/index.html
