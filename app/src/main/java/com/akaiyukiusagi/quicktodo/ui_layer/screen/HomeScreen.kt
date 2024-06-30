@@ -117,8 +117,8 @@ fun TaskList(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val tasks by viewModel.tasks.collectAsState(initial = emptyList())
-    val doneTasks by viewModel.doneTasks.collectAsState(initial = emptyList())
+    val tasks by viewModel.tasks.collectAsState(initial = viewModel.initialTasks)
+    val doneTasks by viewModel.doneTasks.collectAsState(initial = viewModel.initialDoneTasks)
     val scope = rememberCoroutineScope()
 
     val message = stringResource(id = R.string.snackbar_delete_suffix)
@@ -417,7 +417,7 @@ fun NewTask(onAddTask: (String) -> Unit = {}) {
 @PreviewDynamicColors
 @Preview(fontScale = 2.0F)
 @Composable
-fun PreviewScreen(defaultState: Boolean = true) {
+fun PreviewScreen() {
     PreviewComponent {
         HomeScreen(
             viewModel = PreviewHomeViewModel()

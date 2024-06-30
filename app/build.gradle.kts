@@ -2,6 +2,7 @@ plugins {
     kotlin("kapt")
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.screenshot)
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
 }
@@ -60,6 +61,7 @@ android {
     androidResources {
         generateLocaleConfig = true
     }
+    experimentalProperties["android.experimental.enableScreenshotTest"] = true
 }
 
 kotlin {
@@ -105,6 +107,9 @@ dependencies {
     kapt(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.common)
     implementation(libs.androidx.hilt.navigation.compose)
+
+    // スクリーンショットテスト
+    screenshotTestImplementation(libs.androidx.compose.ui.tooling)
 }
 
 kapt {

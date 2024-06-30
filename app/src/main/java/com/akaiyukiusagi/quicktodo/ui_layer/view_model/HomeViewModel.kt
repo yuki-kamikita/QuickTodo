@@ -18,6 +18,8 @@ class HomeViewModel @Inject constructor(
     private val taskRepository: TaskRepository,
     private val notificationUtil: NotificationUtil
 ) : ViewModel(), IHomeViewModel, LifecycleObserver {
+    override val initialTasks: List<Task> = emptyList()
+    override val initialDoneTasks: List<Task> = emptyList()
     override val tasks: Flow<List<Task>> = taskRepository.todoTasks
     override val doneTasks: Flow<List<Task>> = taskRepository.doneTasks
     private val notificationTasksFlow: Flow<List<Task>> = taskRepository.notificationTasks
@@ -71,7 +73,9 @@ class HomeViewModel @Inject constructor(
 
 
 interface IHomeViewModel {
+    val initialTasks: List<Task>
     val tasks: Flow<List<Task>>
+    val initialDoneTasks: List<Task>
     val doneTasks: Flow<List<Task>>
     fun addTask(text: String)
     fun addTask(task: Task)
@@ -80,15 +84,14 @@ interface IHomeViewModel {
 }
 
 class PreviewHomeViewModel: IHomeViewModel {
-    override val tasks: Flow<List<Task>> = flowOf(
-        listOf(
-            Task(1, "aaa", false, false),
-            Task(2, "bbb", false, true)
-        )
+    override val initialTasks: List<Task> = listOf(
+        Task(1, "aaa", false, false),
+        Task(2, "bbb", false, true)
     )
+    override val tasks: Flow<List<Task>> = flowOf(initialTasks)
 
     private val today = LocalDateTime.now()
-    override val doneTasks: Flow<List<Task>> = flowOf(
+    override val initialDoneTasks: List<Task> =
         listOf(
             Task(3, "当日", true, false, today),
             Task(4, "1日前", true, false, today.minusDays(1)),
@@ -100,7 +103,7 @@ class PreviewHomeViewModel: IHomeViewModel {
             Task(10, "31日前", true, false, today.minusDays(31)),
             Task(11, "100日前", true, false, today.minusDays(100)),
         )
-    )
+    override val doneTasks: Flow<List<Task>> = flowOf(initialDoneTasks)
 
     override fun addTask(text: String) {}
     override fun addTask(task: Task) {}
