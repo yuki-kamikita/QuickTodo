@@ -4,19 +4,16 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.akaiyukiusagi.quicktodo.ui_layer.screen.home.HomeScreen
-import com.akaiyukiusagi.quicktodo.ui_layer.screen.home.HomeViewModel
+import com.akaiyukiusagi.quicktodo.ui_layer.screen.HomeScreen
+import com.akaiyukiusagi.quicktodo.ui_layer.view_model.HomeViewModel
 import com.akaiyukiusagi.quicktodo.ui_layer.theme.QuickTodoTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -31,19 +28,26 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             QuickTodoTheme {
-                val focusManager = LocalFocusManager.current
-                Surface(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .safeDrawingPadding() // システムバーと被らせない？
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null,
-                        ) { focusManager.clearFocus() },
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    val homeViewModel: HomeViewModel = hiltViewModel()
-                    HomeScreen(homeViewModel)
+                val homeViewModel: HomeViewModel = hiltViewModel()
+                val snackbarHostState = remember { SnackbarHostState() }
+
+                Scaffold(
+                    snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+                    modifier = Modifier.safeDrawingPadding(), // ナビゲーションバーに被せない
+//                    floatingActionButton = {
+//                        FloatingActionButton(onClick = { /* スクロール描写で 完了/未完 切り替え */ }) {
+//                            Icon(imageVector = Icons.Default.History, contentDescription = stringResource(id = R.string.history))
+//                        }
+//                    },
+//                    topBar = { // 追加画面遷移用
+//                        TopAppBar(
+//                            title = { Text(text = stringResource(id = R.string.app_name)) },
+//                            actions = { IconButton(onClick = { }) {
+//                                Icon(imageVector = Icons.Default.Settings, contentDescription = "")
+//                            }},
+//                        )},
+                ) { padding ->
+                    HomeScreen(homeViewModel, snackbarHostState, padding)
                 }
             }
         }

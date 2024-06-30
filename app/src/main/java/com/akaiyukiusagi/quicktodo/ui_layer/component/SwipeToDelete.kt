@@ -33,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.PreviewDynamicColors
@@ -54,11 +55,11 @@ fun SwipeToDelete(
     content: @Composable (Modifier) -> Unit,
 ) {
     val density = LocalDensity.current
+    val roundedCornerShape = 12.dp // contentにCardが入る前提の角Rの値 Card以外対応には単純にこれを引数に入れてもいいかも
     val deleteButtonWidth = 60.dp
     val deleteButtonWidthPx = with(density) { deleteButtonWidth.toPx() }
     var contentHeight by remember { mutableIntStateOf(0) }
     val contentHeightDp = (with(density) { contentHeight.toDp() })
-    val roundedCornerShape = 12.dp // contentにCardが入る前提の角Rの値 Card以外対応には単純にこれを引数に入れてもいいかも
 
     val state = remember {
         AnchoredDraggableState(
@@ -85,6 +86,7 @@ fun SwipeToDelete(
     }
 
     Box(modifier = modifier.fillMaxWidth()) {
+        val backgroundColor = if (state.offset == 0F) Color.Transparent else MaterialTheme.colorScheme.error // スライド前は背景は透明
         Row(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
@@ -93,7 +95,7 @@ fun SwipeToDelete(
             // 手前レイヤーの角R埋め用
             Spacer (modifier = Modifier
                 .width(roundedCornerShape)
-                .background(MaterialTheme.colorScheme.error)
+                .background(backgroundColor)
                 .height(contentHeightDp)
             )
 
@@ -106,7 +108,7 @@ fun SwipeToDelete(
                             bottomEnd = roundedCornerShape
                         )
                     )
-                    .background(MaterialTheme.colorScheme.error)
+                    .background(backgroundColor)
                     .height(contentHeightDp)
                     .width(deleteButtonWidth)
             ) {

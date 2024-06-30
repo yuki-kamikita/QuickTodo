@@ -1,14 +1,18 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.akaiyukiusagi.quicktodo.ui_layer.screen.home
+package com.akaiyukiusagi.quicktodo.ui_layer.screen
 
 import android.Manifest
 import android.os.Build
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -27,9 +31,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
@@ -64,59 +66,66 @@ import com.akaiyukiusagi.quicktodo.core.extension.view
 import com.akaiyukiusagi.quicktodo.data_layer.room.entity.Task
 import com.akaiyukiusagi.quicktodo.ui_layer.component.OnPause
 import com.akaiyukiusagi.quicktodo.ui_layer.component.PreviewComponent
+import com.akaiyukiusagi.quicktodo.ui_layer.component.SwipeToDelete
 import com.akaiyukiusagi.quicktodo.ui_layer.component.performVibration
+import com.akaiyukiusagi.quicktodo.ui_layer.view_model.IHomeViewModel
+import com.akaiyukiusagi.quicktodo.ui_layer.view_model.PreviewHomeViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
-import java.time.LocalDateTime
-import com.akaiyukiusagi.quicktodo.ui_layer.component.SwipeToDelete
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 @Composable
-fun HomeScreen(viewModel: IHomeViewModel) {
-    val snackbarHostState = remember { SnackbarHostState() }
-
-    Scaffold (
-//        floatingActionButton = {
-//            FloatingActionButton(onClick = { /* スクロール描写で 完了/未完 切り替え */ }) {
-//                Icon(imageVector = Icons.Default.History, contentDescription = stringResource(id = R.string.history))
-//            }
-//        },
-//        topBar = { // 追加画面遷移用
-//            TopAppBar(
-//                title = { Text(text = stringResource(id = R.string.app_name)) },
-//                actions = { IconButton(onClick = { }) {
-//                    Icon(imageVector = Icons.Default.Settings, contentDescription = "")
-//                }},
-//            )},
-        bottomBar = { NewTask { text -> viewModel.addTask(text) } },
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
-    ){ padding ->
-        TaskList(
-            padding = padding,
-            viewModel = viewModel,
-            snackbarHostState = snackbarHostState
-        )
+fun HomeScreen(
+    viewModel: IHomeViewModel,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    padding: PaddingValues = PaddingValues(0.dp)
+) {
+    val focusManager = LocalFocusManager.current
+    Surface(
+        modifier = Modifier
+            .padding(padding)
+            .fillMaxSize()
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+            ) { focusManager.clearFocus() }
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Bottom
+        ) {
+            TaskList(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(),
+                viewModel = viewModel,
+                snackbarHostState = snackbarHostState
+            )
+            HorizontalDivider()
+            NewTask { text -> viewModel.addTask(text) }
+        }
     }
 }
 
 /** タスク一覧 */
 @Composable
 fun TaskList(
-    padding: PaddingValues,
     viewModel: IHomeViewModel,
     snackbarHostState: SnackbarHostState,
+    modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val tasks by viewModel.tasks.collectAsState(initial = emptyList())
-    val doneTasks by viewModel.doneTasks.collectAsState(initial = emptyList())
+    val tasks by viewModel.tasks.collectAsState(initial = viewModel.initialTasks)
+    val doneTasks by viewModel.doneTasks.collectAsState(initial = viewModel.initialDoneTasks)
     val scope = rememberCoroutineScope()
 
     val message = stringResource(id = R.string.snackbar_delete_suffix)
     val label = stringResource(id = R.string.snackbar_undo)
 
     LazyColumn(
-        contentPadding = padding,
+        modifier = modifier.padding(horizontal = 2.dp),
         verticalArrangement = Arrangement.Top
     ) {
         item { Spacer(modifier = Modifier.padding(2.dp)) } // TODO: AppBar入れたら不要になる
@@ -149,7 +158,7 @@ fun TaskList(
         // 完了
         var currentCategory: String? = null
         doneTasks.forEach { task ->
-            val taskCategory = task.completedAt?.category(context) ?: "" // FIXME: ここダメ
+            val taskCategory = task.completedAt?.category(context) ?: "" // FIXME
 
             // カテゴリが変わったら見出しを表示
             if (taskCategory != currentCategory) {
@@ -187,7 +196,6 @@ fun TaskList(
         }
     }
 }
-
 
 /** 未完の一行 */
 @Composable
@@ -320,7 +328,9 @@ fun NotificationButton(
     // プレビューモードでなければ、通知権限の状態を取得
     val isPreview = LocalInspectionMode.current
     val notificationPermissionState = if (!isPreview) {
-        rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS) // ここの旧バージョン対応はもういいかな……
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
+        } else null
     } else null // プレビュー時はnull
 
     IconButton(
@@ -344,6 +354,7 @@ fun NotificationButton(
 }
 
 /** タスク追加 */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewTask(onAddTask: (String) -> Unit = {}) {
     val context = LocalContext.current
@@ -354,7 +365,6 @@ fun NewTask(onAddTask: (String) -> Unit = {}) {
 
     Surface {
         Column {
-            HorizontalDivider()
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -407,7 +417,7 @@ fun NewTask(onAddTask: (String) -> Unit = {}) {
 @PreviewDynamicColors
 @Preview(fontScale = 2.0F)
 @Composable
-fun PreviewScreen(defaultState: Boolean = true) {
+fun PreviewScreen() {
     PreviewComponent {
         HomeScreen(
             viewModel = PreviewHomeViewModel()
