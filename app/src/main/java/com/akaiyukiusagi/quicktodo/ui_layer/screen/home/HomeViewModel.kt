@@ -104,7 +104,6 @@ class PreviewHomeViewModel: IHomeViewModel {
 
     override fun addTask(text: String) {}
     override fun addTask(task: Task) {}
-
     override fun updateTask(task: Task) {}
     override fun deleteTask(task: Task) {}
 }

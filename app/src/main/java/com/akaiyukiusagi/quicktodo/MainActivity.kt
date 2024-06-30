@@ -39,8 +39,7 @@ class MainActivity : ComponentActivity() {
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null,
-                        ) { focusManager.clearFocus() },
-                    color = MaterialTheme.colorScheme.background
+                        ) { focusManager.clearFocus() }
                 ) {
                     val homeViewModel: HomeViewModel = hiltViewModel()
                     HomeScreen(homeViewModel)
