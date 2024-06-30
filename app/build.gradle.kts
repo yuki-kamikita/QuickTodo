@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.akaiyukiusagi.quicktodo"
-        minSdk = 31
+        minSdk = 28
         targetSdk = 34
         versionCode = 3
         versionName = "1.2.0"

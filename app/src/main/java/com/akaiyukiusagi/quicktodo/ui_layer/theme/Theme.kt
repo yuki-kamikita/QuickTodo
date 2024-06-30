@@ -1,6 +1,7 @@
 package com.akaiyukiusagi.quicktodo.ui_layer.theme
 
 import android.app.Activity
+import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -43,11 +44,13 @@ fun QuickTodoTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-        dynamicColor -> {
+        // Android 12以降ではDynamicColorを使用
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
+        // Android 11以下ではTheme.ColorSchemeを使用
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
