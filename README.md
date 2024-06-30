@@ -1,3 +1,7 @@
+# PlayStore
+[![ToPlayStore](play_store_image/GetItOnGooglePlay_Badge_Web_color_Japanese.png)](https://play.google.com/store/apps/details?id=com.akaiyukiusagi.quicktodo)  
+![ToPlayStoreQR](play_store_image/todo_app_download.png)
+
 # Git
 ## Commitメッセージ
 [Gitmoji](https://gitmoji.dev/)を参考に、したりしなかったり
@@ -19,8 +23,9 @@
   - マージしたら自動的にGooglePlayにアップロードされる
 - develop: 開発用
 
+
 # CI/CD
-mainブランチにマージしたらGooglePlayにaabをビルドし、署名します
+mainブランチにマージしたらGooglePlayにaabをビルドし、署名、リリースします
 
 
 # テスト
@@ -51,6 +56,7 @@ https://developer.android.com/studio/preview/compose-screenshot-testing
 open ./app/build/reports/coverage/androidTest/debug/connected/index.html
 ```
 
+# ローカルビルド
 .apkビルド
 ```
 ./gradlew assembleDebug
