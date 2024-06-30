@@ -125,7 +125,7 @@ fun TaskList(
     val label = stringResource(id = R.string.snackbar_undo)
 
     LazyColumn(
-        modifier = modifier,
+        modifier = modifier.padding(horizontal = 2.dp),
         verticalArrangement = Arrangement.Top
     ) {
         item { Spacer(modifier = Modifier.padding(2.dp)) } // TODO: AppBar入れたら不要になる
