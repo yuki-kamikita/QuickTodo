@@ -8,7 +8,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -23,6 +22,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
@@ -31,13 +31,17 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -60,7 +64,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewDynamicColors
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.akaiyukiusagi.quicktodo.R
+import com.akaiyukiusagi.quicktodo.ScreenNavigator
 import com.akaiyukiusagi.quicktodo.core.extension.category
 import com.akaiyukiusagi.quicktodo.core.extension.view
 import com.akaiyukiusagi.quicktodo.data_layer.room.entity.Task
@@ -79,34 +86,51 @@ import java.time.LocalDateTime
 @Composable
 fun HomeScreen(
     viewModel: IHomeViewModel,
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    padding: PaddingValues = PaddingValues(0.dp)
+    navigator: NavController
 ) {
     val focusManager = LocalFocusManager.current
-    Surface(
-        modifier = Modifier
-            .padding(padding)
-            .fillMaxSize()
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-            ) { focusManager.clearFocus() }
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Bottom
-        ) {
-            TaskList(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight(),
-                viewModel = viewModel,
-                snackbarHostState = snackbarHostState
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        topBar = {
+            TopAppBar(
+                title = { Text(text = stringResource(id = R.string.app_name)) },
+                actions = {
+                    IconButton(onClick = { ScreenNavigator.Settings.navigate(navigator) }) {
+                        Icon(Icons.Default.Settings, contentDescription = "Settings")
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(MaterialTheme.colorScheme.surfaceContainer)
             )
-            HorizontalDivider()
-            NewTask { text -> viewModel.addTask(text) }
+        },
+        content = {
+            Surface(
+                modifier = Modifier
+                    .padding(it)
+                    .fillMaxSize()
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                    ) { focusManager.clearFocus() }
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Bottom
+                ) {
+                    TaskList(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight(),
+                        viewModel = viewModel,
+                        snackbarHostState = snackbarHostState
+                    )
+                    HorizontalDivider()
+                    NewTask { text -> viewModel.addTask(text) }
+                }
+            }
         }
-    }
+    )
 }
 
 /** タスク一覧 */
@@ -420,7 +444,8 @@ fun NewTask(onAddTask: (String) -> Unit = {}) {
 fun PreviewScreen() {
     PreviewComponent {
         HomeScreen(
-            viewModel = PreviewHomeViewModel()
+            viewModel = PreviewHomeViewModel(),
+            navigator = rememberNavController()
         )
     }
 }

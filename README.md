@@ -1,5 +1,6 @@
 # PlayStore
 [![ToPlayStore](play_store_image/GetItOnGooglePlay_Badge_Web_color_Japanese.png)](https://play.google.com/store/apps/details?id=com.akaiyukiusagi.quicktodo)  
+
 ![ToPlayStoreQR](play_store_image/todo_app_download.png)
 
 # Git
