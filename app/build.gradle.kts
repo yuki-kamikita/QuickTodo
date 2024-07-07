@@ -97,6 +97,9 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
+    // DataStore
+    implementation(libs.androidx.datastore.preferences)
+
     // Room
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.runtime)

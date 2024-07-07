@@ -21,6 +21,7 @@ import com.akaiyukiusagi.quicktodo.ui_layer.screen.SettingsScreen
 import com.akaiyukiusagi.quicktodo.ui_layer.theme.QuickTodoTheme
 import com.akaiyukiusagi.quicktodo.ui_layer.view_model.HomeViewModel
 import com.akaiyukiusagi.quicktodo.ui_layer.view_model.PreviewSettingsViewModel
+import com.akaiyukiusagi.quicktodo.ui_layer.view_model.SettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -35,6 +36,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             QuickTodoTheme {
                 val homeViewModel: HomeViewModel = hiltViewModel()
+                val settingsViewModel: SettingsViewModel = hiltViewModel()
                 val navController = rememberNavController()
                 val currentRoute = remember { mutableStateOf(ScreenNavigator.Home) }
 
@@ -49,10 +51,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.safeDrawingPadding()
                 ){
                     composable(ScreenNavigator.Home.name) {
-                        HomeScreen(homeViewModel, navController)
+                        HomeScreen(homeViewModel, settingsViewModel, navController)
                     }
                     composable(ScreenNavigator.Settings.name) {
-                        SettingsScreen(PreviewSettingsViewModel())
+                        SettingsScreen(settingsViewModel, navController)
                     }
                 }
             }
@@ -60,13 +62,9 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-enum class ScreenNavigator(private val titleResId: Int) {
-    Home(R.string.app_name),
-    Settings(R.string.settings);
-
-    val title: String
-        @Composable
-        get() = stringResource(id = titleResId)
+enum class ScreenNavigator {
+    Home,
+    Settings;
 
     // nameを使用することは定義されていないからミスる可能性があるかなと思ったけどやりすぎかなって気もしなくもない
     // けど見るの自分だけだし、navController.navigate覚えられないから予測で出てくるこっちでいいか

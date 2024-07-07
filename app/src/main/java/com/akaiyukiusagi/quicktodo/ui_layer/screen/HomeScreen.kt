@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package com.akaiyukiusagi.quicktodo.ui_layer.screen
 
 import android.Manifest
@@ -76,17 +74,21 @@ import com.akaiyukiusagi.quicktodo.ui_layer.component.PreviewComponent
 import com.akaiyukiusagi.quicktodo.ui_layer.component.SwipeToDelete
 import com.akaiyukiusagi.quicktodo.ui_layer.component.performVibration
 import com.akaiyukiusagi.quicktodo.ui_layer.view_model.IHomeViewModel
+import com.akaiyukiusagi.quicktodo.ui_layer.view_model.ISettingsViewModel
 import com.akaiyukiusagi.quicktodo.ui_layer.view_model.PreviewHomeViewModel
+import com.akaiyukiusagi.quicktodo.ui_layer.view_model.PreviewSettingsViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     viewModel: IHomeViewModel,
-    navigator: NavController
+    settings: ISettingsViewModel,
+    navigator: NavController = rememberNavController()
 ) {
     val focusManager = LocalFocusManager.current
     val snackbarHostState = remember { SnackbarHostState() }
@@ -123,6 +125,7 @@ fun HomeScreen(
                             .weight(1f)
                             .fillMaxHeight(),
                         viewModel = viewModel,
+                        settings = settings,
                         snackbarHostState = snackbarHostState
                     )
                     HorizontalDivider()
@@ -137,12 +140,14 @@ fun HomeScreen(
 @Composable
 fun TaskList(
     viewModel: IHomeViewModel,
+    settings: ISettingsViewModel,
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     val tasks by viewModel.tasks.collectAsState(initial = viewModel.initialTasks)
     val doneTasks by viewModel.doneTasks.collectAsState(initial = viewModel.initialDoneTasks)
+    val showDoneTasks by settings.showDoneTasks.collectAsState(initial = false)
     val scope = rememberCoroutineScope()
 
     val message = stringResource(id = R.string.snackbar_delete_suffix)
@@ -177,45 +182,48 @@ fun TaskList(
             )
         }
 
-        item { HorizontalDivider() }
 
         // 完了
-        var currentCategory: String? = null
-        doneTasks.forEach { task ->
-            val taskCategory = task.completedAt?.category(context) ?: "" // FIXME
+        if (showDoneTasks) {
+            item { HorizontalDivider() }
 
-            // カテゴリが変わったら見出しを表示
-            if (taskCategory != currentCategory) {
-                item {
-                    // TODO: 見栄え調整
-                    Text(
-                        text = taskCategory,
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.padding(start = 8.dp, top = 8.dp)
-                    )
+            var currentCategory: String? = null
+            doneTasks.forEach { task ->
+                val taskCategory = task.completedAt?.category(context) ?: "" // FIXME
+
+                // カテゴリが変わったら見出しを表示
+                if (taskCategory != currentCategory) {
+                    item {
+                        // TODO: 見栄え調整
+                        Text(
+                            text = taskCategory,
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.padding(start = 8.dp, top = 8.dp)
+                        )
+                    }
+                    currentCategory = taskCategory
                 }
-                currentCategory = taskCategory
-            }
 
-            item {
-                CompletedItem(
-                    task = task,
-                    updateTask = { updatedTask -> viewModel.updateTask(updatedTask) },
-                    onDelete = {
-                        viewModel.deleteTask(task)
+                item {
+                    CompletedItem(
+                        task = task,
+                        updateTask = { updatedTask -> viewModel.updateTask(updatedTask) },
+                        onDelete = {
+                            viewModel.deleteTask(task)
 
-                        scope.launch {
-                            val result = snackbarHostState.showSnackbar(
-                                message = task.content + message,
-                                actionLabel = label,
-                                duration = SnackbarDuration.Short
-                            )
-                            if (result == SnackbarResult.ActionPerformed) {
-                                viewModel.addTask(task)
+                            scope.launch {
+                                val result = snackbarHostState.showSnackbar(
+                                    message = task.content + message,
+                                    actionLabel = label,
+                                    duration = SnackbarDuration.Short
+                                )
+                                if (result == SnackbarResult.ActionPerformed) {
+                                    viewModel.addTask(task)
+                                }
                             }
                         }
-                    }
-                )
+                    )
+                }
             }
         }
     }
@@ -443,10 +451,7 @@ fun NewTask(onAddTask: (String) -> Unit = {}) {
 @Composable
 fun PreviewScreen() {
     PreviewComponent {
-        HomeScreen(
-            viewModel = PreviewHomeViewModel(),
-            navigator = rememberNavController()
-        )
+        HomeScreen(PreviewHomeViewModel(), PreviewSettingsViewModel())
     }
 }
 
