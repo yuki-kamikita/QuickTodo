@@ -70,7 +70,7 @@ fun SettingsScreen(
                     SettingsRow(stringResource(R.string.theme_color), {})
                     SectionTitle(stringResource(R.string.display_settings))
                     SettingsRow(
-                        text = stringResource(R.string.show_done_tasks),
+                        text = stringResource(R.string.show_done_task),
                         onClick = { viewModel.changeShowDoneTask(!showDoneTasks) },
                         suffix = {
                             Switch(

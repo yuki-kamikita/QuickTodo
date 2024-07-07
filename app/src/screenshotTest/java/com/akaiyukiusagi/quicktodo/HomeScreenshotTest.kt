@@ -10,6 +10,7 @@ import com.akaiyukiusagi.quicktodo.ui_layer.screen.CardDesign
 import com.akaiyukiusagi.quicktodo.ui_layer.screen.HomeScreen
 import com.akaiyukiusagi.quicktodo.ui_layer.screen.NewTask
 import com.akaiyukiusagi.quicktodo.ui_layer.view_model.PreviewHomeViewModel
+import com.akaiyukiusagi.quicktodo.ui_layer.view_model.PreviewSettingsViewModel
 
 class HomeScreenshotTest {
 
@@ -20,7 +21,8 @@ class HomeScreenshotTest {
     fun PreviewScreen() {
         PreviewComponent {
             HomeScreen(
-                viewModel = PreviewHomeViewModel()
+                viewModel = PreviewHomeViewModel(),
+                settings = PreviewSettingsViewModel()
             )
         }
     }
