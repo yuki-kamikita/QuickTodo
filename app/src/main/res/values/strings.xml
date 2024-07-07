@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">NotificationTodo</string>
-    <string name="settings">Settings</string>
     <string name="back">Back</string>
 
     <string name="snackbar_delete_suffix">has been deleted</string>
@@ -16,6 +15,13 @@
     <string name="label_last_7_days">past 7 days</string>
     <string name="label_last_30_days">past 30 days</string>
     <string name="label_month">%1$d month</string>
+
+    <string name="settings">Settings</string>
+    <string name="color">Color</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="theme_color">Theme Color</string>
+    <string name="display_settings">Display Settings</string>
+    <string name="show_done_tasks">Show Done Tasks</string>
 
     <string name="notification_done">Done</string>
     <string name="notification_description">Tasks to display in notifications</string>
