@@ -4,12 +4,20 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -20,7 +28,6 @@ import com.akaiyukiusagi.quicktodo.ui_layer.screen.HomeScreen
 import com.akaiyukiusagi.quicktodo.ui_layer.screen.SettingsScreen
 import com.akaiyukiusagi.quicktodo.ui_layer.theme.QuickTodoTheme
 import com.akaiyukiusagi.quicktodo.ui_layer.view_model.HomeViewModel
-import com.akaiyukiusagi.quicktodo.ui_layer.view_model.PreviewSettingsViewModel
 import com.akaiyukiusagi.quicktodo.ui_layer.view_model.SettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -45,16 +52,45 @@ class MainActivity : ComponentActivity() {
                     currentRoute.value = ScreenNavigator.fromName(screenName) ?: ScreenNavigator.Home
                 }
 
-                NavHost(
-                    navController,
-                    startDestination = ScreenNavigator.Home.name,
-                    modifier = Modifier.safeDrawingPadding()
-                ){
-                    composable(ScreenNavigator.Home.name) {
-                        HomeScreen(homeViewModel, settingsViewModel, navController)
-                    }
-                    composable(ScreenNavigator.Settings.name) {
-                        SettingsScreen(settingsViewModel, navController)
+                Box(
+                    // 予測型「戻る」ジェスチャー時に一瞬見えるので背景色を指定
+                    modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface)
+                ) {
+                    NavHost(
+                        navController,
+                        startDestination = ScreenNavigator.Home.name,
+                        popEnterTransition = {
+                            scaleIn(
+                                animationSpec = tween(
+                                    durationMillis = 100,
+                                    delayMillis = 35,
+                                ),
+                                initialScale = 1.1F,
+                            ) + fadeIn(
+                                animationSpec = tween(
+                                    durationMillis = 100,
+                                    delayMillis = 35,
+                                ),
+                            )
+                        },
+                        popExitTransition = {
+                            scaleOut(
+                                targetScale = 0.9F,
+                            ) + fadeOut(
+                                animationSpec = tween(
+                                    durationMillis = 35,
+                                    easing = CubicBezierEasing(0.1f, 0.1f, 0f, 1f),
+                                ),
+                            )
+                        },
+                        modifier = Modifier.safeDrawingPadding()
+                    ){
+                        composable(ScreenNavigator.Home.name) {
+                            HomeScreen(homeViewModel, settingsViewModel, navController)
+                        }
+                        composable(ScreenNavigator.Settings.name) {
+                            SettingsScreen(settingsViewModel, navController)
+                        }
                     }
                 }
             }
