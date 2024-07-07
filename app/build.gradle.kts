@@ -15,8 +15,8 @@ android {
         applicationId = "com.akaiyukiusagi.quicktodo"
         minSdk = 28
         targetSdk = 34
-        versionCode = 4
-        versionName = "1.3.0"
+        versionCode = 5
+        versionName = "1.4.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -35,7 +35,7 @@ android {
     buildTypes {
         release {
             signingConfig = signingConfigs.getByName("release")
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -43,12 +43,31 @@ android {
         }
         debug {
             applicationIdSuffix = ".debug"
+            versionNameSuffix = ".debug"
             enableUnitTestCoverage = true
             enableAndroidTestCoverage = true
+        }
+        create("animatable") {
+            initWith(getByName("debug"))
+            applicationIdSuffix = ".animatable"
+            versionNameSuffix = ".animatable"
+            isDebuggable = false
+        }
+        create("qa") {
+            initWith(getByName("debug"))
+            applicationIdSuffix = ".qa"
+            versionNameSuffix = ".qa"
+            isDebuggable = false
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.10"
@@ -96,6 +115,9 @@ dependencies {
     // ViewModel
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+
+    // DataStore
+    implementation(libs.androidx.datastore.preferences)
 
     // Room
     implementation(libs.androidx.room.ktx)

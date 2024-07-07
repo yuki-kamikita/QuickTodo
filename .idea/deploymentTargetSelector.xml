@@ -2,20 +2,9 @@
 <project version="4">
   <component name="deploymentTargetSelector">
     <selectionStates>
-      <SelectionState runConfigName="PreviewScreen - Light">
-        <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-04-06T09:36:38.060784Z">
-          <Target type="DEFAULT_BOOT">
-            <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=/Users/shuhei/.android/avd/Pixel_6_API_34.avd" />
-            </handle>
-          </Target>
-        </DropdownSelection>
-        <DialogSelection />
-      </SelectionState>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-06-30T10:40:57.543736Z">
+        <DropdownSelection timestamp="2024-07-07T14:17:29.803462Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=/Users/shuhei/.android/avd/Pixel8_35_.avd" />

@@ -1,5 +1,6 @@
 package com.akaiyukiusagi.quicktodo.ui_layer.component
 
+import androidx.compose.animation.core.exponentialDecay
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -61,16 +62,21 @@ fun SwipeToDelete(
     var contentHeight by remember { mutableIntStateOf(0) }
     val contentHeightDp = (with(density) { contentHeight.toDp() })
 
+    val decayAnimationSpec = exponentialDecay<Float>(
+        frictionMultiplier = 1f, // 減速を調整するための乗数。値が大きいほど早く停止します。
+        absVelocityThreshold = 0.1f // アニメーションが停止とみなされる速度の閾値。
+    )
     val state = remember {
         AnchoredDraggableState(
             initialValue = false,
             anchors = DraggableAnchors {
                 false at 0f
-                true at deleteButtonWidthPx
+                true at -deleteButtonWidthPx
             },
             positionalThreshold = { distance: Float -> distance * 0.5f },
             velocityThreshold = { deleteButtonWidthPx },
-            animationSpec = tween(),
+            snapAnimationSpec = tween(),
+            decayAnimationSpec = decayAnimationSpec
         )
     }
 
@@ -130,13 +136,11 @@ fun SwipeToDelete(
                 .onSizeChanged { contentHeight = it.height }
                 .offset {
                     IntOffset(
-                        x = -state
-                            .requireOffset()
-                            .roundToInt(),
+                        x = state.requireOffset().roundToInt(),
                         y = 0,
                     )
                 }
-                .anchoredDraggable(state, Orientation.Horizontal, reverseDirection = true),
+                .anchoredDraggable(state, Orientation.Horizontal),
         ) {
             content(Modifier)
         }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">通知Todo</string>
+    <string name="back">戻る</string>
 
     <string name="snackbar_delete_suffix">が削除されました</string>
     <string name="snackbar_undo">元に戻す</string>
@@ -14,6 +15,14 @@
     <string name="label_last_7_days">過去7日間</string>
     <string name="label_last_30_days">過去30日間</string>
     <string name="label_month">%1$d月</string>
+
+    <string name="settings">設定</string>
+    <string name="color">色</string>
+    <string name="dark_mode">ダークモード</string>
+    <string name="theme_color">テーマカラー</string>
+    <string name="display_settings">表示設定</string>
+    <string name="show_done_task">完了済みを表示する</string>
+
 
     <string name="notification_done">完了</string>
     <string name="notification_description">通知に表示するやること</string>
