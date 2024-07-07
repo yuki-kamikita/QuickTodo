@@ -43,17 +43,20 @@ android {
         }
         debug {
             applicationIdSuffix = ".debug"
+            versionNameSuffix = ".debug"
             enableUnitTestCoverage = true
             enableAndroidTestCoverage = true
         }
-        create("nonDebuggable") {
+        create("animatable") {
             initWith(getByName("debug"))
-            applicationIdSuffix = ".nonDebuggable"
+            applicationIdSuffix = ".animatable"
+            versionNameSuffix = ".animatable"
             isDebuggable = false
         }
         create("qa") {
             initWith(getByName("debug"))
             applicationIdSuffix = ".qa"
+            versionNameSuffix = ".qa"
             isDebuggable = false
             isMinifyEnabled = true
             proguardFiles(
@@ -64,6 +67,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.10"
