@@ -31,8 +31,10 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.akaiyukiusagi.quicktodo.BuildConfig
 import com.akaiyukiusagi.quicktodo.R
 import com.akaiyukiusagi.quicktodo.data_layer.BooleanPreference
+import com.akaiyukiusagi.quicktodo.ui_layer.component.Center
 import com.akaiyukiusagi.quicktodo.ui_layer.component.PreviewComponent
 import com.akaiyukiusagi.quicktodo.ui_layer.view_model.ISettingsViewModel
 import com.akaiyukiusagi.quicktodo.ui_layer.view_model.PreviewSettingsViewModel
@@ -65,9 +67,10 @@ fun SettingsScreen(
                     .fillMaxSize()
             ) {
                 Column {
-                    SectionTitle(stringResource(R.string.color))
-                    SettingsRow(stringResource(R.string.dark_mode), {})
-                    SettingsRow(stringResource(R.string.theme_color), {})
+//                    SectionTitle(stringResource(R.string.color))
+//                    SettingsRow(stringResource(R.string.dark_mode), {})
+//                    SettingsRow(stringResource(R.string.theme_color), {})
+
                     SectionTitle(stringResource(R.string.display_settings))
                     SettingsRow(
                         text = stringResource(R.string.show_done_task),
@@ -79,6 +82,25 @@ fun SettingsScreen(
                             )
                         }
                     )
+
+//                    SectionTitle("このアプリについて")
+//                    SettingsRow("利用規約", {})
+//                    SettingsRow("プライバシーポリシー", {})
+//                    SettingsRow("ライセンス", {})
+
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Center {
+                        Text(
+                            stringResource(id = R.string.app_name),
+                            style = MaterialTheme.typography.bodyMedium)
+                    }
+                    Center {
+                        Text(
+                            "ver ${BuildConfig.VERSION_NAME}",
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.padding(2.dp))
+                    }
+
                 }
             }
         }
