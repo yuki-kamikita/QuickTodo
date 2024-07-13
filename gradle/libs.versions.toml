@@ -1,6 +1,6 @@
 [versions]
 accompanistPermissions = "0.33.1-alpha"
-agp = "8.5.0"
+agp = "8.5.1"
 composeBom = "2024.06.00"
 constraintlayoutCompose = "1.0.1"
 activityCompose = "1.9.0"
@@ -8,8 +8,7 @@ datastorePreferences = "1.1.1"
 lifecycleViewmodelCompose = "2.8.3"
 lifecycleRuntimeKtx = "2.8.3"
 materialIconsExtended = "1.6.8"
-#navigationCompose = "2.7.7"
-navigationCompose = "2.8.0-beta04"
+navigationCompose = "2.8.0-beta05"
 hiltAndroid = "2.49"
 hiltAndroidCompiler = "2.49"
 hiltCommon = "1.2.0"
@@ -41,12 +40,9 @@ androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-co
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 material3 = { module = "androidx.compose.material3:material3" }
-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
-ui = { module = "androidx.compose.ui:ui" }
 ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling"}
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
