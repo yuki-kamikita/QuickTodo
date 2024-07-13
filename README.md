@@ -34,33 +34,30 @@ mainブランチにマージしたらGooglePlayにaabをビルドし、署名、
 # テスト
 ## スクリーンショットテスト
 https://developer.android.com/studio/preview/compose-screenshot-testing  
-[保存場所](app/src/debug/screenshotTest/reference)
 
 #### スクリーンショット撮影
 ```
 ./gradlew updateDebugScreenshotTest
+open ./app/src/debug/screenshotTest/reference
 ```
 
 #### スクリーンショット比較
 ```
 ./gradlew validateDebugScreenshotTest
+open ./app/build/reports/screenshotTest/preview/debug/index.html
+open ./app/build/reports/screenshotTest/preview/debug
 ```
 
 ## ユニットテスト
-
-カバレッジ更新
+#### カバレッジ更新
 ```
 ./gradlew createDebugCoverageReport
-```
-
-[カバレッジ保存場所](./app/build/reports/coverage/androidTest/debug/connected/index.html)  
-カバレッジをブラウザで開く
-```
 open ./app/build/reports/coverage/androidTest/debug/connected/index.html
 ```
 
 # ローカルビルド
-.apkビルド
+#### .apkビルド
 ```
 ./gradlew assembleDebug
+open ./app/build/outputs/apk/debug
 ```
