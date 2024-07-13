@@ -58,9 +58,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewDynamicColors
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -71,6 +68,7 @@ import com.akaiyukiusagi.quicktodo.core.extension.view
 import com.akaiyukiusagi.quicktodo.data_layer.room.entity.Task
 import com.akaiyukiusagi.quicktodo.ui_layer.component.OnPause
 import com.akaiyukiusagi.quicktodo.ui_layer.component.PreviewComponent
+import com.akaiyukiusagi.quicktodo.ui_layer.component.PreviewTemplate
 import com.akaiyukiusagi.quicktodo.ui_layer.component.SwipeToDelete
 import com.akaiyukiusagi.quicktodo.ui_layer.component.performVibration
 import com.akaiyukiusagi.quicktodo.ui_layer.view_model.IHomeViewModel
@@ -445,9 +443,7 @@ fun NewTask(onAddTask: (String) -> Unit = {}) {
 }
 
 
-@PreviewLightDark
-@PreviewDynamicColors
-@Preview(fontScale = 2.0F)
+@PreviewTemplate
 @Composable
 fun PreviewScreen() {
     PreviewComponent {
@@ -455,8 +451,7 @@ fun PreviewScreen() {
     }
 }
 
-@PreviewLightDark
-@PreviewDynamicColors
+@PreviewTemplate
 @Composable
 fun PreviewCard() {
     PreviewComponent {
@@ -467,8 +462,7 @@ fun PreviewCard() {
     }
 }
 
-@PreviewLightDark
-@PreviewDynamicColors
+@PreviewTemplate
 @Composable
 fun PreviewNewTask() {
     PreviewComponent {
