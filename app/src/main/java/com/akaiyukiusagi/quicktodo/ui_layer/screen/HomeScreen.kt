@@ -145,7 +145,7 @@ fun TaskList(
     val context = LocalContext.current
     val tasks by viewModel.tasks.collectAsState(initial = viewModel.initialTasks)
     val doneTasks by viewModel.doneTasks.collectAsState(initial = viewModel.initialDoneTasks)
-    val showDoneTasks by settings.showDoneTasks.collectAsState(initial = false)
+    val showDoneTasks by settings.showDoneTasks.collectAsState(initial = true)
     val scope = rememberCoroutineScope()
 
     val message = stringResource(id = R.string.snackbar_delete_suffix)
