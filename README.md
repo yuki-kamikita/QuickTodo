@@ -53,6 +53,7 @@ open ./app/build/reports/screenshotTest/preview/debug
 ```
 ./gradlew createDebugCoverageReport
 open ./app/build/reports/coverage/androidTest/debug/connected/index.html
+open ./app/build/reports/androidTests/connected/debug/index.html
 ```
 
 # ローカルビルド

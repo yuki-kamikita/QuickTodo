@@ -65,6 +65,7 @@ import com.akaiyukiusagi.quicktodo.R
 import com.akaiyukiusagi.quicktodo.ScreenNavigator
 import com.akaiyukiusagi.quicktodo.core.extension.category
 import com.akaiyukiusagi.quicktodo.core.extension.view
+import com.akaiyukiusagi.quicktodo.data_layer.BooleanPreference
 import com.akaiyukiusagi.quicktodo.data_layer.room.entity.Task
 import com.akaiyukiusagi.quicktodo.ui_layer.component.OnPause
 import com.akaiyukiusagi.quicktodo.ui_layer.component.PreviewComponent
@@ -145,7 +146,7 @@ fun TaskList(
     val context = LocalContext.current
     val tasks by viewModel.tasks.collectAsState(initial = viewModel.initialTasks)
     val doneTasks by viewModel.doneTasks.collectAsState(initial = viewModel.initialDoneTasks)
-    val showDoneTasks by settings.showDoneTasks.collectAsState(initial = true)
+    val showDoneTasks by settings.showDoneTasks.collectAsState(initial = BooleanPreference.SHOW_DONE_TASKS.initialValue)
     val scope = rememberCoroutineScope()
 
     val message = stringResource(id = R.string.snackbar_delete_suffix)
@@ -155,7 +156,7 @@ fun TaskList(
         modifier = modifier.padding(horizontal = 2.dp),
         verticalArrangement = Arrangement.Top
     ) {
-        item { Spacer(modifier = Modifier.padding(2.dp)) } // TODO: AppBar入れたら不要になる
+        item { Spacer(modifier = Modifier.padding(2.dp)) }
 
         // 未完
         items(tasks, key = { task -> task.id }) { task ->
