@@ -22,6 +22,7 @@
     <string name="theme_color">テーマカラー</string>
     <string name="display_settings">表示設定</string>
     <string name="show_done_task">完了済みを表示する</string>
+    <string name="use_simple_ui">簡易UIを使用する</string>
 
 
     <string name="notification_done">完了</string>

@@ -18,11 +18,18 @@ class SettingsViewModel @Inject constructor(
 ) : ViewModel(), ISettingsViewModel {
     private val _showDoneTasks = MutableStateFlow(BooleanPreference.SHOW_DONE_TASKS.initialValue)
     override val showDoneTasks = _showDoneTasks.asStateFlow()
+    private val _useSimpleUI = MutableStateFlow(BooleanPreference.USE_SIMPLE_UI.initialValue)
+    override val useSimpleUI = _useSimpleUI.asStateFlow()
 
     init {
         viewModelScope.launch {
             dataStore.getBooleanFlow(BooleanPreference.SHOW_DONE_TASKS).collect { value ->
                 _showDoneTasks.value = value
+            }
+        }
+        viewModelScope.launch {
+            dataStore.getBooleanFlow(BooleanPreference.USE_SIMPLE_UI).collect { value ->
+                _useSimpleUI.value = value
             }
         }
     }
@@ -33,15 +40,26 @@ class SettingsViewModel @Inject constructor(
             _showDoneTasks.value = show
         }
     }
+
+    override fun changeUseSimpleUI(simpleUI: Boolean) {
+        viewModelScope.launch {
+            dataStore.saveBoolean(BooleanPreference.USE_SIMPLE_UI, simpleUI)
+            _useSimpleUI.value = simpleUI
+        }
+    }
 }
 
 interface ISettingsViewModel {
     val showDoneTasks: Flow<Boolean>
+    val useSimpleUI: Flow<Boolean>
     fun changeShowDoneTask(show: Boolean)
+    fun changeUseSimpleUI(simpleUI: Boolean)
 }
 
 class PreviewSettingsViewModel: ISettingsViewModel {
     override val showDoneTasks: Flow<Boolean> = flowOf(BooleanPreference.SHOW_DONE_TASKS.initialValue)
+    override val useSimpleUI: Flow<Boolean> = flowOf(BooleanPreference.USE_SIMPLE_UI.initialValue)
 
     override fun changeShowDoneTask(show: Boolean) {}
+    override fun changeUseSimpleUI(simpleUI: Boolean) {}
 }

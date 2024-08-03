@@ -35,11 +35,11 @@ fun PreviewComponent(content: @Composable () -> Unit) {
     AnnotationTarget.ANNOTATION_CLASS,
     AnnotationTarget.FUNCTION
 )
-@Preview(name = "1. Dark Blue",locale = "Ja" , uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL)
-@Preview(name = "2. Dark Red", apiLevel = 33, uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL, wallpaper = RED_DOMINATED_EXAMPLE)
-@Preview(name = "3. Blue",locale = "Ja" , apiLevel = 33, wallpaper = BLUE_DOMINATED_EXAMPLE)
-@Preview(name = "4. Red", apiLevel = 33, wallpaper = RED_DOMINATED_EXAMPLE)
-@Preview(name = "5. Green",locale = "Ja" , apiLevel = 33, wallpaper = GREEN_DOMINATED_EXAMPLE, fontScale = 2f)
-@Preview(name = "6. Yellow", apiLevel = 33, wallpaper = YELLOW_DOMINATED_EXAMPLE, fontScale = 2f)
+@Preview(name = "1. Dark Blue", apiLevel = 33, showBackground = true, wallpaper = BLUE_DOMINATED_EXAMPLE  , uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL, locale = "Ja")
+@Preview(name = "2. Dark Red" , apiLevel = 33, showBackground = true, wallpaper = RED_DOMINATED_EXAMPLE   , uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL)
+@Preview(name = "3. Blue"     , apiLevel = 33, showBackground = true, wallpaper = BLUE_DOMINATED_EXAMPLE  , locale = "Ja")
+@Preview(name = "4. Red"      , apiLevel = 33, showBackground = true, wallpaper = RED_DOMINATED_EXAMPLE)
+@Preview(name = "5. Green"    , apiLevel = 33, showBackground = true, wallpaper = GREEN_DOMINATED_EXAMPLE , locale = "Ja", fontScale = 2f)
+@Preview(name = "6. Yellow"   , apiLevel = 33, showBackground = true, wallpaper = YELLOW_DOMINATED_EXAMPLE, fontScale = 2f)
 annotation class PreviewTemplate
 

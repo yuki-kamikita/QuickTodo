@@ -44,7 +44,8 @@ object DataStoreModule {
 }
 
 enum class BooleanPreference(val initialValue: Boolean) {
-    SHOW_DONE_TASKS(true);
+    SHOW_DONE_TASKS(true),
+    USE_SIMPLE_UI(false);
 
     fun key(): Preferences.Key<Boolean> = booleanPreferencesKey(name)
 }

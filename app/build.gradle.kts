@@ -105,6 +105,7 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.animation)
 
     // Accompanist
     implementation(libs.accompanist.permissions)

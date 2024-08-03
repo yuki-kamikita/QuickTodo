@@ -22,6 +22,7 @@
     <string name="theme_color">Theme Color</string>
     <string name="display_settings">Display Settings</string>
     <string name="show_done_task">Show Done Tasks</string>
+    <string name="use_simple_ui">Use Simple UI</string>
 
     <string name="notification_done">Done</string>
     <string name="notification_description">Tasks to display in notifications</string>

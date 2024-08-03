@@ -3,12 +3,10 @@ package com.akaiyukiusagi.quicktodo
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewDynamicColors
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.akaiyukiusagi.quicktodo.ui_layer.component.PreviewComponent
 import com.akaiyukiusagi.quicktodo.ui_layer.component.PreviewTemplate
 import com.akaiyukiusagi.quicktodo.ui_layer.screen.CardDesign
-import com.akaiyukiusagi.quicktodo.ui_layer.screen.HomeScreen
+import com.akaiyukiusagi.quicktodo.ui_layer.screen.SimpleListScreen
 import com.akaiyukiusagi.quicktodo.ui_layer.screen.NewTask
 import com.akaiyukiusagi.quicktodo.ui_layer.view_model.PreviewHomeViewModel
 import com.akaiyukiusagi.quicktodo.ui_layer.view_model.PreviewSettingsViewModel
@@ -19,7 +17,7 @@ class HomeScreenshotTest {
     @Composable
     fun PreviewScreen() {
         PreviewComponent {
-            HomeScreen(
+            SimpleListScreen(
                 viewModel = PreviewHomeViewModel(),
                 settings = PreviewSettingsViewModel()
             )

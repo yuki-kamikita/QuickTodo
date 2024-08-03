@@ -10,11 +10,9 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -25,6 +23,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.akaiyukiusagi.quicktodo.ui_layer.screen.HomeScreen
+import com.akaiyukiusagi.quicktodo.ui_layer.screen.SimpleListScreen
+import com.akaiyukiusagi.quicktodo.ui_layer.screen.SampleScreen
 import com.akaiyukiusagi.quicktodo.ui_layer.screen.SettingsScreen
 import com.akaiyukiusagi.quicktodo.ui_layer.theme.QuickTodoTheme
 import com.akaiyukiusagi.quicktodo.ui_layer.view_model.HomeViewModel
@@ -52,10 +52,8 @@ class MainActivity : ComponentActivity() {
                     currentRoute.value = ScreenNavigator.fromName(screenName) ?: ScreenNavigator.Home
                 }
 
-                Box(
-                    // 予測型「戻る」ジェスチャー時に一瞬見えるので背景色を指定
-                    modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface)
-                ) {
+                // 予測型「戻る」ジェスチャー時に一瞬見えるので背景を指定
+                Surface(modifier = Modifier.fillMaxSize()) {
                     NavHost(
                         navController,
                         startDestination = ScreenNavigator.Home.name,

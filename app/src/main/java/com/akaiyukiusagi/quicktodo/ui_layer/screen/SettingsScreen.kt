@@ -36,6 +36,7 @@ import com.akaiyukiusagi.quicktodo.R
 import com.akaiyukiusagi.quicktodo.data_layer.BooleanPreference
 import com.akaiyukiusagi.quicktodo.ui_layer.component.Center
 import com.akaiyukiusagi.quicktodo.ui_layer.component.PreviewComponent
+import com.akaiyukiusagi.quicktodo.ui_layer.component.PreviewTemplate
 import com.akaiyukiusagi.quicktodo.ui_layer.view_model.ISettingsViewModel
 import com.akaiyukiusagi.quicktodo.ui_layer.view_model.PreviewSettingsViewModel
 
@@ -46,6 +47,7 @@ fun SettingsScreen(
     navigator: NavController = rememberNavController()
 ) {
     val showDoneTasks = viewModel.showDoneTasks.collectAsState(initial = BooleanPreference.SHOW_DONE_TASKS.initialValue).value
+    val simpleUI = viewModel.useSimpleUI.collectAsState(initial = BooleanPreference.USE_SIMPLE_UI.initialValue).value
     val themeColor = viewModel.showDoneTasks.collectAsState(initial = null)
 
     Scaffold(
@@ -79,6 +81,16 @@ fun SettingsScreen(
                             Switch(
                                 checked = showDoneTasks,
                                 onCheckedChange = { viewModel.changeShowDoneTask(it) }
+                            )
+                        }
+                    )
+                    SettingsRow(
+                        text = stringResource(R.string.use_simple_ui),
+                        onClick = { viewModel.changeUseSimpleUI(!simpleUI) },
+                        suffix = {
+                            Switch(
+                                checked = simpleUI,
+                                onCheckedChange = { viewModel.changeUseSimpleUI(it) }
                             )
                         }
                     )
@@ -148,9 +160,7 @@ fun SettingsRow(
     }
 }
 
-@PreviewLightDark
-@PreviewDynamicColors
-@PreviewFontScale
+@PreviewTemplate
 @Composable
 fun PreviewSettingsScreen() {
     PreviewComponent {

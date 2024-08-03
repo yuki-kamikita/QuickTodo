@@ -1,16 +1,17 @@
 [versions]
 accompanistPermissions = "0.33.1-alpha"
 agp = "8.5.1"
+animation = "1.7.0-beta06"
 composeBom = "2024.06.00"
 constraintlayoutCompose = "1.0.1"
-activityCompose = "1.9.0"
+activityCompose = "1.9.1"
 datastorePreferences = "1.1.1"
-lifecycleViewmodelCompose = "2.8.3"
-lifecycleRuntimeKtx = "2.8.3"
+lifecycleViewmodelCompose = "2.8.4"
+lifecycleRuntimeKtx = "2.8.4"
 materialIconsExtended = "1.6.8"
-navigationCompose = "2.8.0-beta05"
-hiltAndroid = "2.49"
-hiltAndroidCompiler = "2.49"
+navigationCompose = "2.8.0-beta06"
+hiltAndroid = "2.50"
+hiltAndroidCompiler = "2.50"
 hiltCommon = "1.2.0"
 hiltNavigationCompose = "1.2.0"
 kotlin = "1.9.22"
@@ -18,11 +19,12 @@ coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-screenshot = "0.0.1-alpha02"
+screenshot = "0.0.1-alpha03"
 room = "2.6.1"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
+androidx-animation = { module = "androidx.compose.animation:animation", version.ref = "animation" }
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
