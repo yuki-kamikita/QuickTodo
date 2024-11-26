@@ -15,6 +15,10 @@ fun HomeScreen(
     navigator: NavController = rememberNavController()
 ) {
     val simpleUI = settings.useSimpleUI.collectAsState(initial = BooleanPreference.USE_SIMPLE_UI.initialValue).value
-    if (simpleUI) SimpleListScreen(viewModel, settings, navigator)
-    else FullListScreen(viewModel, settings, navigator)
+
+    if (simpleUI) {
+        SimpleListScreen(viewModel, settings, navigator)
+    } else {
+        FullListScreen(viewModel, settings, navigator)
+    }
 }

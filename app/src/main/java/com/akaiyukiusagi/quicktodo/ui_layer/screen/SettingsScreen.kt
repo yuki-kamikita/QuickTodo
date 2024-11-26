@@ -25,16 +25,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.PreviewDynamicColors
-import androidx.compose.ui.tooling.preview.PreviewFontScale
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.akaiyukiusagi.quicktodo.BuildConfig
 import com.akaiyukiusagi.quicktodo.R
 import com.akaiyukiusagi.quicktodo.data_layer.BooleanPreference
-import com.akaiyukiusagi.quicktodo.ui_layer.component.Center
+import com.akaiyukiusagi.quicktodo.ui_layer.component.CenterArrangement
 import com.akaiyukiusagi.quicktodo.ui_layer.component.PreviewComponent
 import com.akaiyukiusagi.quicktodo.ui_layer.component.PreviewTemplate
 import com.akaiyukiusagi.quicktodo.ui_layer.view_model.ISettingsViewModel
@@ -48,7 +45,6 @@ fun SettingsScreen(
 ) {
     val showDoneTasks = viewModel.showDoneTasks.collectAsState(initial = BooleanPreference.SHOW_DONE_TASKS.initialValue).value
     val simpleUI = viewModel.useSimpleUI.collectAsState(initial = BooleanPreference.USE_SIMPLE_UI.initialValue).value
-    val themeColor = viewModel.showDoneTasks.collectAsState(initial = null)
 
     Scaffold(
         topBar = {
@@ -101,12 +97,12 @@ fun SettingsScreen(
 //                    SettingsRow("ライセンス", {})
 
                     Spacer(modifier = Modifier.height(12.dp))
-                    Center {
+                    CenterArrangement {
                         Text(
                             stringResource(id = R.string.app_name),
                             style = MaterialTheme.typography.bodyMedium)
                     }
-                    Center {
+                    CenterArrangement {
                         Text(
                             "ver ${BuildConfig.VERSION_NAME}",
                             style = MaterialTheme.typography.bodySmall,

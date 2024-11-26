@@ -22,7 +22,6 @@ val LightColorScheme = lightColorScheme()
 @Composable
 fun QuickTodoTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -32,7 +31,7 @@ fun QuickTodoTheme(
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
-        // Android 11以下ではTheme.ColorSchemeを使用
+        // Android 11以下ではデフォルトのColorSchemeを使用
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
@@ -41,7 +40,7 @@ fun QuickTodoTheme(
         SideEffect {
             val window = (view.context as Activity).window
             window.statusBarColor = colorScheme.surfaceContainer.toArgb() // TODO: TopAppBar削除時に色変更
-            window.navigationBarColor = colorScheme.surface.toArgb()
+//            window.navigationBarColor = colorScheme.surface.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }

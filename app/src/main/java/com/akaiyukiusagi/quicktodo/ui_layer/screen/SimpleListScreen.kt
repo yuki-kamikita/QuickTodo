@@ -82,7 +82,12 @@ import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
-
+/**
+ * タイトルのみ編集可能なタスク一覧画面
+ *
+ * 旧バージョン
+ * 今後は[FullListScreen]の方で機能追加を行う予定
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SimpleListScreen(
@@ -335,7 +340,7 @@ fun CardDesign(
                     colors = TextFieldDefaults.textFieldColors(
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent
+                        disabledIndicatorColor = Color.Transparent,
                     ),
                 )
 

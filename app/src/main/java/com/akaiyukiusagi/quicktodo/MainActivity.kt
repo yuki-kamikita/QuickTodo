@@ -22,9 +22,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.akaiyukiusagi.quicktodo.ui_layer.screen.AnimatedVisibilitySample
 import com.akaiyukiusagi.quicktodo.ui_layer.screen.HomeScreen
-import com.akaiyukiusagi.quicktodo.ui_layer.screen.SimpleListScreen
-import com.akaiyukiusagi.quicktodo.ui_layer.screen.SampleScreen
 import com.akaiyukiusagi.quicktodo.ui_layer.screen.SettingsScreen
 import com.akaiyukiusagi.quicktodo.ui_layer.theme.QuickTodoTheme
 import com.akaiyukiusagi.quicktodo.ui_layer.view_model.HomeViewModel
@@ -89,6 +88,10 @@ class MainActivity : ComponentActivity() {
                         composable(ScreenNavigator.Settings.name) {
                             SettingsScreen(settingsViewModel, navController)
                         }
+                        composable(ScreenNavigator.Sample.name) {
+                            AnimatedVisibilitySample()
+//                            AnimatedVisibilitySharedElementShortenedExample()
+                        }
                     }
                 }
             }
@@ -98,7 +101,8 @@ class MainActivity : ComponentActivity() {
 
 enum class ScreenNavigator {
     Home,
-    Settings;
+    Settings,
+    Sample;
 
     // nameを使用することは定義されていないからミスる可能性があるかなと思ったけどやりすぎかなって気もしなくもない
     // けど見るの自分だけだし、navController.navigate覚えられないから予測で出てくるこっちでいいか

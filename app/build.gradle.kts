@@ -46,6 +46,7 @@ android {
             versionNameSuffix = ".debug"
             enableUnitTestCoverage = true
             enableAndroidTestCoverage = true
+            isDebuggable = false
         }
         create("animatable") {
             initWith(getByName("debug"))

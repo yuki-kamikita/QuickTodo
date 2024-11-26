@@ -86,22 +86,24 @@ interface IHomeViewModel {
 class PreviewHomeViewModel: IHomeViewModel {
     override val initialTasks: List<Task> = listOf(
         Task(1, "aaa", false, false),
-        Task(2, "bbb", false, true)
+        Task(2, "bbb", false, true),
+        Task(3, "cccc", false, false),
+        Task(4, "dddd", false, true)
     )
     override val tasks: Flow<List<Task>> = flowOf(initialTasks)
 
     private val today = LocalDateTime.now()
     override val initialDoneTasks: List<Task> =
         listOf(
-            Task(3, "当日", true, false, today),
-            Task(4, "1日前", true, false, today.minusDays(1)),
-            Task(5, "2日前", true, false, today.minusDays(2)),
-            Task(6, "3日前", true, false, today.minusDays(3)),
-            Task(7, "7日前", true, false, today.minusDays(7)),
-            Task(8, "8日前", true, false, today.minusDays(8)),
-            Task(9, "30日前", true, false, today.minusDays(30)),
-            Task(10, "31日前", true, false, today.minusDays(31)),
-            Task(11, "100日前", true, false, today.minusDays(100)),
+            Task(11, "当日", true, false, today),
+            Task(12, "1日前", true, false, today.minusDays(1)),
+            Task(13, "2日前", true, false, today.minusDays(2)),
+            Task(14, "3日前", true, false, today.minusDays(3)),
+            Task(15, "7日前", true, false, today.minusDays(7)),
+            Task(16, "8日前", true, false, today.minusDays(8)),
+            Task(17, "30日前", true, false, today.minusDays(30)),
+            Task(18, "31日前", true, false, today.minusDays(31)),
+            Task(19, "100日前", true, false, today.minusDays(100)),
         )
     override val doneTasks: Flow<List<Task>> = flowOf(initialDoneTasks)
 
