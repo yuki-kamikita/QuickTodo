@@ -1,6 +1,6 @@
 [versions]
 accompanistPermissions = "0.33.1-alpha"
-agp = "8.5.1"
+agp = "8.7.0"
 animation = "1.7.0-beta06"
 composeBom = "2024.06.00"
 constraintlayoutCompose = "1.0.1"
