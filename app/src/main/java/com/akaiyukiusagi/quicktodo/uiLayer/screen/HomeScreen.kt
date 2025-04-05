@@ -334,7 +334,7 @@ fun CardDesign(
                                 hadFocus = false
                             }
                         },
-                    colors = TextFieldDefaults.textFieldColors(
+                    colors = TextFieldDefaults.colors(
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
                         disabledIndicatorColor = Color.Transparent
@@ -413,7 +413,7 @@ fun NewTask(onAddTask: (String) -> Unit = {}) {
                         .weight(1f)
                         .focusRequester(focusRequester)
                         .onFocusChanged { focusState -> isFocused.value = focusState.isFocused },
-                    colors = TextFieldDefaults.textFieldColors(
+                    colors = TextFieldDefaults.colors(
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
                         disabledIndicatorColor = Color.Transparent
