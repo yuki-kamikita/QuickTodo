@@ -36,6 +36,7 @@ import com.akaiyukiusagi.quicktodo.R
 import com.akaiyukiusagi.quicktodo.dataLayer.BooleanPreference
 import com.akaiyukiusagi.quicktodo.uiLayer.component.Center
 import com.akaiyukiusagi.quicktodo.uiLayer.component.PreviewComponent
+import com.akaiyukiusagi.quicktodo.uiLayer.component.PreviewTemplate
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.ISettingsViewModel
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.PreviewSettingsViewModel
 
@@ -148,9 +149,7 @@ fun SettingsRow(
     }
 }
 
-@PreviewLightDark
-@PreviewDynamicColors
-@PreviewFontScale
+@PreviewTemplate
 @Composable
 fun PreviewSettingsScreen() {
     PreviewComponent {

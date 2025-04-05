@@ -6,6 +6,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewDynamicColors
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.akaiyukiusagi.quicktodo.uiLayer.component.PreviewComponent
+import com.akaiyukiusagi.quicktodo.uiLayer.component.PreviewTemplate
 import com.akaiyukiusagi.quicktodo.uiLayer.screen.CardDesign
 import com.akaiyukiusagi.quicktodo.uiLayer.screen.HomeScreen
 import com.akaiyukiusagi.quicktodo.uiLayer.screen.NewTask
@@ -14,9 +15,7 @@ import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.PreviewSettingsViewModel
 
 class HomeScreenshotTest {
 
-    @PreviewLightDark
-    @PreviewDynamicColors
-    @Preview(fontScale = 2.0F)
+    @PreviewTemplate
     @Composable
     fun PreviewScreen() {
         PreviewComponent {
