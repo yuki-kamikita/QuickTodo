@@ -24,11 +24,11 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.akaiyukiusagi.quicktodo.ui_layer.screen.HomeScreen
-import com.akaiyukiusagi.quicktodo.ui_layer.screen.SettingsScreen
-import com.akaiyukiusagi.quicktodo.ui_layer.theme.QuickTodoTheme
-import com.akaiyukiusagi.quicktodo.ui_layer.view_model.HomeViewModel
-import com.akaiyukiusagi.quicktodo.ui_layer.view_model.SettingsViewModel
+import com.akaiyukiusagi.quicktodo.uiLayer.screen.HomeScreen
+import com.akaiyukiusagi.quicktodo.uiLayer.screen.SettingsScreen
+import com.akaiyukiusagi.quicktodo.uiLayer.theme.QuickTodoTheme
+import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.HomeViewModel
+import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.SettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
