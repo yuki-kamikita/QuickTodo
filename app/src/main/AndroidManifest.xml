@@ -27,14 +27,14 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".ui_layer.notification.CompleteReceiver"
+        <receiver android:name=".uiLayer.notification.CompleteReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.akaiyukiusagi.quicktodo.ACTION_COMPLETE"/>
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".ui_layer.notification.BootReceiver"
+        <receiver android:name=".uiLayer.notification.BootReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

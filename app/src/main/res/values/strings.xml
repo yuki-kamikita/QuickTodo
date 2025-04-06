@@ -5,6 +5,8 @@
 
     <string name="snackbar_delete_suffix">has been deleted</string>
     <string name="snackbar_undo">Undo</string>
+    <string name="snackbar_notification_permission_required">Notification permission required</string>
+    <string name="snackbar_open_notification_settings">Open settings</string>
 
     <string name="new_task">New Task</string>
     <string name="history">History</string>
@@ -22,6 +24,7 @@
     <string name="theme_color">Theme Color</string>
     <string name="display_settings">Display Settings</string>
     <string name="show_done_task">Show Done Tasks</string>
+    <string name="show_notification_on_create">Show Notification On Create</string>
 
     <string name="notification_done">Done</string>
     <string name="notification_description">Tasks to display in notifications</string>

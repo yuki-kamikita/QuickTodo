@@ -11,10 +11,8 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -24,11 +22,11 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.akaiyukiusagi.quicktodo.ui_layer.screen.HomeScreen
-import com.akaiyukiusagi.quicktodo.ui_layer.screen.SettingsScreen
-import com.akaiyukiusagi.quicktodo.ui_layer.theme.QuickTodoTheme
-import com.akaiyukiusagi.quicktodo.ui_layer.view_model.HomeViewModel
-import com.akaiyukiusagi.quicktodo.ui_layer.view_model.SettingsViewModel
+import com.akaiyukiusagi.quicktodo.uiLayer.screen.HomeScreen
+import com.akaiyukiusagi.quicktodo.uiLayer.screen.SettingsScreen
+import com.akaiyukiusagi.quicktodo.uiLayer.theme.QuickTodoTheme
+import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.HomeViewModel
+import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.SettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -52,9 +50,9 @@ class MainActivity : ComponentActivity() {
                     currentRoute.value = ScreenNavigator.fromName(screenName) ?: ScreenNavigator.Home
                 }
 
-                Box(
+                Surface(
                     // 予測型「戻る」ジェスチャー時に一瞬見えるので背景色を指定
-                    modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface)
+                    modifier = Modifier.background(MaterialTheme.colorScheme.surface)
                 ) {
                     NavHost(
                         navController,
@@ -83,7 +81,6 @@ class MainActivity : ComponentActivity() {
                                 ),
                             )
                         },
-                        modifier = Modifier.safeDrawingPadding()
                     ){
                         composable(ScreenNavigator.Home.name) {
                             HomeScreen(homeViewModel, settingsViewModel, navController)
@@ -98,6 +95,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+// TODO: objectにする
 enum class ScreenNavigator {
     Home,
     Settings;
