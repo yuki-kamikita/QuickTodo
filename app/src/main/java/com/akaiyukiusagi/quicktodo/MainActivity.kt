@@ -95,6 +95,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+// TODO: objectにする
 enum class ScreenNavigator {
     Home,
     Settings;

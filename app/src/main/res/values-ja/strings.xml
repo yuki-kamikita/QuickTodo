@@ -5,6 +5,9 @@
 
     <string name="snackbar_delete_suffix">が削除されました</string>
     <string name="snackbar_undo">元に戻す</string>
+    <string name="snackbar_notification_permission_required">通知権限が必要です</string>
+    <string name="snackbar_open_notification_settings">設定を開く</string>
+
 
     <string name="new_task">新しいやること</string>
     <string name="history">履歴</string>
@@ -23,7 +26,6 @@
     <string name="display_settings">表示設定</string>
     <string name="show_done_task">完了済みを表示する</string>
     <string name="show_notification_on_create">作成時に通知に表示する</string>
-
 
     <string name="notification_done">完了</string>
     <string name="notification_description">通知に表示するやること</string>

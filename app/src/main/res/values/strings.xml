@@ -5,6 +5,8 @@
 
     <string name="snackbar_delete_suffix">has been deleted</string>
     <string name="snackbar_undo">Undo</string>
+    <string name="snackbar_notification_permission_required">Notification permission required</string>
+    <string name="snackbar_open_notification_settings">Open settings</string>
 
     <string name="new_task">New Task</string>
     <string name="history">History</string>

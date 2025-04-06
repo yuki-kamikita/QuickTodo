@@ -1,7 +1,5 @@
 package com.akaiyukiusagi.quicktodo.uiLayer.screen
 
-import android.Manifest
-import android.os.Build
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -55,14 +53,11 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewDynamicColors
 import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewLightDark
-import androidx.compose.ui.tooling.preview.Wallpapers.RED_DOMINATED_EXAMPLE
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -76,13 +71,12 @@ import com.akaiyukiusagi.quicktodo.uiLayer.component.PreviewComponent
 import com.akaiyukiusagi.quicktodo.uiLayer.component.PreviewTemplate
 import com.akaiyukiusagi.quicktodo.uiLayer.component.SwipeToDelete
 import com.akaiyukiusagi.quicktodo.uiLayer.component.performVibration
+import com.akaiyukiusagi.quicktodo.uiLayer.component.premission.rememberNotificationPermissionRequester
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.IHomeViewModel
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.ISettingsViewModel
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.PreviewHomeViewModel
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.PreviewSettingsViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
@@ -94,7 +88,7 @@ fun HomeScreen(
     navigator: NavController = rememberNavController()
 ) {
     val focusManager = LocalFocusManager.current
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackbarHostState = remember { SnackbarHostState() } // TODO: SnackbarHostStateは結構入り組むからもっと増えてきたらCompositionLocalを検討
 
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -166,6 +160,7 @@ fun TaskList(
         items(tasks, key = { task -> task.id }) { task ->
             TodoItem(
                 task = task,
+                snackbarHostState = snackbarHostState,
                 updateTask = { updatedTask -> viewModel.updateTask(updatedTask) },
                 onDelete = {
                     viewModel.deleteTask(task)
@@ -236,6 +231,7 @@ fun TaskList(
 @Composable
 fun TodoItem(
     task: Task,
+    snackbarHostState: SnackbarHostState,
     updateTask: (Task) -> Unit,
     onDelete: () -> Unit,
 ) {
@@ -251,7 +247,7 @@ fun TodoItem(
         onDelete = onDelete,
         changeText = { newText -> textFieldValue = newText }
     ) {
-        NotificationButton(task, updateTask)
+        NotificationButton(task, snackbarHostState, updateTask)
     }
 }
 
@@ -356,28 +352,17 @@ fun CardDesign(
 @Composable
 fun NotificationButton(
     task: Task,
+    snackbarHostState: SnackbarHostState,
     updateTask: (Task) -> Unit
 ) {
     val context = LocalContext.current
-
-    // TODO: 通知権限取得を共通化
-    // プレビューモードでなければ、通知権限の状態を取得
-    val isPreview = LocalInspectionMode.current
-    val notificationPermissionState = if (!isPreview) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
-        } else null
-    } else null // プレビュー時はnull
+    val changeNotification = rememberNotificationPermissionRequester(snackbarHostState) {
+        updateTask(task.copy(sendNotification = !task.sendNotification))
+    }
 
     IconButton(
         onClick = {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                // FIXME: !!を使わないようにする
-                if (!notificationPermissionState?.status?.isGranted!!) {
-                    notificationPermissionState.launchPermissionRequest() // 通知権限の取得
-                }
-            }
-            updateTask(task.copy(sendNotification = !task.sendNotification))
+            changeNotification()
             performVibration(context, 5)
         },
     ) {
