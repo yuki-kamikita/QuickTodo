@@ -15,6 +15,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -22,12 +24,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.PreviewDynamicColors
-import androidx.compose.ui.tooling.preview.PreviewFontScale
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -37,6 +37,7 @@ import com.akaiyukiusagi.quicktodo.dataLayer.BooleanPreference
 import com.akaiyukiusagi.quicktodo.uiLayer.component.Center
 import com.akaiyukiusagi.quicktodo.uiLayer.component.PreviewComponent
 import com.akaiyukiusagi.quicktodo.uiLayer.component.PreviewTemplate
+import com.akaiyukiusagi.quicktodo.uiLayer.component.premission.rememberNotificationPermissionRequester
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.ISettingsViewModel
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.PreviewSettingsViewModel
 
@@ -49,7 +50,13 @@ fun SettingsScreen(
     val showDoneTasks = viewModel.showDoneTasks.collectAsState(initial = BooleanPreference.SHOW_DONE_TASKS.initialValue).value
     val showNotificationOnCreate = viewModel.showNotificationOnCreate.collectAsState(initial = BooleanPreference.SHOW_NOTIFICATION_ON_CREATE.initialValue).value
 
+    val snackbarHostState = remember { SnackbarHostState() }
+    val changeNotification = rememberNotificationPermissionRequester(snackbarHostState) {
+        viewModel.changeShowNotificationOnCreate(!showNotificationOnCreate)
+    }
+
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.settings)) },
@@ -85,11 +92,11 @@ fun SettingsScreen(
                     )
                     SettingsRow(
                         text = stringResource(R.string.show_notification_on_create),
-                        onClick = { viewModel.changeShowNotificationOnCreate(!showNotificationOnCreate) },
+                        onClick = { changeNotification() },
                         suffix = {
                             Switch(
                                 checked = showNotificationOnCreate,
-                                onCheckedChange = { viewModel.changeShowNotificationOnCreate(it) }
+                                onCheckedChange = { changeNotification() }
                             )
                         }
 
