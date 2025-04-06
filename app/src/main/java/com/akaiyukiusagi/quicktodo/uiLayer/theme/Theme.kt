@@ -39,8 +39,6 @@ fun QuickTodoTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-//            window.statusBarColor = colorScheme.surfaceContainer.toArgb() // TODO: TopAppBar削除時に色変更
-//            window.navigationBarColor = colorScheme.surface.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }

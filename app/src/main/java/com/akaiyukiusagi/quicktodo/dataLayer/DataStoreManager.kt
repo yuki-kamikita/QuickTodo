@@ -7,6 +7,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import com.akaiyukiusagi.quicktodo.core.LogHelper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,6 +24,7 @@ class DataStoreManager @Inject constructor(@ApplicationContext private val conte
     suspend fun saveBoolean(booleanPreference: BooleanPreference, value: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[booleanPreference.key()] = value
+            LogHelper.d("${booleanPreference.key()}: $value")
         }
     }
 
@@ -44,7 +46,8 @@ object DataStoreModule {
 }
 
 enum class BooleanPreference(val initialValue: Boolean) {
-    SHOW_DONE_TASKS(true);
+    SHOW_DONE_TASKS(true),
+    SHOW_NOTIFICATION_ON_CREATE(false);
 
     fun key(): Preferences.Key<Boolean> = booleanPreferencesKey(name)
 }

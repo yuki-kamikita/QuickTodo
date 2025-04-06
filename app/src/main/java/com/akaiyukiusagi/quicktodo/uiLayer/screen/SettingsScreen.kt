@@ -47,7 +47,7 @@ fun SettingsScreen(
     navigator: NavController = rememberNavController()
 ) {
     val showDoneTasks = viewModel.showDoneTasks.collectAsState(initial = BooleanPreference.SHOW_DONE_TASKS.initialValue).value
-    val themeColor = viewModel.showDoneTasks.collectAsState(initial = null)
+    val showNotificationOnCreate = viewModel.showNotificationOnCreate.collectAsState(initial = BooleanPreference.SHOW_NOTIFICATION_ON_CREATE.initialValue).value
 
     Scaffold(
         topBar = {
@@ -82,6 +82,17 @@ fun SettingsScreen(
                                 onCheckedChange = { viewModel.changeShowDoneTask(it) }
                             )
                         }
+                    )
+                    SettingsRow(
+                        text = stringResource(R.string.show_notification_on_create),
+                        onClick = { viewModel.changeShowNotificationOnCreate(!showNotificationOnCreate) },
+                        suffix = {
+                            Switch(
+                                checked = showNotificationOnCreate,
+                                onCheckedChange = { viewModel.changeShowNotificationOnCreate(it) }
+                            )
+                        }
+
                     )
 
 //                    SectionTitle("このアプリについて")

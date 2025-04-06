@@ -3,11 +3,16 @@ package com.akaiyukiusagi.quicktodo.uiLayer.viewModel
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.akaiyukiusagi.quicktodo.core.LogHelper
+import com.akaiyukiusagi.quicktodo.dataLayer.BooleanPreference
+import com.akaiyukiusagi.quicktodo.dataLayer.DataStoreManager
 import com.akaiyukiusagi.quicktodo.dataLayer.room.entity.Task
 import com.akaiyukiusagi.quicktodo.dataLayer.repository.TaskRepository
 import com.akaiyukiusagi.quicktodo.uiLayer.notification.NotificationUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -16,6 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val taskRepository: TaskRepository,
+    private val dataStore: DataStoreManager,
     private val notificationUtil: NotificationUtil
 ) : ViewModel(), IHomeViewModel, LifecycleObserver {
     override val initialTasks: List<Task> = emptyList()
@@ -23,6 +29,9 @@ class HomeViewModel @Inject constructor(
     override val tasks: Flow<List<Task>> = taskRepository.todoTasks
     override val doneTasks: Flow<List<Task>> = taskRepository.doneTasks
     private val notificationTasksFlow: Flow<List<Task>> = taskRepository.notificationTasks
+
+    private val _showNotificationOnCreate = MutableStateFlow(BooleanPreference.SHOW_NOTIFICATION_ON_CREATE.initialValue)
+    private val showNotificationOnCreate = _showNotificationOnCreate.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -40,11 +49,19 @@ class HomeViewModel @Inject constructor(
                 }
             }
         }
+
+
+        viewModelScope.launch {
+            dataStore.getBooleanFlow(BooleanPreference.SHOW_NOTIFICATION_ON_CREATE).collect { value ->
+                _showNotificationOnCreate.value = value
+            }
+        }
     }
 
     override fun addTask(text: String) {
         if (text.isNotEmpty()) {
-            val task = Task(content = text)
+            LogHelper.d("${showNotificationOnCreate.value}")
+            val task = Task(content = text, sendNotification = showNotificationOnCreate.value)
             viewModelScope.launch {
                 taskRepository.insert(task)
             }

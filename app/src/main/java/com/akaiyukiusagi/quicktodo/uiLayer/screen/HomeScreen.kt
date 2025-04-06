@@ -360,6 +360,7 @@ fun NotificationButton(
 ) {
     val context = LocalContext.current
 
+    // TODO: 通知権限取得を共通化
     // プレビューモードでなければ、通知権限の状態を取得
     val isPreview = LocalInspectionMode.current
     val notificationPermissionState = if (!isPreview) {
