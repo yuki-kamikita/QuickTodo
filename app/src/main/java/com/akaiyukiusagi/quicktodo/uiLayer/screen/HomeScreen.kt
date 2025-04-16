@@ -60,9 +60,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.PreviewDynamicColors
-import androidx.compose.ui.tooling.preview.PreviewFontScale
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -71,9 +68,10 @@ import com.akaiyukiusagi.quicktodo.ScreenNavigator
 import com.akaiyukiusagi.quicktodo.core.extension.category
 import com.akaiyukiusagi.quicktodo.core.extension.view
 import com.akaiyukiusagi.quicktodo.dataLayer.room.entity.Task
+import com.akaiyukiusagi.quicktodo.uiLayer.ComponentPreviewTemplate
 import com.akaiyukiusagi.quicktodo.uiLayer.component.OnPause
-import com.akaiyukiusagi.quicktodo.uiLayer.component.PreviewComponent
-import com.akaiyukiusagi.quicktodo.uiLayer.component.PreviewTemplate
+import com.akaiyukiusagi.quicktodo.uiLayer.PreviewContent
+import com.akaiyukiusagi.quicktodo.uiLayer.ScreenPreviewTemplate
 import com.akaiyukiusagi.quicktodo.uiLayer.component.SwipeToDelete
 import com.akaiyukiusagi.quicktodo.uiLayer.component.performVibration
 import com.akaiyukiusagi.quicktodo.uiLayer.component.premission.rememberNotificationPermissionRequester
@@ -439,21 +437,18 @@ fun NewTask(onAddTask: (String) -> Unit = {}) {
     }
 }
 
-@PreviewTemplate
-@PreviewDynamicColors
+@ScreenPreviewTemplate
 @Composable
 fun PreviewScreen() {
-    PreviewComponent {
+    PreviewContent {
         HomeScreen(PreviewHomeViewModel(), PreviewSettingsViewModel())
     }
 }
 
-@PreviewLightDark
-@PreviewDynamicColors
-@PreviewFontScale
+@ComponentPreviewTemplate
 @Composable
 fun PreviewCard() {
-    PreviewComponent {
+    PreviewContent {
         Column {
             CardDesign(false, "未完了のタスク") {}
             CardDesign(true, "完了したタスク") {}
@@ -461,12 +456,10 @@ fun PreviewCard() {
     }
 }
 
-@PreviewLightDark
-@PreviewDynamicColors
-@PreviewFontScale
+@ComponentPreviewTemplate
 @Composable
 fun PreviewNewTask() {
-    PreviewComponent {
+    PreviewContent {
         NewTask()
     }
 }

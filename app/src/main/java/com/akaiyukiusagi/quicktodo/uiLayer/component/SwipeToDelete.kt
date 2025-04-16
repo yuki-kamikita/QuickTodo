@@ -41,6 +41,7 @@ import androidx.compose.ui.tooling.preview.PreviewDynamicColors
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import com.akaiyukiusagi.quicktodo.uiLayer.PreviewContent
 import kotlin.math.roundToInt
 
 /**
@@ -151,7 +152,7 @@ fun SwipeToDelete(
 @PreviewLightDark
 @PreviewDynamicColors
 fun PreviewSwipeToDelete() {
-    PreviewComponent {
+    PreviewContent {
         SwipeToDelete {
             Card(
                 modifier = Modifier.fillMaxWidth()

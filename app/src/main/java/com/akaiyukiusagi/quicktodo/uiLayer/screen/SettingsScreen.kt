@@ -35,8 +35,8 @@ import com.akaiyukiusagi.quicktodo.BuildConfig
 import com.akaiyukiusagi.quicktodo.R
 import com.akaiyukiusagi.quicktodo.dataLayer.BooleanPreference
 import com.akaiyukiusagi.quicktodo.uiLayer.component.Center
-import com.akaiyukiusagi.quicktodo.uiLayer.component.PreviewComponent
-import com.akaiyukiusagi.quicktodo.uiLayer.component.PreviewTemplate
+import com.akaiyukiusagi.quicktodo.uiLayer.PreviewContent
+import com.akaiyukiusagi.quicktodo.uiLayer.ScreenPreviewTemplate
 import com.akaiyukiusagi.quicktodo.uiLayer.component.premission.rememberNotificationPermissionRequester
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.ISettingsViewModel
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.PreviewSettingsViewModel
@@ -167,10 +167,10 @@ fun SettingsRow(
     }
 }
 
-@PreviewTemplate
+@ScreenPreviewTemplate
 @Composable
 fun PreviewSettingsScreen() {
-    PreviewComponent {
+    PreviewContent {
         SettingsScreen(PreviewSettingsViewModel())
     }
 }
