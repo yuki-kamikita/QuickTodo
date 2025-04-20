@@ -65,7 +65,6 @@ fun SettingsScreen(
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(id =R.string.back))
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(MaterialTheme.colorScheme.surfaceContainer)
             )
         },
         content = {
