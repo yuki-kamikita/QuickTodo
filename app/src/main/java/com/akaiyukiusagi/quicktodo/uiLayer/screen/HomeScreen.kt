@@ -6,15 +6,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.ime
-import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.union
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,6 +21,7 @@ import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,7 +39,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -60,9 +56,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.PreviewDynamicColors
-import androidx.compose.ui.tooling.preview.PreviewFontScale
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -71,9 +64,10 @@ import com.akaiyukiusagi.quicktodo.ScreenNavigator
 import com.akaiyukiusagi.quicktodo.core.extension.category
 import com.akaiyukiusagi.quicktodo.core.extension.view
 import com.akaiyukiusagi.quicktodo.dataLayer.room.entity.Task
+import com.akaiyukiusagi.quicktodo.uiLayer.ComponentPreviewTemplate
+import com.akaiyukiusagi.quicktodo.uiLayer.PreviewContent
+import com.akaiyukiusagi.quicktodo.uiLayer.ScreenPreviewTemplate
 import com.akaiyukiusagi.quicktodo.uiLayer.component.OnPause
-import com.akaiyukiusagi.quicktodo.uiLayer.component.PreviewComponent
-import com.akaiyukiusagi.quicktodo.uiLayer.component.PreviewTemplate
 import com.akaiyukiusagi.quicktodo.uiLayer.component.SwipeToDelete
 import com.akaiyukiusagi.quicktodo.uiLayer.component.performVibration
 import com.akaiyukiusagi.quicktodo.uiLayer.component.premission.rememberNotificationPermissionRequester
@@ -96,7 +90,6 @@ fun HomeScreen(
     val snackbarHostState = remember { SnackbarHostState() } // TODO: SnackbarHostStateは結構入り組むからもっと増えてきたらCompositionLocalを検討
 
     Scaffold(
-        modifier = Modifier.windowInsetsPadding(WindowInsets.navigationBars.union(WindowInsets.ime)),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
@@ -106,8 +99,10 @@ fun HomeScreen(
                         Icon(Icons.Default.Settings, contentDescription = "Settings")
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(MaterialTheme.colorScheme.surfaceContainer)
             )
+        },
+        bottomBar = {
+            NewTask { text -> viewModel.addTask(text) }
         },
         content = {
             Surface(
@@ -131,8 +126,6 @@ fun HomeScreen(
                         settings = settings,
                         snackbarHostState = snackbarHostState
                     )
-                    HorizontalDivider()
-                    NewTask { text -> viewModel.addTask(text) }
                 }
             }
         }
@@ -390,40 +383,38 @@ fun NewTask(onAddTask: (String) -> Unit = {}) {
     val focusRequester = remember { FocusRequester() }
     val isFocused = remember { mutableStateOf(false) }
 
-    Surface {
-        Column {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 8.dp, top = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                TextField(
-                    value = text,
-                    singleLine = true,
-                    label = { Text(stringResource(id = R.string.new_task)) },
-                    onValueChange = { newText -> text = newText },
-                    modifier = Modifier
-                        .weight(1f)
-                        .focusRequester(focusRequester)
-                        .onFocusChanged { focusState -> isFocused.value = focusState.isFocused },
-                    colors = TextFieldDefaults.colors(
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent
-                    ),
-                    shape = RoundedCornerShape(16.dp),
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            focusManager.clearFocus()
-                            onAddTask(text)
-                            text = ""
-                        }
-                    ),
-                )
-
+    BottomAppBar(
+        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+        modifier = Modifier.imePadding()
+    ) {
+        TextField(
+            value = text,
+            singleLine = true,
+            label = { Text(stringResource(id = R.string.new_task)) },
+            onValueChange = { newText -> text = newText },
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(focusRequester)
+                .onFocusChanged { focusState -> isFocused.value = focusState.isFocused },
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                errorContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            ),
+            shape = RoundedCornerShape(16.dp),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    focusManager.clearFocus()
+                    onAddTask(text)
+                    text = ""
+                }
+            ),
+            trailingIcon = {
                 IconButton(
                     onClick = {
                         focusManager.clearFocus()
@@ -435,25 +426,22 @@ fun NewTask(onAddTask: (String) -> Unit = {}) {
                     Icon(imageVector = Icons.Default.Send, contentDescription = "Send")
                 }
             }
-        }
+        )
     }
 }
 
-@PreviewTemplate
-@PreviewDynamicColors
+@ScreenPreviewTemplate
 @Composable
 fun PreviewScreen() {
-    PreviewComponent {
+    PreviewContent {
         HomeScreen(PreviewHomeViewModel(), PreviewSettingsViewModel())
     }
 }
 
-@PreviewLightDark
-@PreviewDynamicColors
-@PreviewFontScale
+@ComponentPreviewTemplate
 @Composable
 fun PreviewCard() {
-    PreviewComponent {
+    PreviewContent {
         Column {
             CardDesign(false, "未完了のタスク") {}
             CardDesign(true, "完了したタスク") {}
@@ -461,12 +449,10 @@ fun PreviewCard() {
     }
 }
 
-@PreviewLightDark
-@PreviewDynamicColors
-@PreviewFontScale
+@ComponentPreviewTemplate
 @Composable
 fun PreviewNewTask() {
-    PreviewComponent {
+    PreviewContent {
         NewTask()
     }
 }
