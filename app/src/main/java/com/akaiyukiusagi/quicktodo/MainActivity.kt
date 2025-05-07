@@ -10,6 +10,9 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideIn
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -57,28 +60,26 @@ class MainActivity : ComponentActivity() {
                     NavHost(
                         navController,
                         startDestination = ScreenNavigator.Home.name,
-                        popEnterTransition = {
-                            scaleIn(
-                                animationSpec = tween(
-                                    durationMillis = 100,
-                                    delayMillis = 35,
-                                ),
-                                initialScale = 1.1F,
+                        enterTransition = {
+                            slideInHorizontally(
+                                initialOffsetX = { fullWidth -> fullWidth / 5 },
+                                animationSpec = tween(durationMillis = 200)
                             ) + fadeIn(
-                                animationSpec = tween(
-                                    durationMillis = 100,
-                                    delayMillis = 35,
-                                ),
+                                animationSpec = tween(durationMillis = 500)
                             )
                         },
+                        exitTransition = {
+                            fadeOut(animationSpec = tween(700))
+                        },
+                        popEnterTransition = {
+                            fadeIn(animationSpec = tween(700))
+                        },
                         popExitTransition = {
-                            scaleOut(
-                                targetScale = 0.9F,
+                            slideOutHorizontally(
+                                targetOffsetX = { fullWidth -> fullWidth / 5 },
+                                animationSpec = tween(durationMillis = 500)
                             ) + fadeOut(
-                                animationSpec = tween(
-                                    durationMillis = 35,
-                                    easing = CubicBezierEasing(0.1f, 0.1f, 0f, 1f),
-                                ),
+                                animationSpec = tween(durationMillis = 200)
                             )
                         },
                     ){
