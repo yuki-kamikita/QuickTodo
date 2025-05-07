@@ -15,8 +15,8 @@ android {
         applicationId = "com.akaiyukiusagi.quicktodo"
         minSdk = 28
         targetSdk = 35
-        versionCode = 7
-        versionName = "1.5.1"
+        versionCode = 8
+        versionName = "1.6.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
