@@ -1,20 +1,21 @@
 [versions]
 accompanistPermissions = "0.33.1-alpha"
 agp = "8.9.1"
-composeBom = "2025.03.01"
+composeBom = "2025.05.01"
 constraintlayoutCompose = "1.1.1"
 activityCompose = "1.10.1"
-datastorePreferences = "1.1.4"
-lifecycleViewmodelCompose = "2.8.7"
-lifecycleRuntimeKtx = "2.8.7"
+datastorePreferences = "1.1.7"
+lifecycleViewmodelCompose = "2.9.0"
+lifecycleRuntimeKtx = "2.9.0"
 materialIconsExtended = "1.7.8"
-navigationCompose = "2.8.9"
+navigationCompose = "2.9.0"
 hiltAndroid = "2.50"
 hiltAndroidCompiler = "2.50"
 hiltCommon = "1.2.0"
 hiltNavigationCompose = "1.2.0"
-kotlin = "1.9.22"
-coreKtx = "1.15.0"
+kotlin = "2.0.21"
+ksp = "2.0.21-1.0.28"
+coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
@@ -54,4 +55,7 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+jetbrains-kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 screenshot = { id = "com.android.compose.screenshot", version.ref = "screenshot"}
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
