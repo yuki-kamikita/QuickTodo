@@ -16,6 +16,18 @@
       <SelectionState runConfigName="PreviewScreen - 1. Ja - dark">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+      <SelectionState runConfigName="OverflowingHorizontalFloatingToolbarSample">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="VerticalFloatingToolbarWithFabSample">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="HorizontalFloatingToolbarAsScaffoldFabSample">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="HomeToolBarPreview - 1. Dark Blue Ja">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
     </selectionStates>
   </component>
 </project>
