@@ -102,6 +102,7 @@ dependencies {
 
     // JetpackCompose
     implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.material3) // Expressive用alpha版
     implementation(libs.ui)
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
