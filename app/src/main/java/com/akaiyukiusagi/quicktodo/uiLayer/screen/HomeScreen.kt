@@ -1,5 +1,7 @@
 package com.akaiyukiusagi.quicktodo.uiLayer.screen
 
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.Settings
@@ -25,6 +28,7 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -75,9 +79,19 @@ import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.IHomeViewModel
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.ISettingsViewModel
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.PreviewHomeViewModel
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.PreviewSettingsViewModel
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.SwapVert
+import androidx.compose.material.icons.filled.UnfoldLess
+import androidx.compose.material.icons.filled.UnfoldMore
+import androidx.compose.ui.draw.rotate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -102,7 +116,7 @@ fun HomeScreen(
             )
         },
         bottomBar = {
-            NewTask { text -> viewModel.addTask(text) }
+            BottomBar { text -> viewModel.addTask(text) }
         },
         content = {
             Surface(
@@ -275,7 +289,6 @@ fun CompletedItem(
 }
 
 /** 完/未完 の共通部分 */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CardDesign(
     isChecked: Boolean,
@@ -347,7 +360,6 @@ fun CardDesign(
 }
 
 /** 通知on/offボタン */
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun NotificationButton(
     task: Task,
@@ -373,8 +385,97 @@ fun NotificationButton(
     }
 }
 
+@Composable
+fun BottomBar(onAddTask: (String) -> Unit = {}) {
+    var bottomBarMode: BottomBarMode by remember { mutableStateOf(BottomBarMode.ACTION) }
+
+    BottomAppBar(
+        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+        modifier = Modifier.imePadding()
+    ) {
+        AnimatedContent(
+            targetState = bottomBarMode,
+            transitionSpec = {
+                if (initialState == BottomBarMode.ACTION) {
+                    // 上がる
+                    slideInVertically { it } togetherWith slideOutVertically { -it }
+                } else {
+                    // 下がる
+                    slideInVertically { -it } togetherWith slideOutVertically { it }
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) { mode ->
+            when (mode) {
+                BottomBarMode.ACTION -> {
+                    BottomAppBarAction(
+                        onAddClick = { bottomBarMode = BottomBarMode.ADD_TASK },
+                    )
+                }
+                BottomBarMode.ADD_TASK -> {
+                    NewTask(onAddTask = {
+                        onAddTask(it)
+                        bottomBarMode = BottomBarMode.ACTION
+                    })
+                }
+            }
+        }
+    }
+}
+
+enum class BottomBarMode {
+    ACTION,
+    ADD_TASK,
+}
+
+@Composable
+fun BottomAppBarAction(
+    onAddClick: () -> Unit = {},
+) {
+    var sortMode by remember { mutableStateOf(false) }
+    // 回転角度をアニメーション
+    val rotation by animateFloatAsState(
+        targetValue = if (sortMode) 45f else 0f,
+        label = "fab_rotation"
+    )
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row {
+            IconButton(onClick = { /* TODO: */ }) {
+                Icon(Icons.Default.UnfoldLess, contentDescription = "全部閉じる")
+            }
+            IconButton(onClick = { /* TODO: */ }) {
+                Icon(Icons.Default.UnfoldMore, contentDescription = "全部開く")
+            }
+            AnimatedVisibility(
+                visible = !sortMode,
+                enter = fadeIn(),
+                exit = fadeOut(),
+            ) {
+                IconButton(onClick = { sortMode = !sortMode }) {
+                    Icon(Icons.Default.SwapVert, contentDescription = "並び替え")
+                }
+            }
+        }
+        FloatingActionButton(
+            onClick = onAddClick,
+            modifier = Modifier.padding(8.dp),
+            containerColor = MaterialTheme.colorScheme.primary,
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Add",
+                modifier = Modifier.rotate(rotation)
+            )
+        }
+    }
+}
+
 /** タスク追加 */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewTask(onAddTask: (String) -> Unit = {}) {
     val context = LocalContext.current
@@ -383,51 +484,46 @@ fun NewTask(onAddTask: (String) -> Unit = {}) {
     val focusRequester = remember { FocusRequester() }
     val isFocused = remember { mutableStateOf(false) }
 
-    BottomAppBar(
-        containerColor = MaterialTheme.colorScheme.surfaceVariant,
-        modifier = Modifier.imePadding()
-    ) {
-        TextField(
-            value = text,
-            singleLine = true,
-            label = { Text(stringResource(id = R.string.new_task)) },
-            onValueChange = { newText -> text = newText },
-            modifier = Modifier
-                .fillMaxWidth()
-                .focusRequester(focusRequester)
-                .onFocusChanged { focusState -> isFocused.value = focusState.isFocused },
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                errorContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent
-            ),
-            shape = RoundedCornerShape(16.dp),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(
-                onDone = {
+    TextField(
+        value = text,
+        singleLine = true,
+        label = { Text(stringResource(id = R.string.new_task)) },
+        onValueChange = { newText -> text = newText },
+        modifier = Modifier
+            .fillMaxWidth()
+            .focusRequester(focusRequester)
+            .onFocusChanged { focusState -> isFocused.value = focusState.isFocused },
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            errorContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent
+        ),
+        shape = RoundedCornerShape(16.dp),
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions(
+            onDone = {
+                focusManager.clearFocus()
+                onAddTask(text)
+                text = ""
+            }
+        ),
+        trailingIcon = {
+            IconButton(
+                onClick = {
                     focusManager.clearFocus()
                     onAddTask(text)
+                    performVibration(context, 5)
                     text = ""
-                }
-            ),
-            trailingIcon = {
-                IconButton(
-                    onClick = {
-                        focusManager.clearFocus()
-                        onAddTask(text)
-                        performVibration(context, 5)
-                        text = ""
-                    },
-                ) {
-                    Icon(imageVector = Icons.Default.Send, contentDescription = "Send")
-                }
+                },
+            ) {
+                Icon(imageVector = Icons.Default.Send, contentDescription = "Send")
             }
-        )
-    }
+        }
+    )
 }
 
 @ScreenPreviewTemplate
