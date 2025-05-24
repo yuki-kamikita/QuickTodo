@@ -12,6 +12,9 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.SwapVert
+import androidx.compose.material.icons.filled.UnfoldLess
+import androidx.compose.material.icons.filled.UnfoldMore
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingToolbarDefaults
@@ -48,19 +51,16 @@ fun HomeToolBar(
                 Icon(Icons.Filled.Add, "Localized description")
             }
         },
-        colors = FloatingToolbarDefaults.vibrantFloatingToolbarColors(),
+//        colors = FloatingToolbarDefaults.vibrantFloatingToolbarColors(),
         content = {
-            IconButton(onClick = { /* doSomething() */ }) {
-                Icon(Icons.Filled.Person, contentDescription = "Localized description")
+            IconButton(onClick = { /* TODO */ }) {
+                Icon(Icons.Default.UnfoldLess, contentDescription = "全部閉じる")
             }
-            IconButton(onClick = { /* doSomething() */ }) {
-                Icon(Icons.Filled.Edit, contentDescription = "Localized description")
+            IconButton(onClick = { /* TODO */ }) {
+                Icon(Icons.Default.UnfoldMore, contentDescription = "全部開く")
             }
-            IconButton(onClick = { /* doSomething() */ }) {
-                Icon(Icons.Filled.Favorite, contentDescription = "Localized description")
-            }
-            IconButton(onClick = { /* doSomething() */ }) {
-                Icon(Icons.Filled.MoreVert, contentDescription = "Localized description")
+            IconButton(onClick = { /* TODO: 並び替え */ }) {
+                Icon(Icons.Default.SwapVert, contentDescription = "並び替え")
             }
         },
     )
