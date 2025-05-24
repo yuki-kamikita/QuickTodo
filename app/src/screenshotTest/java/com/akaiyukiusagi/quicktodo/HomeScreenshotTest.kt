@@ -5,9 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.akaiyukiusagi.quicktodo.uiLayer.PreviewContent
 import com.akaiyukiusagi.quicktodo.uiLayer.ScreenPreviewTemplate
-import com.akaiyukiusagi.quicktodo.uiLayer.screen.CardDesign
-import com.akaiyukiusagi.quicktodo.uiLayer.screen.HomeScreen
-import com.akaiyukiusagi.quicktodo.uiLayer.screen.NewTask
+import com.akaiyukiusagi.quicktodo.uiLayer.screen.home.CardDesign
+import com.akaiyukiusagi.quicktodo.uiLayer.screen.home.HomeScreen
+import com.akaiyukiusagi.quicktodo.uiLayer.screen.home.NewTask
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.PreviewHomeViewModel
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.PreviewSettingsViewModel
 

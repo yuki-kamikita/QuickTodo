@@ -1,4 +1,4 @@
-package com.akaiyukiusagi.quicktodo.uiLayer.component
+package com.akaiyukiusagi.quicktodo.uiLayer.component.ui.layout
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

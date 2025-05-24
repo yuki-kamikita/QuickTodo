@@ -1,4 +1,4 @@
-package com.akaiyukiusagi.quicktodo.uiLayer.screen
+package com.akaiyukiusagi.quicktodo.uiLayer.screen.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -67,10 +67,10 @@ import com.akaiyukiusagi.quicktodo.dataLayer.room.entity.Task
 import com.akaiyukiusagi.quicktodo.uiLayer.ComponentPreviewTemplate
 import com.akaiyukiusagi.quicktodo.uiLayer.PreviewContent
 import com.akaiyukiusagi.quicktodo.uiLayer.ScreenPreviewTemplate
-import com.akaiyukiusagi.quicktodo.uiLayer.component.OnPause
-import com.akaiyukiusagi.quicktodo.uiLayer.component.SwipeToDelete
-import com.akaiyukiusagi.quicktodo.uiLayer.component.performVibration
-import com.akaiyukiusagi.quicktodo.uiLayer.component.premission.rememberNotificationPermissionRequester
+import com.akaiyukiusagi.quicktodo.uiLayer.component.ui.behavior.OnPause
+import com.akaiyukiusagi.quicktodo.uiLayer.component.ui.behavior.SwipeToDelete
+import com.akaiyukiusagi.quicktodo.uiLayer.component.system.performVibration
+import com.akaiyukiusagi.quicktodo.uiLayer.component.system.rememberNotificationPermissionRequester
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.IHomeViewModel
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.ISettingsViewModel
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.PreviewHomeViewModel

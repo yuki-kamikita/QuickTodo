@@ -21,7 +21,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
@@ -34,10 +33,10 @@ import androidx.navigation.compose.rememberNavController
 import com.akaiyukiusagi.quicktodo.BuildConfig
 import com.akaiyukiusagi.quicktodo.R
 import com.akaiyukiusagi.quicktodo.dataLayer.BooleanPreference
-import com.akaiyukiusagi.quicktodo.uiLayer.component.Center
+import com.akaiyukiusagi.quicktodo.uiLayer.component.ui.layout.Center
 import com.akaiyukiusagi.quicktodo.uiLayer.PreviewContent
 import com.akaiyukiusagi.quicktodo.uiLayer.ScreenPreviewTemplate
-import com.akaiyukiusagi.quicktodo.uiLayer.component.premission.rememberNotificationPermissionRequester
+import com.akaiyukiusagi.quicktodo.uiLayer.component.system.rememberNotificationPermissionRequester
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.ISettingsViewModel
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.PreviewSettingsViewModel
 
