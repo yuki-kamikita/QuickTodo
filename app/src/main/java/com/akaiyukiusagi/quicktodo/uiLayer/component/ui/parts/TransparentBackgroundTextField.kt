@@ -15,8 +15,12 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.akaiyukiusagi.quicktodo.R
+import com.akaiyukiusagi.quicktodo.uiLayer.ComponentPreviewTemplate
+import com.akaiyukiusagi.quicktodo.uiLayer.PreviewContent
 
 @Composable
 fun TransparentBackgroundTextField(
@@ -52,4 +56,15 @@ fun TransparentBackgroundTextField(
             onDone = { keyboardDone() }
         ),
     )
+}
+
+@Composable
+@ComponentPreviewTemplate
+fun TransparentBackgroundTextFieldPreview() {
+    PreviewContent {
+        TransparentBackgroundTextField(
+            value = stringResource(id = R.string.example_text),
+            labelText = "Label"
+        )
+    }
 }

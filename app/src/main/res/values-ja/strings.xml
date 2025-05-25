@@ -29,4 +29,6 @@
 
     <string name="notification_done">完了</string>
     <string name="notification_description">通知に表示するやること</string>
+
+    <string name="example_text">テキストテキストテキスト</string>
 </resources>

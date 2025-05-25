@@ -28,4 +28,6 @@
 
     <string name="notification_done">Done</string>
     <string name="notification_description">Tasks to display in notifications</string>
+
+    <string name="example_text">example text</string>
 </resources>
