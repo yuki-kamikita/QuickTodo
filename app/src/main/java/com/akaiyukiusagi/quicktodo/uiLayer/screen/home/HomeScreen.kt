@@ -13,12 +13,10 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.BottomAppBar
@@ -71,6 +69,7 @@ import com.akaiyukiusagi.quicktodo.uiLayer.component.ui.behavior.OnPause
 import com.akaiyukiusagi.quicktodo.uiLayer.component.ui.behavior.SwipeToDelete
 import com.akaiyukiusagi.quicktodo.uiLayer.component.system.performVibration
 import com.akaiyukiusagi.quicktodo.uiLayer.component.system.rememberNotificationPermissionRequester
+import com.akaiyukiusagi.quicktodo.uiLayer.component.ui.parts.TransparentBackgroundTextField
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.IHomeViewModel
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.ISettingsViewModel
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.PreviewHomeViewModel
@@ -387,43 +386,18 @@ fun NewTask(onAddTask: (String) -> Unit = {}) {
         containerColor = MaterialTheme.colorScheme.surfaceVariant,
         modifier = Modifier.imePadding()
     ) {
-        TextField(
+        TransparentBackgroundTextField(
             value = text,
-            singleLine = true,
-            label = { Text(stringResource(id = R.string.new_task)) },
-            onValueChange = { newText -> text = newText },
-            modifier = Modifier
-                .fillMaxWidth()
-                .focusRequester(focusRequester)
-                .onFocusChanged { focusState -> isFocused.value = focusState.isFocused },
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                errorContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent
-            ),
-            shape = RoundedCornerShape(16.dp),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    focusManager.clearFocus()
+            labelText = stringResource(id = R.string.new_task),
+            focusRequester = focusRequester,
+            onValueChange = { text = it },
+            onFocusChanged = { isFocused.value = it },
+            keyboardDone = {
+                focusManager.clearFocus()
+                if (text.isNotBlank()) {
                     onAddTask(text)
+                    performVibration(context, 5)
                     text = ""
-                }
-            ),
-            trailingIcon = {
-                IconButton(
-                    onClick = {
-                        focusManager.clearFocus()
-                        onAddTask(text)
-                        performVibration(context, 5)
-                        text = ""
-                    },
-                ) {
-                    Icon(imageVector = Icons.Default.Send, contentDescription = "Send")
                 }
             }
         )
