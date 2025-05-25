@@ -24,14 +24,13 @@ import com.akaiyukiusagi.quicktodo.uiLayer.PreviewContent
 
 @Composable
 fun TransparentBackgroundTextField(
-    value: String = "",
+    value: String,
     labelText: String = "",
     focusRequester: FocusRequester = remember { FocusRequester() },
-    onValueChange: (String) -> Unit = {},
+    onValueChange: (String) -> Unit,
     onFocusChanged: (Boolean) -> Unit = {},
     keyboardDone: () -> Unit = {},
 ) {
-
     TextField(
         value = value,
         singleLine = true,
@@ -42,10 +41,10 @@ fun TransparentBackgroundTextField(
             .focusRequester(focusRequester)
             .onFocusChanged { focusState -> onFocusChanged(focusState.isFocused) },
         colors = TextFieldDefaults.colors(
-            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-            disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-            errorContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            disabledContainerColor = Color.Transparent,
+            errorContainerColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent
@@ -64,7 +63,8 @@ fun TransparentBackgroundTextFieldPreview() {
     PreviewContent {
         TransparentBackgroundTextField(
             value = stringResource(id = R.string.example_text),
-            labelText = "Label"
+            labelText = "Label",
+            onValueChange = {},
         )
     }
 }
