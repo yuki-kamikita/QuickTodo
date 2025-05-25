@@ -404,6 +404,11 @@ fun NewTask(onAddTask: (String) -> Unit = {}) {
     }
 }
 
+enum class ToolbarMode {
+    ACTION,
+    ADD_TASK,
+}
+
 @ScreenPreviewTemplate
 @Composable
 fun PreviewScreen() {
