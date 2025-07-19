@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App-wide strings -->
-    <string name="app_name">NotificationTodo</string>
+    <string name="app_name">Make Notification</string>
     <string name="back">Back</string>
 
     <!-- Snackbar strings -->
