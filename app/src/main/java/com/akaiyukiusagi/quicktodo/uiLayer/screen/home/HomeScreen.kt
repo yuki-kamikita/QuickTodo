@@ -3,13 +3,16 @@ package com.akaiyukiusagi.quicktodo.uiLayer.screen.home
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,10 +22,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FloatingToolbarDefaults.floatingToolbarVerticalNestedScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -43,6 +47,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -65,11 +70,11 @@ import com.akaiyukiusagi.quicktodo.dataLayer.room.entity.Task
 import com.akaiyukiusagi.quicktodo.uiLayer.ComponentPreviewTemplate
 import com.akaiyukiusagi.quicktodo.uiLayer.PreviewContent
 import com.akaiyukiusagi.quicktodo.uiLayer.ScreenPreviewTemplate
-import com.akaiyukiusagi.quicktodo.uiLayer.component.ui.behavior.OnPause
-import com.akaiyukiusagi.quicktodo.uiLayer.component.ui.behavior.SwipeToDelete
 import com.akaiyukiusagi.quicktodo.uiLayer.component.system.performVibration
 import com.akaiyukiusagi.quicktodo.uiLayer.component.system.rememberNotificationPermissionRequester
-import com.akaiyukiusagi.quicktodo.uiLayer.component.ui.parts.TransparentBackgroundTextField
+import com.akaiyukiusagi.quicktodo.uiLayer.component.ui.behavior.OnPause
+import com.akaiyukiusagi.quicktodo.uiLayer.component.ui.behavior.SwipeToDelete
+import com.akaiyukiusagi.quicktodo.uiLayer.screen.home.component.HomeToolBar
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.IHomeViewModel
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.ISettingsViewModel
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.PreviewHomeViewModel
@@ -78,7 +83,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun HomeScreen(
     viewModel: IHomeViewModel,
@@ -87,6 +92,8 @@ fun HomeScreen(
 ) {
     val focusManager = LocalFocusManager.current
     val snackbarHostState = remember { SnackbarHostState() } // TODO: SnackbarHostStateは結構入り組むからもっと増えてきたらCompositionLocalを検討
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    var isSwap by rememberSaveable { mutableStateOf(true) }
 
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -100,8 +107,19 @@ fun HomeScreen(
                 },
             )
         },
-        bottomBar = {
-            NewTask { text -> viewModel.addTask(text) }
+        floatingActionButton = {
+            Box(
+                modifier = Modifier
+                    .padding(WindowInsets.ime.asPaddingValues())
+            ) {
+                HomeToolBar(
+                    expanded = expanded,
+                    isSwap = isSwap,
+                    onAddClick = { expanded = true },
+                    onSendClick = { text -> viewModel.addTask(text) },
+                    onSwapClick = { isSwap = !isSwap },
+                )
+            }
         },
         content = {
             Surface(
@@ -120,7 +138,14 @@ fun HomeScreen(
                     TaskList(
                         modifier = Modifier
                             .weight(1f)
-                            .fillMaxHeight(),
+                            .fillMaxHeight()
+                            .then(
+                                Modifier.floatingToolbarVerticalNestedScroll(
+                                    expanded = expanded,
+                                    onExpand = { expanded = true },
+                                    onCollapse = { expanded = false },
+                                )
+                            ),
                         viewModel = viewModel,
                         settings = settings,
                         snackbarHostState = snackbarHostState
@@ -152,8 +177,6 @@ fun TaskList(
         modifier = modifier.padding(horizontal = 2.dp),
         verticalArrangement = Arrangement.Top
     ) {
-        item { Spacer(modifier = Modifier.padding(2.dp)) } // TODO: AppBar入れたら不要になる
-
         // 未完
         items(tasks, key = { task -> task.id }) { task ->
             TodoItem(
@@ -372,37 +395,6 @@ fun NotificationButton(
     }
 }
 
-/** タスク追加 */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun NewTask(onAddTask: (String) -> Unit = {}) {
-    val context = LocalContext.current
-    var text by remember { mutableStateOf("") }
-    val focusManager = LocalFocusManager.current
-    val focusRequester = remember { FocusRequester() }
-    val isFocused = remember { mutableStateOf(false) }
-
-    BottomAppBar(
-        containerColor = MaterialTheme.colorScheme.surfaceVariant,
-        modifier = Modifier.imePadding()
-    ) {
-        TransparentBackgroundTextField(
-            value = text,
-            labelText = stringResource(id = R.string.new_task),
-            focusRequester = focusRequester,
-            onValueChange = { text = it },
-            onFocusChanged = { isFocused.value = it },
-            keyboardDone = {
-                focusManager.clearFocus()
-                if (text.isNotBlank()) {
-                    onAddTask(text)
-                    performVibration(context, 5)
-                    text = ""
-                }
-            }
-        )
-    }
-}
 
 enum class ToolbarMode {
     ACTION,
@@ -425,13 +417,5 @@ fun PreviewCard() {
             CardDesign(false, "未完了のタスク") {}
             CardDesign(true, "完了したタスク") {}
         }
-    }
-}
-
-@ComponentPreviewTemplate
-@Composable
-fun PreviewNewTask() {
-    PreviewContent {
-        NewTask()
     }
 }

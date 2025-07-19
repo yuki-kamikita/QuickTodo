@@ -3,6 +3,13 @@
 
 ![ToPlayStoreQR](play_store_image/todo_app_download.png)
 
+
+# QuickTodo
+Material Design 3 や Jetpack Compose の最新コンポーネント、アーキテクチャ等を使ってみる砂場  
+コード的には書き方が統一されていなかったり、ゴミが多かったりしますが、そこは整理しません  
+アプリの使用感はそこそこちゃんと作ってるので動作部分だけ見てください  
+
+
 # Git
 ## Commitメッセージ
 [Gitmoji](https://gitmoji.dev/)を参考に、したりしなかったり
