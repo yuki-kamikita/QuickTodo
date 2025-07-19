@@ -101,20 +101,11 @@ fun HomeToolBar(
                 }
             }
         },
-//        colors = FloatingToolbarDefaults.vibrantFloatingToolbarColors(),
         content = {
             AnimatedContent(
                 targetState = toolbarMode,
                 transitionSpec = {
                     fadeIn(animationSpec = tween()).togetherWith(fadeOut(animationSpec = tween()))
-
-//                    if (targetState == ToolbarMode.ADD_TASK && initialState == ToolbarMode.ACTION) {
-//                        // 右から入って左に出る
-//                        slideInHorizontally { it }.togetherWith(slideOutHorizontally { -it })
-//                    } else {
-//                        // 左から入って右に出る
-//                        slideInHorizontally { -it }.togetherWith(slideOutHorizontally { it })
-//                    }
                 }
             ) { mode ->
                 when (mode) {
