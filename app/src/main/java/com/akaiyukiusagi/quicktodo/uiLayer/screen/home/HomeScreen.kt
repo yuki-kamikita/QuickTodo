@@ -98,7 +98,10 @@ fun HomeScreen(
                     expanded = expanded,
                     isSwap = isSwap,
                     onAddClick = { expanded = true },
-                    onSendClick = { text -> viewModel.addTask(text) },
+                    onSendClick = {
+                        text -> viewModel.addTask(text)
+                        expanded = false
+                    },
                     onSwapClick = { isSwap = !isSwap },
                 )
             }
@@ -120,14 +123,14 @@ fun HomeScreen(
                     TaskList(
                         modifier = Modifier
                             .weight(1f)
-                            .fillMaxHeight()
-                            .then(
-                                Modifier.floatingToolbarVerticalNestedScroll(
-                                    expanded = expanded,
-                                    onExpand = { expanded = true },
-                                    onCollapse = { expanded = false },
-                                )
-                            ),
+                            .fillMaxHeight(),
+//                            .then(
+//                                Modifier.floatingToolbarVerticalNestedScroll(
+//                                    expanded = expanded,
+//                                    onExpand = { expanded = true },
+//                                    onCollapse = { expanded = false },
+//                                )
+//                            ),
                         viewModel = viewModel,
                         settings = settings,
                         snackbarHostState = snackbarHostState

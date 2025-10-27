@@ -108,8 +108,8 @@ fun HomeToolBar(
                     fadeIn(animationSpec = tween()).togetherWith(fadeOut(animationSpec = tween()))
                 }
             ) { mode ->
-                when (mode) {
-                    ToolbarMode.ADD_TASK -> {
+//                when (mode) {
+//                    ToolbarMode.ADD_TASK -> {
                         TransparentBackgroundTextField(
                             value = text,
                             labelText = stringResource(id = R.string.new_task),
@@ -126,28 +126,28 @@ fun HomeToolBar(
                         LaunchedEffect(Unit) {
                             focusRequester.requestFocus()
                         }
-                    }
-                    ToolbarMode.ACTION -> {
-                        Row {
-                            IconButton(onClick = { /* TODO */ }) {
-                                Icon(Icons.Default.UnfoldLess, contentDescription = "全部閉じる")
-                            }
-                            IconButton(onClick = { /* TODO */ }) {
-                                Icon(Icons.Default.UnfoldMore, contentDescription = "全部開く")
-                            }
-                            IconButton(
-                                onClick = {
-                                    if (!isSwap) rememberShape = initialShapeList.random()
-                                    onSwapClick()
-                                },
-                                shape = rememberShape.toShape(),
-                                colors = if (isSwap) IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primaryContainer) else IconButtonDefaults.iconButtonColors()
-                            ) {
-                                Icon(Icons.Default.SwapVert, contentDescription = "並び替え")
-                            }
-                        }
-                    }
-                }
+//                    }
+//                    ToolbarMode.ACTION -> {
+//                        Row {
+//                            IconButton(onClick = { /* TODO */ }) {
+//                                Icon(Icons.Default.UnfoldLess, contentDescription = "全部閉じる")
+//                            }
+//                            IconButton(onClick = { /* TODO */ }) {
+//                                Icon(Icons.Default.UnfoldMore, contentDescription = "全部開く")
+//                            }
+//                            IconButton(
+//                                onClick = {
+//                                    if (!isSwap) rememberShape = initialShapeList.random()
+//                                    onSwapClick()
+//                                },
+//                                shape = rememberShape.toShape(),
+//                                colors = if (isSwap) IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primaryContainer) else IconButtonDefaults.iconButtonColors()
+//                            ) {
+//                                Icon(Icons.Default.SwapVert, contentDescription = "並び替え")
+//                            }
+//                        }
+//                    }
+//                }
             }
         },
     )
