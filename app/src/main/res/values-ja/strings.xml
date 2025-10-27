@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--  アプリ全体  -->
-    <string name="app_name">通知カキコ</string>
+    <string name="app_name">通知メモ</string>
     <string name="back">戻る</string>
 
     <!--  スナックバー用  -->
