@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FloatingToolbarDefaults.floatingToolbarVerticalNestedScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -77,7 +78,7 @@ fun HomeScreen(
 ) {
     val focusManager = LocalFocusManager.current
     val snackbarHostState = remember { SnackbarHostState() } // TODO: SnackbarHostStateは結構入り組むからもっと増えてきたらCompositionLocalを検討
-    var expanded by rememberSaveable { mutableStateOf(false) }
+    var expanded by rememberSaveable { mutableStateOf(true) }
     var isSwap by rememberSaveable { mutableStateOf(true) }
 
     Scaffold(
@@ -100,10 +101,7 @@ fun HomeScreen(
                     expanded = expanded,
                     isSwap = isSwap,
                     onAddClick = { expanded = true },
-                    onSendClick = {
-                        text -> viewModel.addTask(text)
-                        expanded = false
-                    },
+                    onSendClick = { text -> viewModel.addTask(text) },
                     onSwapClick = { isSwap = !isSwap },
                 )
             }
@@ -125,14 +123,14 @@ fun HomeScreen(
                     TaskList(
                         modifier = Modifier
                             .weight(1f)
-                            .fillMaxHeight(),
-//                            .then(
-//                                Modifier.floatingToolbarVerticalNestedScroll(
-//                                    expanded = expanded,
-//                                    onExpand = { expanded = true },
-//                                    onCollapse = { expanded = false },
-//                                )
-//                            ),
+                            .fillMaxHeight()
+                            .then(
+                                Modifier.floatingToolbarVerticalNestedScroll(
+                                    expanded = expanded,
+                                    onExpand = { expanded = true },
+                                    onCollapse = { expanded = false },
+                                )
+                            ),
                         viewModel = viewModel,
                         settings = settings,
                         navigationBarHeight = innerPadding.calculateBottomPadding(),

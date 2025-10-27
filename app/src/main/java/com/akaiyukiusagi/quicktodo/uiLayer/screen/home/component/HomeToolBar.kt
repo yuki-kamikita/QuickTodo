@@ -128,24 +128,24 @@ fun HomeToolBar(
                         }
                     }
                     ToolbarMode.ACTION -> {
-//                        Row {
-//                            IconButton(onClick = { /* TODO */ }) {
-//                                Icon(Icons.Default.UnfoldLess, contentDescription = "全部閉じる")
-//                            }
-//                            IconButton(onClick = { /* TODO */ }) {
-//                                Icon(Icons.Default.UnfoldMore, contentDescription = "全部開く")
-//                            }
-//                            IconButton(
-//                                onClick = {
-//                                    if (!isSwap) rememberShape = initialShapeList.random()
-//                                    onSwapClick()
-//                                },
-//                                shape = rememberShape.toShape(),
-//                                colors = if (isSwap) IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primaryContainer) else IconButtonDefaults.iconButtonColors()
-//                            ) {
-//                                Icon(Icons.Default.SwapVert, contentDescription = "並び替え")
-//                            }
-//                        }
+                        Row {
+                            IconButton(onClick = { /* TODO */ }) {
+                                Icon(Icons.Default.UnfoldLess, contentDescription = "全部閉じる")
+                            }
+                            IconButton(onClick = { /* TODO */ }) {
+                                Icon(Icons.Default.UnfoldMore, contentDescription = "全部開く")
+                            }
+                            IconButton(
+                                onClick = {
+                                    if (!isSwap) rememberShape = initialShapeList.random()
+                                    onSwapClick()
+                                },
+                                shape = rememberShape.toShape(),
+                                colors = if (isSwap) IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primaryContainer) else IconButtonDefaults.iconButtonColors()
+                            ) {
+                                Icon(Icons.Default.SwapVert, contentDescription = "並び替え")
+                            }
+                        }
                     }
                 }
             }
