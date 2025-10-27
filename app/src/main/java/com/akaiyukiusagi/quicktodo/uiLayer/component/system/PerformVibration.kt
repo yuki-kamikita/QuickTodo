@@ -1,4 +1,4 @@
-package com.akaiyukiusagi.quicktodo.uiLayer.component
+package com.akaiyukiusagi.quicktodo.uiLayer.component.system
 
 import android.content.Context
 import android.os.Build
@@ -8,8 +8,6 @@ import android.os.VibratorManager
 
 /**
  * バイブレーション実行
- *
- * ディレクトリ悩むところ
  */
 fun performVibration(context: Context, durationMillis: Long) {
     val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {

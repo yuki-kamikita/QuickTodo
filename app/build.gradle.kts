@@ -1,10 +1,10 @@
 plugins {
-    kotlin("kapt")
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.jetbrains.kotlin.compose)
     alias(libs.plugins.screenshot)
-    id("com.google.devtools.ksp")
-    id("com.google.dagger.hilt.android")
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -15,8 +15,8 @@ android {
         applicationId = "com.akaiyukiusagi.quicktodo"
         minSdk = 28
         targetSdk = 35
-        versionCode = 8
-        versionName = "1.6.0"
+        versionCode = 9
+        versionName = "1.7.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -102,6 +102,7 @@ dependencies {
 
     // JetpackCompose
     implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.material3) // Expressive用alpha版
     implementation(libs.ui)
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
@@ -126,14 +127,10 @@ dependencies {
 
     // Hilt
     implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
+    ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.common)
     implementation(libs.androidx.hilt.navigation.compose)
 
     // スクリーンショットテスト
     screenshotTestImplementation(libs.androidx.compose.ui.tooling)
-}
-
-kapt {
-    correctErrorTypes = true
 }

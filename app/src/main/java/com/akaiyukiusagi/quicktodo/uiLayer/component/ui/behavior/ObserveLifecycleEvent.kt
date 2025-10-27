@@ -1,4 +1,4 @@
-package com.akaiyukiusagi.quicktodo.uiLayer.component
+package com.akaiyukiusagi.quicktodo.uiLayer.component.ui.behavior
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect

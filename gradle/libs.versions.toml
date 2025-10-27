@@ -1,24 +1,26 @@
 [versions]
 accompanistPermissions = "0.33.1-alpha"
-agp = "8.9.1"
-composeBom = "2025.03.01"
+agp = "8.9.3"
+composeBom = "2025.07.00"
 constraintlayoutCompose = "1.1.1"
 activityCompose = "1.10.1"
-datastorePreferences = "1.1.4"
-lifecycleViewmodelCompose = "2.8.7"
-lifecycleRuntimeKtx = "2.8.7"
+datastorePreferences = "1.1.7"
+lifecycleViewmodelCompose = "2.9.2"
+lifecycleRuntimeKtx = "2.9.2"
+material3 = "1.4.0-alpha18"
 materialIconsExtended = "1.7.8"
-navigationCompose = "2.8.9"
+navigationCompose = "2.9.2"
 hiltAndroid = "2.50"
 hiltAndroidCompiler = "2.50"
 hiltCommon = "1.2.0"
 hiltNavigationCompose = "1.2.0"
-kotlin = "1.9.22"
-coreKtx = "1.15.0"
+kotlin = "2.0.21"
+ksp = "2.0.21-1.0.28"
+coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-screenshot = "0.0.1-alpha09"
+screenshot = "0.0.1-alpha10"
 room = "2.6.1"
 
 [libraries]
@@ -31,6 +33,7 @@ androidx-hilt-common = { module = "androidx.hilt:hilt-common", version.ref = "hi
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
+androidx-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
@@ -54,4 +57,7 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+jetbrains-kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 screenshot = { id = "com.android.compose.screenshot", version.ref = "screenshot"}
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

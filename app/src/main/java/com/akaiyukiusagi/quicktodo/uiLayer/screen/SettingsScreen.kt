@@ -21,23 +21,23 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.akaiyukiusagi.quicktodo.BuildConfig
 import com.akaiyukiusagi.quicktodo.R
 import com.akaiyukiusagi.quicktodo.dataLayer.BooleanPreference
-import com.akaiyukiusagi.quicktodo.uiLayer.component.Center
+import com.akaiyukiusagi.quicktodo.uiLayer.component.ui.layout.Center
 import com.akaiyukiusagi.quicktodo.uiLayer.PreviewContent
 import com.akaiyukiusagi.quicktodo.uiLayer.ScreenPreviewTemplate
-import com.akaiyukiusagi.quicktodo.uiLayer.component.premission.rememberNotificationPermissionRequester
+import com.akaiyukiusagi.quicktodo.uiLayer.component.system.rememberNotificationPermissionRequester
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.ISettingsViewModel
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.PreviewSettingsViewModel
 
@@ -107,18 +107,18 @@ fun SettingsScreen(
 //                    SettingsRow("ライセンス", {})
 
                     Spacer(modifier = Modifier.height(12.dp))
-                    Center {
-                        Text(
-                            stringResource(id = R.string.app_name),
-                            style = MaterialTheme.typography.bodyMedium)
-                    }
-                    Center {
-                        Text(
-                            "ver ${BuildConfig.VERSION_NAME}",
-                            style = MaterialTheme.typography.bodySmall,
-                            modifier = Modifier.padding(2.dp))
-                    }
-
+                    Text(
+                        stringResource(id = R.string.app_name),
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        "ver ${BuildConfig.VERSION_NAME}",
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.fillMaxWidth().padding(2.dp),
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
         }

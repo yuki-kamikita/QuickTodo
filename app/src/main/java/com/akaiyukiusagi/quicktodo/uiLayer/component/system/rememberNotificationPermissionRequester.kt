@@ -1,4 +1,4 @@
-package com.akaiyukiusagi.quicktodo.uiLayer.component.premission
+package com.akaiyukiusagi.quicktodo.uiLayer.component.system
 
 import android.Manifest
 import android.content.Intent

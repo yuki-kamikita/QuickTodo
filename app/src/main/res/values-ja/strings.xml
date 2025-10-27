@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">通知Todo</string>
+    <!--  アプリ全体  -->
+    <string name="app_name">通知メモ</string>
     <string name="back">戻る</string>
 
+    <!--  スナックバー用  -->
     <string name="snackbar_delete_suffix">が削除されました</string>
     <string name="snackbar_undo">元に戻す</string>
     <string name="snackbar_notification_permission_required">通知権限が必要です</string>
     <string name="snackbar_open_notification_settings">設定を開く</string>
 
+    <!--  通知用  -->
+    <string name="notification_done">完了</string>
+    <string name="notification_description">通知に表示するやること</string>
 
+    <!--  ホーム画面用  -->
     <string name="new_task">新しいやること</string>
-    <string name="history">履歴</string>
-
     <string name="label_today">今日</string>
     <string name="label_yesterday">昨日</string>
     <string name="label_day_before_yesterday">一昨日</string>
@@ -19,6 +23,7 @@
     <string name="label_last_30_days">過去30日間</string>
     <string name="label_month">%1$d月</string>
 
+    <!--  設定画面用  -->
     <string name="settings">設定</string>
     <string name="color">色</string>
     <string name="dark_mode">ダークモード</string>
@@ -27,6 +32,7 @@
     <string name="show_done_task">完了済みを表示する</string>
     <string name="show_notification_on_create">作成時に通知に表示する</string>
 
-    <string name="notification_done">完了</string>
-    <string name="notification_description">通知に表示するやること</string>
+    <!--  プレビュー用  -->
+    <string name="example_text">テキストテキストテキスト</string>
+
 </resources>

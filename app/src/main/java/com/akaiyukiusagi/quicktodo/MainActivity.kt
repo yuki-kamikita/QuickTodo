@@ -4,13 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
-import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
@@ -25,7 +21,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.akaiyukiusagi.quicktodo.uiLayer.screen.HomeScreen
+import com.akaiyukiusagi.quicktodo.uiLayer.screen.home.HomeScreen
 import com.akaiyukiusagi.quicktodo.uiLayer.screen.SettingsScreen
 import com.akaiyukiusagi.quicktodo.uiLayer.theme.QuickTodoTheme
 import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.HomeViewModel

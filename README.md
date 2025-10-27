@@ -3,6 +3,13 @@
 
 ![ToPlayStoreQR](play_store_image/todo_app_download.png)
 
+
+# QuickTodo
+Material Design 3 や Jetpack Compose の最新コンポーネント、アーキテクチャ等を使ってみる砂場  
+コード的には書き方が統一されていなかったり、ゴミが多かったりしますが、そこは整理しません  
+アプリの使用感はそこそこちゃんと作ってるので動作部分だけ見てください  
+
+
 # Git
 ## Commitメッセージ
 [Gitmoji](https://gitmoji.dev/)を参考に、したりしなかったり
@@ -25,6 +32,20 @@
 - develop: 開発用
 - animatable: アニメーション確認用 デバッグ不可
 - qa: テスト用 難読化あり、デバッグ不可
+
+
+# ディレクトリ構成（抜粋）
+- `core/`: アプリ全体で使う共通処理や定数、拡張関数など
+- `dataLayer/`: データ取得・保存（リポジトリ、データソース、エンティティ等）
+- `uiLayer/`: UI関連
+  - `component/`: 複数画面で使いまわすもの
+    - `system/`: バイブレーションや通知などシステム機能
+    - `ui/`
+      - `parts/`: 見た目を主とするUI部品（ボタン、テキストフィールドなどのMaterial3関連）
+      - `behavior/`: 機能や振る舞いを主とするUI部品（ライフサイクル、アニメーションなど）
+      - `layout/`: 配置を主とするUI部品（スロットパターンなど）
+  - `screen/`: 画面単位のUI
+  - `notification/`: 通知の比重が大きいアプリなので分割
 
 
 # CI/CD

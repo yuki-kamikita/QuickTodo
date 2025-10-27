@@ -1,4 +1,4 @@
-package com.akaiyukiusagi.quicktodo.uiLayer.component
+package com.akaiyukiusagi.quicktodo.uiLayer.component.ui.behavior
 
 import androidx.compose.animation.core.exponentialDecay
 import androidx.compose.animation.core.tween
