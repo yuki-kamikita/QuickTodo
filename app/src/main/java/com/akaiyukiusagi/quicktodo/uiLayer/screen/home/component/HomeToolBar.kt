@@ -108,8 +108,8 @@ fun HomeToolBar(
                     fadeIn(animationSpec = tween()).togetherWith(fadeOut(animationSpec = tween()))
                 }
             ) { mode ->
-//                when (mode) {
-//                    ToolbarMode.ADD_TASK -> {
+                when (mode) {
+                    ToolbarMode.ADD_TASK -> {
                         TransparentBackgroundTextField(
                             value = text,
                             labelText = stringResource(id = R.string.new_task),
@@ -126,8 +126,8 @@ fun HomeToolBar(
                         LaunchedEffect(Unit) {
                             focusRequester.requestFocus()
                         }
-//                    }
-//                    ToolbarMode.ACTION -> {
+                    }
+                    ToolbarMode.ACTION -> {
 //                        Row {
 //                            IconButton(onClick = { /* TODO */ }) {
 //                                Icon(Icons.Default.UnfoldLess, contentDescription = "全部閉じる")
@@ -146,8 +146,8 @@ fun HomeToolBar(
 //                                Icon(Icons.Default.SwapVert, contentDescription = "並び替え")
 //                            }
 //                        }
-//                    }
-//                }
+                    }
+                }
             }
         },
     )
