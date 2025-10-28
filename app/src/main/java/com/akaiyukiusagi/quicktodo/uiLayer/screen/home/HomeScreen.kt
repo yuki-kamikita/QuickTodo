@@ -79,7 +79,7 @@ fun HomeScreen(
     val focusManager = LocalFocusManager.current
     val snackbarHostState = remember { SnackbarHostState() } // TODO: SnackbarHostStateは結構入り組むからもっと増えてきたらCompositionLocalを検討
     var expanded by rememberSaveable { mutableStateOf(true) }
-    var isSwap by rememberSaveable { mutableStateOf(true) }
+    var isSwap by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },

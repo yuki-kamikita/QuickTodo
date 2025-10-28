@@ -58,7 +58,7 @@ import com.akaiyukiusagi.quicktodo.uiLayer.screen.home.ToolbarMode
 fun HomeToolBar(
     expanded: Boolean,
     toolbarMode: ToolbarMode = ToolbarMode.ACTION,
-    isSwap: Boolean = true,
+    isSwap: Boolean = false,
     onAddClick: () -> Unit = {},
     onSendClick: (String) -> Unit = {},
     onSwapClick: () -> Unit = {},
