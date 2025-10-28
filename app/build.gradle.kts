@@ -9,12 +9,12 @@ plugins {
 
 android {
     namespace = "com.akaiyukiusagi.quicktodo"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.akaiyukiusagi.quicktodo"
         minSdk = 28
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 9
         versionName = "1.7.0"
 
