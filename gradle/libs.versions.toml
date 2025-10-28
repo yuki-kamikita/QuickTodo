@@ -1,5 +1,5 @@
 [versions]
-accompanistPermissions = "0.33.1-alpha"
+accompanistPermissions = "0.37.3"
 agp = "8.13.0"
 composeBom = "2025.10.01"
 constraintlayoutCompose = "1.1.1"
