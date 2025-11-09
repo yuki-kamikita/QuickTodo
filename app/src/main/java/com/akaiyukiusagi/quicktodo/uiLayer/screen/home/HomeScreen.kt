@@ -73,7 +73,7 @@ import java.time.LocalDateTime
 fun HomeScreen(
     viewModel: IHomeViewModel,
     settings: ISettingsViewModel,
-    navigator: NavController = rememberNavController()
+    toSettingsScreen: () -> Unit = {}
 ) {
     val focusManager = LocalFocusManager.current
     val snackbarHostState = remember { SnackbarHostState() } // TODO: SnackbarHostStateは結構入り組むからもっと増えてきたらCompositionLocalを検討
@@ -86,7 +86,7 @@ fun HomeScreen(
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.app_name)) },
                 actions = {
-                    IconButton(onClick = { ScreenNavigator.Settings.navigate(navigator) }) {
+                    IconButton(onClick = toSettingsScreen) {
                         Icon(Icons.Default.Settings, contentDescription = "Settings")
                     }
                 },
@@ -218,6 +218,7 @@ fun TaskList(
                         updateTask = { updatedTask -> viewModel.updateTask(updatedTask) },
                         onDelete = {
                             viewModel.deleteTask(task)
+                            performVibration(context, 5)
 
                             scope.launch {
                                 val result = snackbarHostState.showSnackbar(
