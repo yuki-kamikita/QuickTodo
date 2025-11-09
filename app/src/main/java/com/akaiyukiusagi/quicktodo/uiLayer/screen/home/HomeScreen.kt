@@ -218,6 +218,7 @@ fun TaskList(
                         updateTask = { updatedTask -> viewModel.updateTask(updatedTask) },
                         onDelete = {
                             viewModel.deleteTask(task)
+                            performVibration(context, 5)
 
                             scope.launch {
                                 val result = snackbarHostState.showSnackbar(
