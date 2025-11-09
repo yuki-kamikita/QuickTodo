@@ -47,10 +47,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.akaiyukiusagi.quicktodo.R
-import com.akaiyukiusagi.quicktodo.ScreenNavigator
 import com.akaiyukiusagi.quicktodo.core.extension.category
 import com.akaiyukiusagi.quicktodo.core.extension.view
 import com.akaiyukiusagi.quicktodo.dataLayer.room.entity.Task
