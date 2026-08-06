@@ -19,6 +19,7 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingToolbarDefaults
 import androidx.compose.material3.FloatingToolbarDefaults.floatingToolbarVerticalNestedScroll
+import androidx.compose.material3.HorizontalFloatingToolbar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -36,8 +37,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
-import androidx.xr.compose.material3.ExperimentalMaterial3XrApi
-import androidx.xr.compose.material3.HorizontalFloatingToolbar
 import com.akaiyukiusagi.quicktodo.R
 import com.akaiyukiusagi.quicktodo.uiLayer.PreviewContent
 import com.akaiyukiusagi.quicktodo.uiLayer.ScreenPreviewTemplate
@@ -48,8 +47,7 @@ import com.akaiyukiusagi.quicktodo.uiLayer.screen.home.ToolbarMode
 
 @OptIn(
     ExperimentalAnimationApi::class,
-    ExperimentalMaterial3ExpressiveApi::class,
-    ExperimentalMaterial3XrApi::class
+    ExperimentalMaterial3ExpressiveApi::class
 )
 @Composable
 fun HomeToolBar(
