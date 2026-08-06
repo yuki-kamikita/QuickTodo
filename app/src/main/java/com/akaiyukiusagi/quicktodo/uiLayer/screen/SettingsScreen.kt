@@ -29,12 +29,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.akaiyukiusagi.quicktodo.BuildConfig
 import com.akaiyukiusagi.quicktodo.R
 import com.akaiyukiusagi.quicktodo.dataLayer.BooleanPreference
-import com.akaiyukiusagi.quicktodo.uiLayer.component.ui.layout.Center
 import com.akaiyukiusagi.quicktodo.uiLayer.PreviewContent
 import com.akaiyukiusagi.quicktodo.uiLayer.ScreenPreviewTemplate
 import com.akaiyukiusagi.quicktodo.uiLayer.component.system.rememberNotificationPermissionRequester
@@ -45,7 +42,7 @@ import com.akaiyukiusagi.quicktodo.uiLayer.viewModel.PreviewSettingsViewModel
 @Composable
 fun SettingsScreen(
     viewModel: ISettingsViewModel,
-    navigator: NavController = rememberNavController()
+    popBackStack: () -> Unit = {}
 ) {
     val showDoneTasks = viewModel.showDoneTasks.collectAsState(initial = BooleanPreference.SHOW_DONE_TASKS.initialValue).value
     val showNotificationOnCreate = viewModel.showNotificationOnCreate.collectAsState(initial = BooleanPreference.SHOW_NOTIFICATION_ON_CREATE.initialValue).value
@@ -61,7 +58,7 @@ fun SettingsScreen(
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.settings)) },
                 navigationIcon = {
-                    IconButton(onClick = { navigator.popBackStack() }) {
+                    IconButton(onClick = popBackStack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(id =R.string.back))
                     }
                 },
